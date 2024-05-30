@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask App</title>
+</head>
+<body>
+
+ <h1>Trigger action on device</h1>
+    <form action="/trigger_execution" method="post">
+        <label for="launchfile_id">Select action:</label><br>
+        <input type="radio" id="bringup" name="launchfile_id" value="bringup">
+        <label for="bringup">Bringup</label><br>
+        <input type="radio" id="startmapping" name="launchfile_id" value="startmapping">
+        <label for="startmapping">Start Mapping</label><br>
+        <input type="radio" id="savemap" name="launchfile_id" value="savemap">
+        <label for="savemap">Save Map</label><br><br>
+        <input type="submit" value="Trigger Execution">
+    </form>
+    {% if execution_status %}
+        <p>Execution Status: {{ execution_status }}</p>
+    {% endif %}
+    <hr>
+
+    <h1>Link to Foxglove Dashboard</h1>
+    <a href="https://foxglove-demo.robopaas.dev/?ds=foxglove-websocket&ds.url=wss%3A%2F%2Fbridges.robopaas.dev">Foxglove dashboard</a>
+    <hr>
+    
+
+    <h1>Environment map</h1>
+    <img src="{{ image_url }}" alt="my_map.pgm">
+
+
+    <form action="/map_export" method="get">
+        <button type="submit">Export Map</button>
+    </form>
+    <hr>
+
+
+
+       
+    <h1>Read properties on device</h1>
+    <form action="/read_data" method="get">
+        <button type="submit">Read Data</button>
+    </form>
+    {% if data %}
+        <h2>Data</h2>
+        <pre>{{ data }}</pre>
+    {% endif %}
+
+
+    <h1>Read properties on device through periodic function</h1>
+    <form action="/current_values" method="get">
+        <button type="submit">Current Values</button>
+    </form>
+    {% if current_status %}
+        <p>Current Values: {{ current_status }}</p>
+    {% endif %}
+    <hr>
+
+    <h1>List filenames on VO's DB</h1>
+    <form action="/read_data_db" method="get">
+        <button type="submit">Read Filenames stored on VO's DB</button>
+    </form>
+    {% if data_db %}
+        <h2>Data</h2>
+        <pre>{{ data_db }}</pre>
+    {% endif %}
+
+
+    <h1>Store map on VO's DB</h1>
+    <form action="/store_map_db" method="get">
+        <label for="filename_tosave">Filename to use:</label>
+        <input type="text" id="filename_tosave" name="filename_tosave">
+        <button type="submit">Store map on DB</button>
+    </form>
+    
+  
+
+    <h1>Get Environent Map from VO's DB</h1>
+    <img src="{{ map_from_db }}" alt="my_map.pgm">
+
+    <form action="/read_map_from_db" method="get">
+        <label for="filename_map">Filename:</label>
+        <input type="text" id="filename_map" name="filename_map">
+        <button type="submit">Get Map from VO's DB</button>
+    </form>
+    
+
+
+ 
+</body>
+</html>
+

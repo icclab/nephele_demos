@@ -1,0 +1,52 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: zenoh
+  labels:
+    app: zenoh
+spec:
+  type: NodePort
+  ports:
+  - name: zenoh-protocol
+    protocol: TCP
+    port: 7447    
+    nodePort: 30447 #$NODE_PORT
+  - name: zenoh-api
+    protocol: TCP
+    port: 8000    
+  selector:
+    name: zenoh
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zenoh-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: zenoh
+  template:
+    metadata:
+      name: zenoh
+      labels:
+        name: zenoh
+    spec:
+      # runtimeClassName: "nvidia"
+      containers:
+      - name: zenoh
+        image: eclipse/zenoh
+        ports:
+        - containerPort: 7447
+          protocol: TCP
+          name: zenoh-protocol
+        - containerPort: 8000
+          protocol: TCP
+          name: zenoh-api
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 200m
+          limits:
+            memory: 128Mi
+            cpu: 200m
