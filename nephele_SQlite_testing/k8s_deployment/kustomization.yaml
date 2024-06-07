@@ -19,4 +19,3 @@ resources:
 - vo-1_deploy.yaml
 - foxglove-zenoh.yaml
 - nginx.yaml
-

@@ -30,8 +30,15 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: nginx
-        image: nginx
+      - name: cors-nginx
+        image: robopaas/cors
+        resources:
+          requests:
+            cpu: "2"
+            memory: 2048Mi
+          limits:
+            cpu: "2"
+            memory: 2048Mi 
         volumeMounts:
           - name: tb2
             mountPath: /usr/share/nginx/html/tb2
@@ -45,3 +52,24 @@ spec:
             items:
             - key: tb2
               path: tb2
+                         
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  labels:
+    name: nginx-ingress
+spec:
+  rules:
+  - host: ngnix.robopaas.dev
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ngnix-service
+            port:
+              number: 80
+
