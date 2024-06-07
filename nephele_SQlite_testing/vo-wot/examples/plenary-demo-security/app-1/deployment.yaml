@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-1
+  labels:
+    app: app-1
+spec:
+  selector:
+    matchLabels:
+      app: app-1
+  template:
+    metadata:
+      labels:
+        app: app-1
+    spec:
+      containers:
+      - name: app-1
+        image: nepheleproject/app1-security
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+      - name: holder
+        image: nepheleproject/demo-oidc4vp:kotlinv1.0
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: holder-data
+            mountPath: /app/data
+            subPath: ""
+        ports:
+        - containerPort: 8085
+        env:
+        - name: logs
+          value: "false"
+        command: ["/app/bin/waltid-ssikit"]
+        args: ["holder"]
+      volumes:
+        - name: holder-data
+          hostPath:
+            path: /mnt-app1/data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-1
+  labels:
+    app: app-1
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 30030
+    protocol: TCP
+    name: http
+  selector:
+    app: app-1

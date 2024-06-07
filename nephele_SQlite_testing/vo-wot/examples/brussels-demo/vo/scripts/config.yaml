@@ -1,0 +1,19 @@
+name: image-compression-vo
+type: VO
+resourceType:
+  specification: WoT
+  version: 1.1
+bindingNB:
+  bindingModeNB: [H]
+  hostname: image-compression-vo
+  ports:
+    {{- toYaml .Values.voDescriptorOverwrite.bindingNB.ports | nindent 4 }}
+  securityNB:
+    securityScheme: nosec
+deploymentType: B
+catalogue: {{ .Values.voDescriptorOverwrite.catalogue }}
+databaseConfig:
+  timeseriesDB:
+    influxDB: {{ .Values.voDescriptorOverwrite.databaseConfig.timeseriesDB.influxDB }}
+  persistentDB:
+    SQLite: enabled

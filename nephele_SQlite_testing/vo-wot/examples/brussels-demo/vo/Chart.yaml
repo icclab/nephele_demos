@@ -1,0 +1,17 @@
+apiVersion: v2
+appVersion: "0.1.0"
+description: This VO compresses an image sent from a device and forwards it to the next application node
+name:  image-compression-vo
+type: application
+version: "0.1.0"
+maintainers:
+  - name: NTUA
+annotations:
+  specType: VO
+  specImplementer: WOT
+  descriptorPath: "scripts/config.yaml"
+  deploymentType: 1
+  timeseriesDB: false
+  persistentDB: true
+  genericFunction: ""
+  consumedVOs: ""

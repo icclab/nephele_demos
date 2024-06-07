@@ -1,0 +1,44 @@
+# ====================================
+# Lille Plenary Meeting cVO Descriptor
+# ====================================
+name: {{ .Values.thingName }}
+type: cVO
+resourceType:
+  specification: WoT
+  version: 1.1
+deploymentType: A
+catalogue: 9090
+bindingNB:
+  bindingModeNB: [H]
+  hostname: {{ .Values.serviceName }}
+  ports:
+    httpPort: 8080
+  securityNB:
+    securityScheme: nosec
+bindingSB:
+  bindingModeSB: [H]
+  securitySB:
+    securitySBHTTP:
+      securityScheme: bearer
+      token: token
+databaseConfig:
+  timeseriesDB:
+    influxDB: enabled
+    address: "http://wotpy-influxdb-cvo:8086"
+    dbUser: my-username
+    dbPass: my-password
+    dbToken: my-token
+  persistentDB:
+    SQLite: enabled
+genericFunction: [forecasting]
+consumedVOs:
+  vo1:
+    url: "http://vo1:9090/vo1"
+  vo2:
+    url: "http://vo2:9090/vo2"
+    events:
+    - smokeDetected
+proxy:
+  propertiesMap:
+    temperature: vo1
+    humidity: vo1

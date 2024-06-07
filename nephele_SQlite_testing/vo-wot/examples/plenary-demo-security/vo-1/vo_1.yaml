@@ -1,0 +1,22 @@
+# ====================================
+# Lille Plenary Meeting VO1 Descriptor
+# ====================================
+name: vo1
+type: VO
+resourceType:
+  specification: WoT
+  version: 1.1
+deploymentType: A
+catalogue: 9091
+bindingNB:
+  bindingModeNB: [H]
+  hostname: vo1
+  ports:
+    httpProxyPort: 8080
+    httpPort: 8081
+databaseConfig:
+  timeseriesDB:
+    influxDB: disabled
+  persistentDB:
+    SQLite: enabled
+genericFunction: [mean_value, vo_status, device_status]

@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wotpy
+  labels:
+    app: wotpy
+spec:
+  selector:
+    matchLabels:
+      app: wotpy
+  template:
+    metadata:
+      labels:
+        app: wotpy
+    spec:
+      containers:
+      - name: wotpy
+        image: nepheleproject/vo-wot
+        imagePullPolicy: Never
+        volumeMounts:
+          - name: wot-script
+            mountPath: /app.py
+            subPath: test.py
+        ports:
+        - containerPort: 8080
+        - containerPort: 8081
+        - containerPort: 5683
+        - containerPort: 9090
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9090
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        env:
+        - name: HOSTNAME
+          value: localhost
+        - name: INFLUXDB_URL
+          value: "http://wotpy-influxdb:8086"
+      volumes:
+      - name: wot-script
+        hostPath:
+          path: /mnt/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wotpy
+  labels:
+    app: wotpy
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30000
+    protocol: TCP
+    name: http
+  - port: 8081
+    targetPort: 8081
+    nodePort: 30001
+    protocol: TCP
+    name: ws
+  - port: 5683
+    targetPort: 5683
+    nodePort: 30002
+    protocol: UDP
+    name: coap
+  - port: 9090
+    targetPort: 9090
+    nodePort: 30003
+    protocol: TCP
+    name: catalogue-port
+  selector:
+    app: wotpy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wotpy-influxdb
+  labels:
+    app: influxdb
+spec:
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+      - name: influxdb
+        image: influxdb:2.0
+        ports:
+        - containerPort: 8086
+        env:
+        - name: DOCKER_INFLUXDB_INIT_MODE
+          value: setup
+        - name: DOCKER_INFLUXDB_INIT_USERNAME
+          value: my-username
+        - name: DOCKER_INFLUXDB_INIT_PASSWORD
+          value: my-password
+        - name: DOCKER_INFLUXDB_INIT_ORG
+          value: wot
+        - name: DOCKER_INFLUXDB_INIT_BUCKET
+          value: my-bucket
+        - name: DOCKER_INFLUXDB_INIT_RETENTION
+          value: 1w
+        - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+          value: my-token
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wotpy-influxdb
+  labels:
+    app: influxdb
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8086
+    targetPort: 8086
+    protocol: TCP
+    name: influx
+  selector:
+    app: influxdb

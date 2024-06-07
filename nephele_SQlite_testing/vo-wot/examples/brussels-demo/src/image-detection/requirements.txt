@@ -1,0 +1,4 @@
+ultralytics
+Flask
+gunicorn
+prometheus-flask-exporter

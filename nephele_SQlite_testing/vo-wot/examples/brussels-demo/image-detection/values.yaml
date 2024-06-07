@@ -1,0 +1,14 @@
+replicas: 1
+
+clustersAffinity:
+- netmode-cluster2
+
+serviceImportClusters:
+- netmode-cluster
+
+service:
+  port: 8080
+
+resources:
+  limits:
+    cpu: "1"

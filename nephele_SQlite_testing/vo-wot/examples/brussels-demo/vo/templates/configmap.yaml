@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-scripts
+data:
+  app.py: |-
+{{ tpl ( .Files.Get "scripts/app.py" ) . | indent 4 }}
+  config.yaml: |-
+{{ tpl ( .Files.Get "scripts/config.yaml" ) . | indent 4 }}
+  td.json: |
+{{ tpl ( .Files.Get "scripts/td.json" ) . | indent 4 }}

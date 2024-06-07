@@ -1,0 +1,6 @@
+apiVersion: v2
+appVersion: "0.1.0"
+description: This service receives an image and performs image detection on it
+name:  image-detection
+type: application
+version: "0.1.0"

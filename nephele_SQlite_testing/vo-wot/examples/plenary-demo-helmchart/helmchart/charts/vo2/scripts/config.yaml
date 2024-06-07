@@ -1,0 +1,21 @@
+# ====================================
+# Lille Plenary Meeting VO2 Descriptor
+# ====================================
+name: {{ .Values.thingName}}
+type: VO
+resourceType:
+  specification: WoT
+  version: 1.1
+bindingNB:
+  bindingModeNB: [H,U]
+  hostname: {{ .Values.serviceName }}
+  ports:
+    httpPort: 8080
+    coapPort: 5683
+  securityNB:
+    securityScheme: nosec
+deploymentType: B
+catalogue: 9090
+databaseConfig:
+  persistentDB:
+    SQLite: enabled

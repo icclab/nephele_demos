@@ -1,0 +1,35 @@
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+ingress:
+  enabled: false
+resources: {}
+autoscaling:
+  enabled: false
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+thingName: vo2
+serviceName: vo2
+service:
+  type: NodePort
+  http:
+    port: 8080
+    targetPort: 8080
+    nodePort: 30010
+  coap:
+    port: 5683
+    targetPort: 5683
+    nodePort: 30012
+  catalogue:
+    port: 9090
+    targetPort: 9090
+    nodePort: 30013

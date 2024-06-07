@@ -1,0 +1,19 @@
+apiVersion: policy.karmada.io/v1alpha1
+kind: PropagationPolicy
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  propagateDeps: true
+  resourceSelectors:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: {{ .Chart.Name }}
+    - apiVersion: v1
+      kind: Service
+      name: {{ .Chart.Name }}
+  placement:
+    clusterAffinity:
+      clusterNames:
+        {{- range .Values.clustersAffinity }}
+        - {{ . }}
+        {{- end }}

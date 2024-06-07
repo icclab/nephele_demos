@@ -1,0 +1,61 @@
+# VO name
+name: cvo
+# VO type
+type: cVO
+# Web of Things metadata
+resourceType:
+  specification: WoT
+  version: 1.1
+# Deployment Type. Assumes that the associated device is running a WoT runtime
+deploymentType: A
+# Catalogue port from which the VO can be consumed
+catalogue: 9090
+bindingNB:
+  # NorthBound server that will be enabled. Only an HTTP server in this case
+  bindingModeNB: [H]
+  # Hostname that will be used to populate the forms to access the Properties, Actions and Events
+  hostname: cvo
+  ports:
+    # Port of the HTTP server
+    httpPort: 8080
+  securityNB:
+    # No security scheme to access the NorthBound interface
+    securityScheme: nosec
+bindingSB:
+  # SouthBound clients that will be initialized. Only an HTTP client in this case
+  bindingModeSB: [H]
+  securitySB:
+    # Security scheme to access the associated device. In this case a bearer token scheme
+    securitySBHTTP:
+      securityScheme: bearer
+      token: token
+databaseConfig:
+  # InfluxDB. In this case it is enabled, available in the following URL and accessed using
+  # the following credentials
+  timeseriesDB:
+    influxDB: enabled
+    address: "http://wotpy-influxdb-cvo:8086"
+    dbUser: my-username
+    dbPass: my-password
+    dbToken: my-token
+  # SQLite. Enabled in this case
+  persistentDB:
+    SQLite: enabled
+# Only the forecasting function is enabled
+genericFunction: [forecasting]
+consumedVOs:
+  # The vo1 is consumed from the following URL and made available to the user-defined code
+  vo1:
+    url: "http://vo1:9090/vo1"
+  # The vo2 is consumed from the following URL and made available to the user-defined code
+  vo2:
+    url: "http://vo2:9090/vo2"
+    # The following event is subscribed to and the handler of the subscription needs
+    # to be defined from the user
+    events:
+    - smokeDetected
+proxy:
+  # Interaction with the following properties is propagated to vo1 and not handled locally
+  propertiesMap:
+    temperature: vo1
+    humidity: vo1

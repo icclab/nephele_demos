@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vo1.fullname" . }}
+  labels:
+     {{- include "vo1.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: 1
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "vo1.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "vo1.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "vo1.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: nepheleproject/vo-wot:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: scripts
+              mountPath: /app.py
+              subPath: app.py
+            - name: scripts
+              mountPath: /config.yaml
+              subPath: config.yaml
+            - name: scripts
+              mountPath: /td.json
+              subPath: td.json
+          ports:
+          - containerPort: 8080
+          - containerPort: 9090
+          readinessProbe:
+            httpGet:
+              path: "/{{ .Values.serviceName }}"
+              port: 9090
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: scripts
+          configMap:
+            name: vo1-scripts
+            items:
+              - key: app.py
+                path: app.py
+              - key: config.yaml
+                path: config.yaml
+              - key: td.json
+                path: td.json
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

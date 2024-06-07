@@ -1,0 +1,19 @@
+{
+    "title": "db-test",
+    "id": "urn:dev:wot:example:dbtest",
+    "description": "A test showcasing database functionalities.",
+    "@context": [
+        "https://www.w3.org/2022/wot/td/v1.1"
+    ],
+    "securityDefinitions": {
+        "nosec_sc":{
+            "scheme": "nosec"
+        }
+    },
+    "security": "nosec_sc",
+    "properties": {
+        "someStringProperty": {
+            "type": "string"
+        }
+    }
+}

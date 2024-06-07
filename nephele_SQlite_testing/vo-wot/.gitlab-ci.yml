@@ -1,0 +1,25 @@
+default:
+  tags:
+    - origin:eclipse
+
+stages:
+  - build
+  - test
+
+pages:
+  stage: build
+  image: sphinxdoc/sphinx
+  script:
+    - pip install -U .[docs]
+    - sphinx-build -b html docs public
+  artifacts:
+    paths:
+      - public
+
+tests:
+  stage: test
+  image: python:3.9-slim
+  needs: []
+  script:
+    - pip install -U .[tests,docs]  
+    - python -m pytest
