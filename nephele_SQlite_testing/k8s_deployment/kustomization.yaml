@@ -16,6 +16,7 @@ resources:
 - zenoh-router.yaml
 - mqtt-broker.yaml
 - flask-app.yaml
-- vo-1_deploy.yaml
+#- vo-1_deploy.yaml
 - foxglove-zenoh.yaml
-- nginx.yaml
+- nginx_vo-1_deploy.yaml
+#- nginx.yaml

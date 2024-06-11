@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-vo1
+  labels:
+    app: nginx-vo1
+spec:
+  selector:
+    matchLabels:
+      app: nginx-vo1
+  template:
+    metadata:
+      labels:
+        app: nginx-vo1
+    spec:
+      volumes:
+        - name: shared-data
+          emptyDir: {}
+        - name: scripts
+          configMap:
+            name: vo-scripts
+            items:
+            - key: app.py
+              path: app.py
+            - key: config.yaml
+              path: config.yaml
+            - key: td.json
+              path: td.json        
+        - name: tb2
+          configMap:
+            name: tb2
+            items:
+            - key: tb2
+              path: tb2
+      containers:
+      - name: wotpy
+        image: robopaas/nephele-vo:test #nepheleproject/vo-wot robopaas/nephele-vo:latest
+        imagePullPolicy: Always # IfNotPresent
+        volumeMounts:
+          - name: scripts
+            mountPath: /app.py
+            subPath: app.py
+          - name: scripts
+            mountPath: /config.yaml
+            subPath: config.yaml
+          - name: scripts
+            mountPath: /td.json
+            subPath: td.json
+          - name: shared-data
+            mountPath: /pod-data
+        ports:
+        - containerPort: 8080
+        - containerPort: 9090
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9090 
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        env:
+        - name: HOSTNAME
+          value: vo1
+      - name: cors-nginx
+        image: robopaas/cors
+        resources:
+          requests:
+            cpu: "2"
+            memory: 2048Mi
+          limits:
+            cpu: "2"
+            memory: 2048Mi 
+        volumeMounts:
+          - name: tb2
+            mountPath: /usr/share/nginx/html/tb2
+            subPath: tb2
+          - name: shared-data
+            mountPath: /usr/share/nginx/html
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vo1
+  labels:
+    app: vo1
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30885
+    protocol: TCP
+    name: http
+  - port: 9090
+    targetPort: 9090
+    nodePort: 30886
+    protocol: TCP
+    name: catalogue-port
+  selector:
+    app: nginx-vo1
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngnix-service
+spec:
+  selector:
+    app: nginx-vo1
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  labels:
+    name: nginx-ingress
+spec:
+  rules:
+  - host: ngnix.robopaas.dev
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ngnix-service
+            port:
+              number: 80
