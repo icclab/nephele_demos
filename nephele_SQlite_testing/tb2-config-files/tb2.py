@@ -130,6 +130,14 @@ async def triggerBringup_handler(params):
         print("Map saved successfully.")
         saveaction = True
         
+    if launchfileId == 'savebag':
+        print("Starting recording rosbag!")
+        process_bagrecording = subprocess.Popen(['ros2', 'launch', 'turtlebot2_bringup', 'rosbag_save.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        time.sleep(1) 
+       
+        print("Bag recording started.")
+        savebagaction = True
+        
         
       
 
@@ -165,6 +173,8 @@ async def triggerBringup_handler(params):
         return {'result': mappingaction, 'message': f'Your {launchfileId} is in progress!'}
     elif launchfileId == 'savemap':
         return {'result': saveaction, 'message': f'Your {launchfileId} is in progress!'}
+    elif launchfileId == 'savebag':
+        return {'result': savebagaction, 'message': f'Your {launchfileId} is in progress!'}
     
 async def mapExport_handler(params):
     params = params['input'] if params['input'] else {}

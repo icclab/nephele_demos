@@ -15,7 +15,9 @@
         <input type="radio" id="startmapping" name="launchfile_id" value="startmapping">
         <label for="startmapping">Start Mapping</label><br>
         <input type="radio" id="savemap" name="launchfile_id" value="savemap">
-        <label for="savemap">Save Map</label><br><br>
+        <label for="savemap">Save Map</label><br>
+        <input type="radio" id="savebag" name="launchfile_id" value="savebag">
+        <label for="savebag">Save 1m rosbag</label><br>
         <input type="submit" value="Trigger Execution">
     </form>
     {% if execution_status %}
