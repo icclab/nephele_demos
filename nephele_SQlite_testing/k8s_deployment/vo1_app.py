@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
-
+import asyncio
+#import mcap
 from wotpy.functions.functions import vo_status, device_status
 
 LOGGER = logging.getLogger()
 
+from io import BytesIO
+import base64
+LOGGER.setLevel(logging.INFO)
+
 TABLE_NAME = "string_data_table"
+
+#from mcap.mcap_reader import McapReader
 
 
 async def someStringProperty_write_handler(value):
@@ -86,6 +93,39 @@ async def mapStoreDB_handler(params):
     result=sqlite_db.insert_data(TABLE_NAME, (filename_tosave, content))
     
     return {'message': f'Your map storing on db is in progress!'}
+
+
+async def bagStoreVO_handler(params):
+    params = params['input'] if params['input'] else {}
+     # Default values
+    filename_tosave = 'rosbag.mcap'
+
+    # Check if params are provided
+    filename_tosave = params.get('filename_tosave', filename_tosave)
+    LOGGER.info('Consumed Thing: {}'.format(consumed_vos["tb2"]))
+    bagstring = await consumed_vos["tb2"].invoke_action("bagExport")
+    LOGGER.info('Result after params is {}'.format(bagstring))
+    #print(bagstring)
+    
+            
+    #add saving bag to fs
+    #rosbag_raw_data= base64.b64decode(bagstring)
+    #bag_path = '/rosbag.mcap'
+    #with Image.open(BytesIO(rosbag_raw_data)) as bag:
+    #     bag.save(bag_path, format="MCAP")
+    
+    if bagstring is None:
+            return None
+    else:
+        rosbag_raw_data= base64.b64decode(bagstring)
+    # Open PGM data as an image
+        bag_path = '/pod-data/rosbag.mcap'
+        with open(bag_path, 'wb') as file:
+        # Convert to PNG format
+            file.write(rosbag_raw_data)
+    
+    
+    return {'message': f'Your bag storing on VO is in progress!'}
 
 
 async def read_property_from_tb2():

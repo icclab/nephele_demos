@@ -34,7 +34,7 @@ spec:
               path: tb2
       containers:
       - name: wotpy
-        image: robopaas/nephele-vo:test #nepheleproject/vo-wot robopaas/nephele-vo:latest 
+        image: robopaas/nephele-vo:test #robopaas/nephele-vo:latest nepheleproject/vo-wot #nepheleproject/vo-wot #
         imagePullPolicy: Always # IfNotPresent
         volumeMounts:
           - name: scripts

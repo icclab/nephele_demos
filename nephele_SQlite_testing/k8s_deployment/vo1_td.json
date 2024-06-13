@@ -137,6 +137,31 @@
                 }
             } 
         },
+        "bagStoreVO": { 
+            "title": "Store rosbag on VO's FS", 
+            "description": "Get rosbag data and store it to FS of the VO", 
+            "input": { 
+                "type": "object", 
+                "properties": { 
+                    "filename_tosave": { 
+                        "type": "string", 
+                        "description": "which filename to save rosbag on FS" 
+                    }
+                }
+            },
+            "output": { 
+                "type": "object", 
+                "description": "Returns rosbag in string format.", 
+                "properties": { 
+                    "result": { 
+                        "type": "boolean" 
+                    }, 
+                    "message": { 
+                        "type": "string" 
+                    } 
+                } 
+            } 
+        },
         "currentValues": {
             "description": "Returns current Values for battery status from tb2 through the Consumed Thing"
         }

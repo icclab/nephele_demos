@@ -191,6 +191,30 @@ async def storemapdb():
     return result
 
 
+@app.route("/store_bag_vo", methods=['GET'])
+def store_bag_vo():
+    result = asyncio.run(storebagvo())
+    return render_template('index.html', store_bag_vo=result)
+
+async def storebagvo():
+    http_client = HTTPClient()
+    security_scheme_dict = {
+        "scheme": "bearer"
+    }
+    credentials_dict = {
+        "token": "token"
+    }
+    http_client.set_security(security_scheme_dict, credentials_dict)
+    wot = WoT(servient=Servient(clients=[http_client]))
+    consumed_thing = await wot.consume_from_url("http://vo1:9090/vo1")
+    # Get the filename from the query parameters
+    bagname_tosave = request.args.get('bagname_tosave')
+    result = await consumed_thing.invoke_action("bagStoreVO", {'filename_tosave': bagname_tosave }) 
+    #result = await consumed_thing.invoke_action("mapStoreDB")
+    print(result)
+    return result
+
+
 @app.route("/read_map_from_db", methods=['GET'])
 def read_map_from_db():
     result = asyncio.run(read_map_db())
