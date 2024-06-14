@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: wotpy
-        image: robopaas/nephele-vo:test #nepheleproject/vo-wot robopaas/nephele-vo:latest
+        image: nepheleproject/vo-wot #robopaas/nephele-vo:test #nepheleproject/vo-wot robopaas/nephele-vo:latest
         imagePullPolicy: Always # IfNotPresent
         volumeMounts:
           - name: scripts

@@ -17,9 +17,9 @@
         <input type="radio" id="savemap" name="launchfile_id" value="savemap">
         <label for="savemap">Save Map</label><br>
         <input type="radio" id="savebag" name="launchfile_id" value="savebag">
-        <label for="savebag">Save rosbag</label><br>
+        <label for="savebag">Start rosbag</label><br>
         <input type="radio" id="stopbag" name="launchfile_id" value="stopbag">
-        <label for="stopbag">Stop saving rosbag</label><br>
+        <label for="stopbag">Stop rosbag</label><br>
         <input type="submit" value="Trigger Execution">
     </form>
     {% if execution_status %}
@@ -79,18 +79,6 @@
         <input type="text" id="filename_tosave" name="filename_tosave">
         <button type="submit">Store map on DB</button>
     </form>
-    
-  
-    <h1>Store bag on VO's FS</h1>
-    <form action="/store_bag_vo" method="get">
-        <label for="bagname_tosave">Filename to use (.mcap):</label>
-        <input type="text" id="bagname_tosave" name="bagname_tosave">
-        <button type="submit">Store rosbag on VO</button>
-    </form>
-
-    <h1>Review the stored rosbag from the VO</h1>
-    <a href="https://foxglove-demo.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix.robopaas.dev%2Frosbag.mcap">Rosbag stored on VO</a>
-    <hr>
 
     <h1>Get Environent Map from VO's DB</h1>
     <img src="{{ map_from_db }}" alt="my_map.pgm">
@@ -101,6 +89,20 @@
         <button type="submit">Get Map from VO's DB</button>
     </form>
     
+    
+  
+    <h1>Save rosbag on VO's FS</h1>
+    <form action="/store_bag_vo" method="get">
+        <label for="bagname_tosave">Filename to use (.mcap):</label>
+        <input type="text" id="bagname_tosave" name="bagname_tosave">
+        <button type="submit">Save rosbag on VO</button>
+    </form>
+
+    <h1>Review the stored rosbag from the VO</h1>
+    <a href="https://foxglove-demo.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix.robopaas.dev%2Frosbag.mcap">Rosbag stored on VO</a>
+    <hr>
+
+
 
     
 </body>
