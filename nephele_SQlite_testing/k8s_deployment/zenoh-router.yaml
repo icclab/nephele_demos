@@ -35,7 +35,7 @@ spec:
       # runtimeClassName: "nvidia"
       containers:
       - name: zenoh
-        image: eclipse/zenoh
+        image: eclipse/zenoh:0.11.0 #eclipse/zenoh
         ports:
         - containerPort: 7447
           protocol: TCP

@@ -31,7 +31,7 @@ periodicFunction:
   read_property_from_tb2: 5000
 consumedVOs:
   tb2:
-    url: "http://ngnix-service/tb2"
+    url: "http://ngnix-service-td/tb2"
 proxy:
   propertiesMap:
     allAvailableResources: tb2
