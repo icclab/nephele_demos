@@ -1,0 +1,22 @@
+{
+    "title": "testvo",
+    "id": "urn:dev:wot:test:test",
+    "description": "A test example.",
+    "securityDefinitions": {
+        "bearer_sc":{
+            "scheme":"bearer"
+        }
+    },
+    "security": "bearer_sc",
+    "@context": [
+        "https://www.w3.org/2022/wot/td/v1.1"
+    ],
+    "properties": {
+        "dummy": {
+            "type": "integer"
+        }
+    },
+    "actions": {
+
+    }
+}

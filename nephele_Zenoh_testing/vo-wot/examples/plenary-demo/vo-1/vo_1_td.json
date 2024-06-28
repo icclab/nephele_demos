@@ -1,0 +1,39 @@
+{
+    "title": "vo1",
+    "id": "urn:dev:wot:plenary:VO1",
+    "description": "Lille Plenary Meeting Descriptor for VO1 for Device 1.",
+    "securityDefinitions": {
+        "bearer_sc": {
+            "scheme": "bearer"
+        }
+    },
+    "security": "bearer_sc",
+    "@context": [
+        "https://www.w3.org/2022/wot/td/v1.1"
+    ],
+    "properties": {
+        "temperature": {
+            "type": "integer"
+        },
+        "humidity": {
+            "type": "integer"
+        },
+        "average_values":{
+            "type": "object",
+                "average_temperature": {
+                    "type": "integer"
+                },
+                "average_humidity": {
+                    "type": "integer"
+                }
+        }
+    },
+    "actions": {
+        "currentValues": {
+            "description": "Returns current Values for temperature and humidity from Device 1 through the Consumed Thing"
+        },
+        "averageData": {
+            "description": "Calculate the average_values property from the latest 10 values from InfluxDB"
+        }
+    }
+}

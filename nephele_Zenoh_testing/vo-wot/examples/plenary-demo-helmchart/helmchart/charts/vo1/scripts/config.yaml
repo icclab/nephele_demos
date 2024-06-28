@@ -1,0 +1,52 @@
+# ====================================
+# Lille Plenary Meeting VO1 Descriptor
+# ====================================
+name: {{ .Values.thingName }}
+type: VO
+resourceType:
+  specification: WoT
+  version: 1.1
+deploymentType: A
+catalogue: 9090
+bindingNB:
+  bindingModeNB: [H]
+  hostname: {{ .Values.serviceName}}
+  ports:
+    httpPort: 8080
+  securityNB:
+    securityScheme: bearer
+    token: token
+bindingSB:
+  bindingModeSB: [H, M]
+  brokerIP: {{ .Values.brokerIP }}
+  securitySB:
+      securitySBMQTT:
+        securityScheme: basic
+        username: user
+        password: pass
+      securitySBHTTP:
+        securityScheme: basic
+        username: user
+        password: pass
+databaseConfig:
+  timeseriesDB:
+    influxDB: enabled
+    address: "http://wotpy-influxdb-vo1:8086"
+    dbUser: my-username
+    dbPass: my-password
+    dbToken: my-token
+  persistentDB:
+    SQLite: enabled
+genericFunction: [mean_value, vo_status, device_status]
+periodicFunction:
+  check: 1000
+  read_property_from_device_1: 5000
+consumedVOs:
+  device1:
+    url: {{ .Values.deviceURL }}
+proxy:
+  propertiesMap:
+    temperature: device1
+    humidity: device1
+  actionsMap:
+    currentValues: device1

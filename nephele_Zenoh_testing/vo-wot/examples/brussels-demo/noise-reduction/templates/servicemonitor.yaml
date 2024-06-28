@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  namespaceSelector:
+    matchNames:
+    - default
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  endpoints:
+  - interval: 1s
+    port: web
+---
+apiVersion: policy.karmada.io/v1alpha1
+kind: PropagationPolicy
+metadata:
+  name: {{ .Chart.Name }}-service-monitor
+  namespace: monitoring
+spec:
+  propagateDeps: true
+  resourceSelectors:
+    - apiVersion: monitoring.coreos.com/v1
+      kind: ServiceMonitor
+      name: {{ .Chart.Name }}
+      namespace: monitoring
+  placement:
+    clusterAffinity:
+      clusterNames:
+        {{- range .Values.clustersAffinity }}
+        - {{ . }}
+        {{- end }}

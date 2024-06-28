@@ -1,0 +1,132 @@
+# Name of the Virtual Object/Thing
+name: example_name
+# Type of the Virtual Object. Can be one of: VO/cVO
+type: cVO
+# Web of Things metadata
+resourceType:
+    specification: WoT
+    version: 1.1
+# Deployment Type. Can be one of: A, B
+# Deployment Type A means the associated device is running the WoT runtime
+# Deployment Type B means the associated device is not running the WoT runtime
+deploymentType: A
+# Catalogue port (port of an HTTP server) of the Thing from where it can be consumed
+catalogue: 9090
+# NorthBound interface of the Virtual Object
+bindingNB:
+    # List of protocol servers that will be enabled for the NorthBound communication
+    # Possible values: H (HTTP), M (MQTT), U(CoAP/UDP)
+    bindingModeNB: [H, M, U]
+    # The hostname that will be injected inside the forms used to access
+    # the Virtual Object's Properties, Actions and Events
+    hostname: example_hostname
+    # Ports each server will be listening to. Possible keys: httpPort, coapPort
+    ports:
+        httpPort: 8080
+        coapPort: 5683
+    # The URL to reach the MQTT broker
+    brokerIP: "mqtt://localhost:1883"
+    # Path to a certificate to instantiate an HTTPS server
+    serverCert: None
+    # Path to a private key to instantiate an HTTPS server
+    serverKey: None
+    # Path to the certificate file of an MQTT NorthBound broker
+    mqttCAFile: None
+    # Path to a JSON Credentials Map for OSCORE (CoAP server)
+    OSCORECredentialsMap: None
+    # NorthBound security credentials definition
+    securityNB:
+        # The WoT security scheme that will be used. Can be one of: nosec, basic, bearer
+        securityScheme: nosec
+        # If `securityScheme` is set to basic, set the desired username-password
+        username: example_username
+        password: example_password
+        # If `securityScheme` is set to bearer, set the desired token
+        token: example_token
+# SouthBound interface of the Virtual Object
+bindingSB:
+    # List of protocol clients that will be enabled for the SouthBound communication
+    # Possible values: H (HTTP), M (MQTT), U(CoAP/UDP)
+    bindingModeSB: [H, M, U]
+    # Path to the certificate file of an MQTT SouthBound broker
+    mqttCAFile: None
+    # Path to a JSON Credentials Map for OSCORE (CoAP client)
+    OSCORECredentialsMap: None
+    # SouthBound security credentials definition that will be injected to
+    # all requests made through the SouthBound interface
+    securitySB:
+        # HTTP credentials
+        securitySBHTTP:
+            # The WoT security scheme that will be used. Can be one of: nosec, basic, bearer
+            securityScheme: nosec
+            # If `securityScheme` is set to basic, set the desired username-password
+            username: example_username
+            password: example_password
+            # If `securityScheme` is set to bearer, set the desired token
+            token: example_token
+        securitySBMQTT:
+            # The WoT security scheme that will be used. Can be one of: nosec, basic
+            securityScheme: nosec
+            # If `securityScheme` is set to basic, set the desired username-password
+            username: example_username
+            password: example_password
+        securitySBCOAP:
+            # The WoT security scheme that will be used. Can be one of: nosec, basic, bearer
+            securityScheme: nosec
+            # If `securityScheme` is set to basic, set the desired username-password
+            username: example_username
+            password: example_password
+            # If `securityScheme` is set to bearer, set the desired token
+            token: example_token
+# Database configuration
+databaseConfig:
+    # InfluxDB settings
+    timeseriesDB:
+        # Flag that enables/disables the InfluxDB connection. Can be one of: enabled,disabled
+        influxDB: enabled
+        # URL of where the InfluxDB is deployed
+        address: "http://wotpy-influxdb-cvo:8086"
+        # Username used to connect to the database
+        dbUser: my-username
+        # Password used to connect to the database
+        dbPass: my-password
+        # Token used from the VO to access the database
+        dbToken: my-token
+    # SQLite settings
+    persistentDB:
+        # Flag that enables/disables the SQLite database. Can be one of: enabled,disabled
+        SQLite: enabled
+        # Optional field that sets the path to save the database
+        dbFilePath: None
+# List of generic functions that will be made available to the user-defined scripts.
+# Possible values: forecasting, mean_value, vo_status, device_status
+genericFunction: [forecasting, mean_value, vo_status, device_status]
+# User-defined functions that will be executed periodically
+# Is a map of function names and their periodicity in miliseconds
+periodicFunction:
+    example_function: 0
+# Foreign Virtual Objects that will be consumed
+consumedVOs:
+    # Name of the consumed VO
+    example_vo_name:
+        # Catalogue endpoint of the Virtual Object
+        url: "http://vo1:9090/vo1"
+        # List of events whose subscriptions need to be mapped to user-defined functions
+        events:
+        - exampleEvent
+        # List of properties whose subscriptions to changes need to be mapped to user-defined functions
+        propertyChanges:
+        - exampleProperty
+# Proxy Properties, Actions and Events whose access is propagated to
+# other Virtual Objects and not handled locally
+proxy:
+    # Map of property and the target Virtual Object
+    propertiesMap:
+        exampleProperty: example_vo_name
+    # Map of action and the target Virtual Object
+    actionsMap:
+        exampleAction: example_vo_name
+    # Map of event and the target Virtual Object
+    eventsMap:
+        exampleEvent: example_vo_name
+

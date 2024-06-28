@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.serviceName }}
+  labels:
+    {{- include "vo2.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.http.port }}
+      targetPort: {{ .Values.service.http.targetPort }}
+      nodePort: {{ .Values.service.http.nodePort }}
+      protocol: TCP
+      name: http
+    - port: {{ .Values.service.coap.port }}
+      targetPort: {{ .Values.service.coap.targetPort }}
+      nodePort: {{ .Values.service.coap.nodePort }}
+      protocol: UDP
+      name: coap
+    - port: {{ .Values.service.catalogue.port }}
+      targetPort: {{ .Values.service.catalogue.targetPort }}
+      nodePort: {{ .Values.service.catalogue.nodePort }}
+      protocol: TCP
+      name: catalogue-port
+  selector:
+    {{- include "vo2.selectorLabels" . | nindent 4 }}

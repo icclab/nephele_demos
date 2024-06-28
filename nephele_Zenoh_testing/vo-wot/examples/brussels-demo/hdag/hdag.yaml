@@ -1,0 +1,71 @@
+hdaGraph:
+  imVersion: 0.3.0
+  id: image-detection-graph
+  version: "1.0.0"
+  designer: NTUA
+  hdaGraphIntent: "Low latency"
+  description: >-
+    Brussels demo
+  services:
+    - id: image-compression-vo
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network: ""
+          resources: "small"
+          coLocation: []
+          connectionPoints: ["noise-reduction"]
+          metrics: []
+      artifact:
+        ociImage: "oci://nephele-platform.netmode.ece.ntua.gr/brussels-demo/image-compression-vo"
+        ociConfig:
+          type: VO
+          implementer: WOT
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite:
+          voDescriptorOverwrite: {}
+          voChartOverwrite: {}
+    - id: noise-reduction
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network: ""
+          resources: "small"
+          coLocation: []
+          connectionPoints: ["image-detection"]
+          metrics: []
+      artifact:
+        ociImage: "oci://nephele-platform.netmode.ece.ntua.gr/brussels-demo/noise-reduction"
+        ociConfig:
+          type: App
+          implementer: HELM
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}
+    - id: image-detection
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network: ""
+          resources: "small"
+          coLocation: []
+          connectionPoints: []
+          metrics: []
+      artifact:
+        ociImage: "oci://nephele-platform.netmode.ece.ntua.gr/brussels-demo/image-detection"
+        ociConfig:
+          type: App
+          implementer: HELM
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}

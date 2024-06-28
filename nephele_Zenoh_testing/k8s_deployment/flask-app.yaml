@@ -1,0 +1,53 @@
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: my-service-flaskapp 
+spec: 
+  selector: 
+    app: myflaskapp 
+  ports: 
+  - port: 5000
+    targetPort: 5000 
+
+--- 
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: flaskapp 
+  labels: 
+        app: myflaskapp 
+spec: 
+  replicas: 1 
+  selector: 
+    matchLabels: 
+      app: myflaskapp 
+  template: 
+    metadata: 
+      labels: 
+        app: myflaskapp
+    spec: 
+      containers: 
+      - name: flaskapp-container 
+        image: robopaas/myflaskapp 
+        ports: 
+        - containerPort: 5000 
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flaskapp-ingress
+  labels:
+    name: my-service-flask-app
+spec:
+  rules:
+  - host: flask-gui.robopaas.dev
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-service-flaskapp
+            port:
+              number: 5000 

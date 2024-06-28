@@ -1,0 +1,18 @@
+name: db-test
+type: VO
+resourceType:
+  specification: WoT
+  version: 1.1
+deploymentType: A
+catalogue: 9090
+bindingNB:
+  bindingModeNB: [H]
+  hostname: localhost
+  ports:
+    httpPort: 8080
+databaseConfig:
+  timeseriesDB:
+    influxDB: disabled
+  persistentDB:
+    SQLite: enabled
+

@@ -1,0 +1,35 @@
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+ingress:
+  enabled: false
+resources: {}
+autoscaling:
+  enabled: false
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+serviceName: wotpy-influxdb-cvo
+env:
+  - name: DOCKER_INFLUXDB_INIT_MODE
+    value: setup
+  - name: DOCKER_INFLUXDB_INIT_USERNAME
+    value: my-username
+  - name: DOCKER_INFLUXDB_INIT_PASSWORD
+    value: my-password
+  - name: DOCKER_INFLUXDB_INIT_ORG
+    value: wot
+  - name: DOCKER_INFLUXDB_INIT_BUCKET
+    value: my-bucket
+  - name: DOCKER_INFLUXDB_INIT_RETENTION
+    value: 1w
+  - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+    value: my-token

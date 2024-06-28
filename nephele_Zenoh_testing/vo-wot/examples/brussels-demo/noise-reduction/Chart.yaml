@@ -1,0 +1,6 @@
+apiVersion: v2
+appVersion: "0.1.0"
+description: This service receives an image, performs noise reduction and forwards it to the next application node
+name:  noise-reduction
+type: application
+version: "0.1.0"

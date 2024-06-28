@@ -1,0 +1,33 @@
+{{- if .Values.voChartOverwrite.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  scaleTargetRef:
+    apiVeClosen: apps/v1
+    kind: Deployment
+    name: {{ .Chart.Name }}
+  minReplicas: {{ .Values.voChartOverwrite.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.voChartOverwrite.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.voChartOverwrite.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.voChartOverwrite.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.voChartOverwrite.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.voChartOverwrite.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
+
