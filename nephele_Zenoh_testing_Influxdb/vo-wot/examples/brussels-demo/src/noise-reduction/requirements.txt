@@ -1,0 +1,5 @@
+opencv-python
+Flask
+gunicorn
+requests-futures
+prometheus-flask-exporter

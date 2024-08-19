@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  type: {{ .Values.voChartOverwrite.service.type }}
+  ports:
+    - port: {{ .Values.voDescriptorOverwrite.catalogue }}
+      targetPort: {{ .Values.voDescriptorOverwrite.catalogue }}
+      {{- if .Values.voChartOverwrite.service.catalogue.nodePort }}
+      nodePort: {{ .Values.voChartOverwrite.service.catalogue.nodePort }}
+      {{- end }}
+      protocol: TCP
+      name: catalogue-port
+    {{- if .Values.voDescriptorOverwrite.bindingNB.ports.httpPort }}
+    - port: {{ .Values.voDescriptorOverwrite.bindingNB.ports.httpPort }}
+      targetPort: {{ .Values.voDescriptorOverwrite.bindingNB.ports.httpPort }}
+      {{- if .Values.voChartOverwrite.service.http.nodePort }}
+      nodePort: {{ .Values.voChartOverwrite.service.http.nodePort }}
+      {{- end }}
+      protocol: TCP
+      name: http
+    {{- end }}
+    {{- if .Values.voDescriptorOverwrite.bindingNB.ports.coapPort }}
+    - port: {{ .Values.voDescriptorOverwrite.bindingNB.ports.coapPort }}
+      targetPort: {{ .Values.voDescriptorOverwrite.bindingNB.ports.coapPort }}
+      {{- if .Values.voChartOverwrite.service.coap.nodePort }}
+      nodePort: {{ .Values.voChartOverwrite.service.coap.nodePort }}
+      {{- end }}
+      protocol: UDP
+      name: coap
+    {{- end }}
+  selector:
+    app: {{ .Chart.Name }}

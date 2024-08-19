@@ -1,0 +1,25 @@
+turtlebot@tb2-1:/etc/systemd/system$ cat start_nephele_container.service 
+
+
+[Unit]
+Description=Nephele Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull robopaas/rosdocked-hum-tb2_nephele:latest 
+ExecStart=/usr/bin/nvidia-docker run  --privileged --net host --rm --name %n  \
+-v /home/turtlebot:/home/turtlebot:rw \
+-v /dev/kobuki:/dev/kobuki \
+-v /dev/lidar:/dev/lidar \
+robopaas/rosdocked-hum-tb2_nephele:latest
+ExecStop=/usr/bin/docker stop %n
+
+
+[Install]
+WantedBy=multi-user.target
+

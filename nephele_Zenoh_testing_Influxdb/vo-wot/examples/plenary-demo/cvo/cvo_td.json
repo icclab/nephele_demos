@@ -1,0 +1,38 @@
+{
+    "title": "cvo",
+    "id": "urn:dev:wot:plenary:cVO",
+    "description": "Lille Plenary Meeting Descriptor for cVO.",
+    "securityDefinitions": {
+        "no_sc": {
+            "scheme": "nosec"
+        }
+    },
+    "security": "no_sc",
+    "@context": [
+        "https://www.w3.org/2022/wot/td/v1.1"
+    ],
+    "properties": {
+        "temperature": {
+            "type": "integer"
+        },
+        "humidity": {
+            "type": "integer"
+        },
+        "smoke": {
+            "type": "boolean"
+        },
+        "fire": {
+            "type": "boolean"
+        }
+    },
+    "events": {
+        "fireDetected": {
+            "description": "Fire Existence Notify APP"
+        }
+    },
+    "actions": {
+        "forecast_data": {
+            "description": "Estimate the temperature property with ARIMA"
+        }
+    }
+}

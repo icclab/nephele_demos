@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vo1
+  labels:
+    app: vo1
+spec:
+  selector:
+    matchLabels:
+      app: vo1
+  template:
+    metadata:
+      labels:
+        app: vo1
+    spec:
+      containers:
+      - name: verifier
+        image: nepheleproject/demo-oidc4vp:kotlinv1.0
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: verifier-data
+            mountPath: /app/data
+            subPath: ""
+        ports:
+        - containerPort: 8090
+        env:
+        - name: logs
+          value: "false"
+        command: ["/app/bin/waltid-ssikit"]
+        args: ["verifier"]
+      - name: wotpy
+        image: nepheleproject/vo-wot
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: wot-script
+            mountPath: /app.py
+            subPath: vo_1.py
+          - name: wot-config
+            mountPath: /config.yaml
+            subPath: vo_1.yaml
+          - name: wot-td
+            mountPath: /td.json
+            subPath: vo_1_td.json
+        ports:
+        - containerPort: 8081
+        - containerPort: 9091
+        #readinessProbe:
+        #  httpGet:
+        #    path: /
+        #    port: 9091
+        #  initialDelaySeconds: 10
+        #  periodSeconds: 10
+        env:
+        - name: HOSTNAME
+          value: vo1
+      - name: proxy
+        image: nepheleproject/demo-pep-proxy:pythonv1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        - containerPort: 9090
+        env:
+        - name: pep_protocol
+          value: http
+        - name: target_port
+          value: "8081"
+        - name: target2_port
+          value: "9091"
+        - name: target2_thingdescription
+          value: /vo1
+        - name: PEP_ENDPOINT
+          value: http://vo1:8080,http://vo1:9090
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      - name: holder
+        image: nepheleproject/demo-oidc4vp:kotlinv1.0
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: holder-data
+            mountPath: /app/data
+            subPath: ""
+        ports:
+        - containerPort: 8085
+        env:
+        - name: logs
+          value: "false"
+        command: ["/app/bin/waltid-ssikit"]
+        args: ["holder"]
+      volumes:
+      - name: holder-data
+        hostPath:
+          path: /mnt1/data
+      - name: wot-script
+        hostPath:
+          path: /mnt1/
+      - name: wot-config
+        hostPath:
+          path: /mnt1/
+      - name: wot-td
+        hostPath:
+          path: /mnt1/
+      - name: verifier-data
+        hostPath:
+          path: /mnt1/data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vo1
+  labels:
+    app: vo1
+spec:
+  type: NodePort
+  ports:
+  - port: 9090
+    targetPort: 9090
+    protocol: TCP
+    name: vo1-9090
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: vo1-8080
+  selector:
+    app: vo1

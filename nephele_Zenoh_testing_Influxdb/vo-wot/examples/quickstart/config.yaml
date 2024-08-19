@@ -1,0 +1,19 @@
+name: coffee-machine
+type: VO
+resourceType:
+  specification: WoT
+  version: 1.1
+deploymentType: A
+catalogue: 9090
+bindingNB:
+  bindingModeNB: [H, U]
+  hostname: localhost
+  ports:
+    httpPort: 8080
+    coapPort: 5683
+databaseConfig:
+  timeseriesDB:
+    influxDB: disabled
+  persistentDB:
+    SQLite: enabled
+

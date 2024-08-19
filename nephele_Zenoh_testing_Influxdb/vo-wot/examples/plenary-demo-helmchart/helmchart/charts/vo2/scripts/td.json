@@ -1,0 +1,24 @@
+{
+    "title": "vo2",
+    "id": "urn:dev:wot:plenary:VO2",
+    "description": "Lille Plenary Meeting Descriptor for VO2 for Device 2.",
+    "securityDefinitions": {
+        "no_sc": {
+            "scheme": "nosec"
+        }
+    },
+    "security": "no_sc",
+    "@context": [
+        "https://www.w3.org/2022/wot/td/v1.1"
+    ],
+    "properties": {
+        "smoke": {
+            "type": "boolean"
+        }
+    },
+    "events": {
+        "smokeDetected": {
+            "description": "Smoke Existence from device"
+        }
+    }
+}

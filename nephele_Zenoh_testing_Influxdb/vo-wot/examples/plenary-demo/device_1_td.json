@@ -1,0 +1,27 @@
+{
+    "title": "device1",
+    "id": "urn:dev:wot:plenary:device1",
+    "description": "'Lille Plenary Meeting Descriptor for Device 1 (with computing capabilities).'",
+    "securityDefinitions": {
+        "basic_sec": {
+            "scheme": "basic"
+        }
+    },
+    "security": "basic_sec",
+    "@context": [
+        "https://www.w3.org/2022/wot/td/v1.1"
+    ],
+    "properties": {
+        "temperature": {
+            "type": "integer"
+        },
+        "humidity": {
+            "type": "integer"
+        }
+    },
+    "actions": {
+        "currentValues": {
+            "description": "Returns the current values"
+        }
+    }
+}

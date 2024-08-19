@@ -1,0 +1,77 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: influxdb
+  name: influxdb-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+      
+      
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: influxdb
+  name: influxdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+      - image: docker.io/influxdb:1.8.10
+        name: influxdb
+        env:
+        - name: INFLUXDB_DB
+          value: "monitoring"
+        - name: INFLUXDB_USER
+          value: "user"
+        - name: INFLUXDB_USER_PASSWORD
+          value: "password"
+        - name: INFLUXDB_READ_USER
+          value: "readonly"
+        - name: INFLUXDB_READ_USER_PASSWORD
+          value: "password"
+        - name: INFLUXDB_ADMIN_USER
+          value: "admin"
+        - name: INFLUXDB_ADMIN_USER_PASSWORD
+          value: "admin"
+        - name: INFLUXDB_HOST
+          value: "influxdb"
+        - name: INFLUXDB_HTTP_AUTH_ENABLED
+          value: "true"
+        volumeMounts:
+        - mountPath: /var/lib/influxdb
+          name: var-lib-influxdb
+      volumes:
+      - name: var-lib-influxdb
+        persistentVolumeClaim:
+          claimName: influxdb-pvc
+          
+---      
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: influxdb
+  name: influxdb
+spec:
+  ports:
+  - port: 8086
+    protocol: TCP
+    targetPort: 8086
+  selector:
+    app: influxdb
+  type: LoadBalancer

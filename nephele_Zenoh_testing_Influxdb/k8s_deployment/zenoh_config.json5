@@ -1,0 +1,61 @@
+{
+  plugins: {
+    // configuration of "storage_manager" plugin:
+    storage_manager: {
+      volumes: {
+        // configuration of a "influxdb" volume (the "zenoh_backend_influxdb" backend library will be loaded at startup)
+        //this should be named influxdb for v1 and influxdb2 for v2
+        influxdb2: {
+          // URL to the InfluxDB service. The example below is for plugin v1.x. For plugin 2.x, we need to append /api/v2/ to the url
+          url: "http://160.85.253.140:8086/api/v2/",
+          private: {
+            // If needed: InfluxDB credentials, preferably ALL-ACCESS for databases creation and drop
+            //if not ALL-ACCESS then atleast with authorization to create/delete buckets
+            //Note: this should not be left empty for the plugin to work; if you have no admin creds, you can copy the user creds instead
+           // org_id: "organization ID",
+           // token: "admin access token"
+         
+            org_id: "zhaw",
+            token: "MwcIsfVWaruDgfoYuVkVq2x7vB_yZM9R71id7UTa46-fCIWLwerTJMNyhs4lesEu9ZRkxFqjYZR3E6SxJXNuAw=="
+
+          }
+        }
+      },
+      storages: {
+        // configuration of a "bot1" storage using the "influxdb" volume
+        bot1: {
+          // the key expression this storage will subscribes to
+          key_expr: "bot1/**",
+          // this prefix will be stripped from the received key when converting to database key.
+          // i.e.: "demo/example/a/b" will be stored as "a/b"
+          // this option is optional
+          strip_prefix: "bot1",
+          volume: {
+            //this will be influxdb2 for v2 (exactly the same name as in volumes section)
+            id: "influxdb2",
+            // the database/bucket name within InfluxDB
+            db: "zenoh",
+            // if the database doesn't exist, create it
+            create_db: true,
+            // strategy on storage closure
+            on_closure: "drop_db",
+            private: { 
+            //For Influxdb v2.x:
+              //Required 
+              //InfluxDB credentials, with read/write privileges for the database
+              //the org_id value should be the same as for admin
+                org_id: "zhaw",
+                //this is a token with either:
+                //a.) Read-Write access to the existing DB named above in the config (case where db/bucket already exists)
+                //b.) Read-write access to ALL buckets in the organization so it can access the new bucket created by zenoh;
+                            //(case where a new db/bucket has to be created)
+                token: "MwcIsfVWaruDgfoYuVkVq2x7vB_yZM9R71id7UTa46-fCIWLwerTJMNyhs4lesEu9ZRkxFqjYZR3E6SxJXNuAw==" 
+            }
+          }
+        }
+      }
+    },
+    // Optionally, add the REST plugin
+    rest: { http_port: 8000 }
+  }
+}

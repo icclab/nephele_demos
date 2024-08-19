@@ -1,0 +1,46 @@
+apiVersion: multicluster.x-k8s.io/v1alpha1
+kind: ServiceExport
+metadata:
+  name: {{ .Chart.Name }}
+---
+apiVersion: policy.karmada.io/v1alpha1
+kind: PropagationPolicy
+metadata:
+  name: {{ .Chart.Name }}-export
+spec:
+  resourceSelectors:
+    - apiVersion: multicluster.x-k8s.io/v1alpha1
+      kind: ServiceExport
+      name: {{ .Chart.Name }}
+  placement:
+    clusterAffinity:
+      clusterNames:
+        {{- range .Values.clustersAffinity }}
+        - {{ . }}
+        {{- end }}
+---
+apiVersion: multicluster.x-k8s.io/v1alpha1
+kind: ServiceImport
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  type: ClusterSetIP
+  ports:
+  - port: {{ .Values.service.port}}
+    protocol: TCP
+---
+apiVersion: policy.karmada.io/v1alpha1
+kind: PropagationPolicy
+metadata:
+  name: {{ .Chart.Name }}-import
+spec:
+  resourceSelectors:
+    - apiVersion: multicluster.x-k8s.io/v1alpha1
+      kind: ServiceImport
+      name: {{ .Chart.Name }}
+  placement:
+    clusterAffinity:
+      clusterNames:
+        {{- range .Values.serviceImportClusters }}
+        - {{ . }}
+        {{- end }}

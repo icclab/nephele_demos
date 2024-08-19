@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+     app: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      imagePullSecrets:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: nepheleproject/custom-vo:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: scripts
+              mountPath: /app.py
+              subPath: app.py
+            - name: scripts
+              mountPath: /config.yaml
+              subPath: config.yaml
+            - name: scripts
+              mountPath: /td.json
+              subPath: td.json
+          ports:
+          - containerPort: {{ .Values.voDescriptorOverwrite.catalogue }}
+          {{- if .Values.voDescriptorOverwrite.bindingNB.ports.httpPort }}
+          - containerPort: {{ .Values.voDescriptorOverwrite.bindingNB.ports.httpPort }}
+          {{- end }}
+          {{- if .Values.voDescriptorOverwrite.bindingNB.ports.coapPort }}
+          - containerPort: {{ .Values.voDescriptorOverwrite.bindingNB.ports.coapPort }}
+          {{- end }}
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: {{ .Values.voDescriptorOverwrite.catalogue }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.voChartOverwrite.resources | nindent 12 }}
+      volumes:
+        - name: scripts
+          configMap:
+            name: {{ .Chart.Name }}-scripts
+            items:
+              - key: app.py
+                path: app.py
+              - key: config.yaml
+                path: config.yaml
+              - key: td.json
+                path: td.json

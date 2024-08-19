@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.serviceName }}
+  labels:
+    {{- include "cvo.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.http.port }}
+      targetPort: {{ .Values.service.http.targetPort }}
+      nodePort: {{ .Values.service.http.nodePort }}
+      protocol: TCP
+      name: http
+    - port: {{ .Values.service.catalogue.port }}
+      targetPort: {{ .Values.service.catalogue.targetPort }}
+      nodePort: {{ .Values.service.catalogue.nodePort }}
+      protocol: TCP
+      name: catalogue-port
+  selector:
+    {{- include "cvo.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,23 @@
+configMapGenerator:
+- name: foxglove-demo
+  files:
+  - default-layout.json 
+- name: vo-scripts
+  files:
+  - app.py=vo1_app.py
+  - config.yaml=vo1_config.yaml
+  - td.json=vo1_td.json
+- name: zenohd-config
+  files:
+  - zenoh.json5=zenoh_config.json5
+- name: tb2
+  files:
+  - tb2=tb2
+generatorOptions:
+   disableNameSuffixHash: true
+resources:
+- flask-app.yaml
+- foxglove-zenoh.yaml
+- nginx_vo-1_deploy.yaml
+- nginx_td.yaml
+- zenoh-router.yaml
