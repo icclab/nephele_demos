@@ -37,7 +37,11 @@ ADD ./run_bridge.sh /run_bridge.sh
 
 # Download the zenoh-bridge-ros2dds binary from the release page
 # https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds/actions
-COPY zenoh-bridge-ros2dds /zenoh-bridge-ros2dds
+#COPY zenoh-bridge-ros2dds /zenoh-bridge-ros2dds
+# install fails because of no systemd in container
+RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list > /dev/null && \
+    sudo apt update && sudo bash -c "apt install -y zenoh-bridge-ros2dds=0.11.0 > /dev/null 2>1; echo $?"
+
 COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
 
 # Source ROS

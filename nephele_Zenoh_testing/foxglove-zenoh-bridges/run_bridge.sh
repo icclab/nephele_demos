@@ -5,7 +5,8 @@ BRIDGE_PID=$!
 
 sleep 30
 
-./zenoh-bridge-ros2dds -c zenoh-bridge-conf.json5 &
+#./zenoh-bridge-ros2dds -c zenoh-bridge-conf.json5 &
+zenoh-bridge-ros2dds -c zenoh-bridge-conf.json5 &
 ZENOH_PID=$!
 
 wait $BRIDGE_PID

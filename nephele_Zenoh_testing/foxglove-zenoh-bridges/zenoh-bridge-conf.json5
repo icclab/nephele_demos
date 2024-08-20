@@ -14,7 +14,7 @@
       ///      This identifier will also appears in the logs of all other bridges on discovery events.
       ///      By default a random UUID
       ////
-      id: "control1",
+     // id: "control1",
 
       ////
       //// nodename: A ROS node name to be used by this bridge.
@@ -137,7 +137,7 @@
     //   //// You can bind on a specific interface setting a "<local_ip>:<port>" string.
     //   ////
          http_port: 8000,
-    // },
+     },
   },
 
   ////
@@ -160,18 +160,19 @@
        "tcp/160.85.253.140:30447"
     ]
   },
-
+}
   ////
   //// Which endpoints to listen on.
   //// By configuring the endpoints, it is possible to tell zenoh which are the endpoints that other routers,
   //// peers, or client can use to establish a zenoh session.
   //// In 'router' mode (default) the zenoh-bridge-ros2dds is listening by default on `tcp/0.0.0.0:7447` (`0.0.0.0` meaning all the available network interfaces)
   ////
-  listen: {
-    endpoints: [
+  // listen: {
+  //  endpoints: [
       // "<proto>/<ip>:<port>"
-    ]
-  },
+  //  ]
+  //},
+
 
   ////
   //// Configure the scouting mechanisms and their behaviours
@@ -209,4 +210,5 @@
   //  },
   //},
 
-}
+
+

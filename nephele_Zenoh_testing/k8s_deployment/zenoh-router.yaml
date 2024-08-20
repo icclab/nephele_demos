@@ -13,7 +13,8 @@ spec:
     nodePort: 30447 #$NODE_PORT
   - name: zenoh-api
     protocol: TCP
-    port: 8000    
+    port: 8000
+    nodePort: 30450    
   selector:
     name: zenoh
 ---
@@ -35,7 +36,7 @@ spec:
       # runtimeClassName: "nvidia"
       containers:
       - name: zenoh
-        image: eclipse/zenoh:0.11.0-rc.3 #eclipse/zenoh:0.11.0 #eclipse/zenoh:0.11.0-rc.3 version for ros rmw  #eclipse/zenoh:0.11.0 version for demo tb2 #eclipse/zenoh latest
+        image: eclipse/zenoh:0.11.0 #eclipse/zenoh #eclipse/zenoh:0.11.0-rc.3 version for ros rmw  #eclipse/zenoh:0.11.0 version for demo tb2 
         env:
         - name: RUST_LOG
           value: "zenoh=debug"
