@@ -1,0 +1,20 @@
+configMapGenerator:
+- name: foxglove-demo
+  files:
+  - default-layout.json 
+- name: vo-scripts
+  files:
+  - app.py=vo2_app.py
+  - config.yaml=vo2_config.yaml
+  - td.json=vo2_td.json
+- name: summmit
+  files:
+  - summit=summit
+generatorOptions:
+   disableNameSuffixHash: true
+resources:
+- zenoh-router.yaml
+- flask-app.yaml
+- foxglove-zenoh.yaml
+- nginx_vo-2_deploy.yaml
+- nginx_td.yaml
