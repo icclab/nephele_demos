@@ -1,4 +1,3 @@
-summit@SXLS0-180227AA:~/catkin_ws/src/icclab_summit_xl/scripts$ cat start_zenoh_and_containers_witharm.sh 
 #!/bin/bash
 
 #Start a background screen name the session "summit":

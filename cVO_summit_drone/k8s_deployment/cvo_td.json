@@ -1,7 +1,7 @@
 {
-    "title": "vo2",
-    "id": "urn:dev:wot:vo2",
-    "description": "Descriptor for vo2 for summit.",
+    "title": "cvo",
+    "id": "urn:dev:wot:cvo",
+    "description": "Descriptor for cvo.",
     "securityDefinitions": {
         "nosec_sc": {
             "scheme": "nosec"
@@ -12,7 +12,7 @@
         "https://www.w3.org/2022/wot/td/v1.1"
     ],
     "properties": { 
-        "allAvailableResources": {  
+        "allAvailableResources_summit": {  
             "type": "object", 
             "description": "Current level of all available resources given as an integer percentage for each particular resource. The data is obtained from the machine's sensors but can be set manually in case the sensors are broken.", 
             "properties": { 
@@ -26,7 +26,7 @@
         "someStringProperty": {
             "type": "string"
         },
-        "possibleLaunchfiles": { 
+        "possibleLaunchfiles_summit": { 
             "type": "array", 
             "description": "The list of possible launchfiles. Doesn't depend on the available resources.", 
             "items": { 
@@ -35,7 +35,7 @@
         }
     },
     "actions": { 
-        "triggerBringup": { 
+        "triggerBringup_summit": { 
             "title": "Trigger ROS launchfiles", 
             "description": "Brings hw components up (corresponding ROS launch files are launched). Accepts launchfile id as input. Brings up all if no input is specified.", 
             "input": { 
@@ -60,7 +60,7 @@
                 } 
             } 
         },
-        "mapExport": { 
+        "mapExport_summit": { 
             "title": "Export map data", 
             "description": "Get map data", 
             "output": { 
@@ -73,7 +73,7 @@
                 } 
             } 
         },
-        "mapStoreDB": { 
+        "mapStoreDB_summit": { 
             "title": "Store map on DB", 
             "description": "Get map data and store it to DB of the VO", 
             "input": { 
@@ -98,7 +98,7 @@
                 } 
             } 
         },
-        "mapReadDB": { 
+        "mapReadDB_summit": { 
             "title": "Read map from DB", 
             "description": "Get map from DB of the VO", 
             "input": { 
@@ -120,7 +120,7 @@
                 }
             } 
         },
-        "filenamesReadDB": { 
+        "filenamesReadDB_summit": { 
             "title": "Read map from DB", 
             "description": "Get map from DB of the VO", 
             "output": { 
@@ -134,7 +134,7 @@
                 }
             } 
         },
-        "bagStoreVO": { 
+        "bagStoreVO_summit": { 
             "title": "Store rosbag on VO's FS", 
             "description": "Get rosbag data and store it to FS of the VO", 
             "input": { 
@@ -159,12 +159,12 @@
                 } 
             } 
         },
-        "currentValues": {
+        "currentValues_summit": {
             "description": "Returns current Values for battery status from summit through the Consumed Thing"
         }
     }, 
     "events": { 
-        "outOfResource": { 
+        "outOfResource_summmit": { 
             "description": "Out of resource event. Emitted when the available resource level is not sufficient to operate further (e.g., battery level).", 
             "data": { 
                 "type": "string" 

@@ -1,3 +1,19 @@
+
+
+Type: std_msgs/msg/Float32
+Publisher count: 1
+Subscription count: 0
+
+
+---
+data: 57.3580436706543
+---
+data: 57.3580436706543
+---
+data: 57.348175048828125
+
+
+
 /clicked_point
 /clock
 /diagnostics
