@@ -16,7 +16,7 @@ popd > /dev/null
 # Build the docker image
 docker build  \
 =======
-docker build --no-cache \
+docker build \
   --build-arg user=user\
   --build-arg uid=$UID\
   --build-arg home=/home/user \

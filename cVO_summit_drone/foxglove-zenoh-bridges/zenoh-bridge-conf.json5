@@ -67,14 +67,14 @@
       //   action_servers: [".*/rotate_absolute"],
       //   action_clients: [],
       // },
-      deny: {
-         publishers: ["/rosout", "/parameter_events"],
-         subscribers: ["/rosout"],
-         service_servers: [".*/set_parameters", ".*/_internal/.*"],
-         service_clients: [".*/set_parameters", ".*/_internal/.*"],
-         action_servers: [".*/_internal/.*"],
-         action_clients: [".*/_internal/.*"],
-      },
+    //  deny: {
+    //     publishers: ["/rosout", "/parameter_events"],
+    //     subscribers: ["/rosout"],
+    //     service_servers: [".*/set_parameters", ".*/_internal/.*"],
+    //     service_clients: [".*/set_parameters", ".*/_internal/.*"],
+    //     action_servers: [".*/_internal/.*"],
+    //     action_clients: [".*/_internal/.*"],
+    //  },
       ////
       //// pub_max_frequencies: Specify a list of maximum frequency of publications routing over zenoh for a set of Publishers.
       ////                      The strings must have the format "<regex>=<float>":

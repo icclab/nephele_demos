@@ -84,8 +84,8 @@
         "poseEstimateThetaDeviation": 0.26179939
       },
       "imageMode": {
-        "imageTopic": "/oak/rgb/image_raw",
-        "calibrationTopic": "/oak/rgb/camera_info"
+        "imageTopic": "/summit/oak/rgb/image_raw",
+        "calibrationTopic": "/summit/oak/rgb/camera_info"
       },
       "foxglovePanelTitle": "Arm camera view"
     },
@@ -337,7 +337,7 @@
       "foxglovePanelTitle": "Front camera view"
     },
     "Teleop!4km4ztc": {
-      "topic": "/summit/cmd_vel",
+      "topic": "/summit/cmd_vel_smoothed",
       "publishRate": 1,
       "upButton": {
         "field": "linear-x",
