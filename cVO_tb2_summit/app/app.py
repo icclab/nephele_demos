@@ -5,6 +5,7 @@ import asyncio
 
 import requests
 from flask import Flask, render_template, request, send_file
+import time
 
 from wotpy.wot.servient import Servient
 from wotpy.wot.wot import WoT
@@ -28,7 +29,9 @@ app = Flask(__name__,
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    #return render_template('index.html')
+    timestamp = int(time.time())  # Current time in seconds
+    return render_template('index.html', timestamp=timestamp)
 
 http_client = HTTPClient()
 security_scheme_dict = {
@@ -50,7 +53,7 @@ def trigger_execution_summit():
     launchfile_id_summit = request.form['launchfile_id_summit']
     result_summit = asyncio.run(trigger_summit(launchfile_id_summit))
     print("trigger_summit", result_summit)
-    return render_template('index.html', execution_status=result_summit)
+    return render_template('index.html', execution_status_summit=result_summit)
 
 async def trigger_summit(launchfile_id_summit):
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -89,7 +92,7 @@ async def read_summit():
 @app.route('/map_export_summit', methods=['GET'])
 def map_export_summit():
     result_summit = asyncio.run(export_map_summit())
-    return render_template('index.html', image_url=result_summit)
+    return render_template('index.html', image_url_summit=result_summit)
 
 async def export_map_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -191,7 +194,7 @@ def trigger_execution_tb2():
     launchfile_id_tb2 = request.form['launchfile_id_tb2']
     result_tb2 = asyncio.run(trigger_tb2(launchfile_id_tb2))
     print("trigger_tb2", result_tb2)
-    return render_template('index.html', execution_status=result_tb2)
+    return render_template('index.html', execution_status_tb2=result_tb2)
 
 async def trigger_tb2(launchfile_id_tb2):
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -228,7 +231,7 @@ async def read_tb2():
 @app.route('/map_export_tb2', methods=['GET'])
 def map_export_tb2():
     result_tb2 = asyncio.run(export_map_tb2())
-    return render_template('index.html', image_url=result_tb2)
+    return render_template('index.html', image_url_tb2=result_tb2)
 
 async def export_map_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")

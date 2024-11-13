@@ -17,6 +17,9 @@ spec:
         - name: foxglove-config-vo2
           configMap:
             name: foxglove-demo-vo2
+            items:
+            - key: default-layout.json
+              path: default-layout.json
       hostname: "foxglove-zenoh-bridges-vo2"
       hostAliases:
       - ip: "127.0.0.1"
@@ -24,7 +27,7 @@ spec:
         - "foxglove-zenoh-bridges-vo2"
       containers:
       - name: foxglove-zenoh-bridges-vo2-container       
-        image: robopaas/foxglove-zenoh-bridges
+        image: robopaas/foxglove-zenoh-bridge-summit
         imagePullPolicy: Always
         resources:
           requests:
@@ -63,9 +66,9 @@ spec:
         - containerPort: 8080
           name: fxg-std
         volumeMounts:
-        - mountPath: /foxglove/default-layout.json
+        - name: foxglove-config-vo2
+          mountPath: /foxglove/default-layout.json
           subPath: default-layout.json
-          name: foxglove-config-vo2
         securityContext:
           capabilities:
             add:

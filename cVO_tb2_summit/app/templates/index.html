@@ -60,21 +60,21 @@
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Trigger Execution</button>
                     </form>
-                    {% if execution_status %}
-                        <div class="alert alert-info mt-3">Execution Status: {{ execution_status }}</div>
+                    {% if execution_status_summit %}
+                        <div class="alert alert-info mt-3">Execution Status: {{ execution_status_summit }}</div>
                     {% endif %}
                 </div>
 
                 <!-- Foxglove Dashboard Link for Summit-Xl -->
                 <div class="mb-4">
                     <h3>Link to Summit Foxglove Dashboard</h3>
-                    <a href="https://foxglove-demo-vo2.robopaas.dev/?ds=foxglove-websocket&ds.url=wss%3A%2F%2Fbridges-vo2.robopaas.dev" class="btn btn-info">Foxglove Dashboard</a>
+                    <a href="https://foxglove-demo-vo2.robopaas.dev/?ds=foxglove-websocket&ds.url=wss%3A%2F%2Fbridges-vo2.robopaas.dev&rand={{ timestamp }}" class="btn btn-info">Foxglove Dashboard</a>
                 </div>
 
                 <!-- Environment Map for Summit-Xl -->
                 <div class="mb-4">
                     <h3>Environment Map</h3>
-                    <img src="{{ image_url }}" alt="Summit-Xl Map" class="img-fluid">
+                    <img src="{{ image_url_summit }}" alt="Summit-Xl Map" class="img-fluid">
                     <form action="/map_export_summit" method="get" class="mt-2">
                         <button type="submit" class="btn btn-secondary">Export Map</button>
                     </form>
@@ -146,9 +146,14 @@
                         <button type="submit" class="btn btn-secondary mt-2">Save rosbag</button>
                     </form>
                 </div>
+
+                 <!-- Read Rosbag on VO's FS for Summit-Xl -->
+                <div class="mb-4">
+                    <h3>View the rosbag on VO's FS</h3>
+                    <a href="https://foxglove-demo.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo1.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
+                </div>
             </div>
 
-            
             
             <!-- Right Column (Turtlebot) -->
             <div class="col-md-6">
@@ -188,7 +193,7 @@
                 <!-- Foxglove Dashboard Link for Turtlebot -->
                 <div class="mb-4">
                     <h3>Link to Turtlebot Foxglove Dashboard</h3>
-                    <a href="https://foxglove-demo-vo1.robopaas.dev/?ds=foxglove-websocket&ds.url=wss%3A%2F%2Fbridges-vo1.robopaas.dev" class="btn btn-info">Foxglove Dashboard</a>
+                    <a href="https://foxglove-demo-vo1.robopaas.dev/?ds=foxglove-websocket&ds.url=wss%3A%2F%2Fbridges-vo1.robopaas.dev&rand={{ timestamp }}" class="btn btn-info">Foxglove Dashboard</a>
                 </div>
 
                 <!-- Environment Map for Turtlebot -->
@@ -264,6 +269,13 @@
                         <input type="text" id="bagname_tosave_tb2" name="bagname_tosave_tb2" class="form-control">
                         <button type="submit" class="btn btn-secondary mt-2">Save rosbag</button>
                     </form>
+                </div>
+
+                
+                 <!-- Read Rosbag on VO's FS for Summit-Xl -->
+                 <div class="mb-4">
+                    <h3>View the rosbag on VO's FS</h3>
+                    <a href="https://foxglove-demo.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo2.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
                 </div>
 
             </div>

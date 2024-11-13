@@ -125,7 +125,7 @@ metadata:
     name: nginx-ingress-vo2
 spec:
   rules:
-  - host: ngnix.robopaas.dev
+  - host: ngnix-vo2.robopaas.dev
     http:
       paths:
       - path: /

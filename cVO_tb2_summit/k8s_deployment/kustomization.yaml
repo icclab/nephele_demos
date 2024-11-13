@@ -1,10 +1,10 @@
 configMapGenerator:
 - name: foxglove-demo-vo1
   files:
-  - default-layout-1.json 
+  - default-layout.json=default-layout-1.json 
 - name: foxglove-demo-vo2
   files:
-  - default-layout-2.json 
+  - default-layout.json=default-layout-2.json 
 - name: vo1-scripts
   files:
   - app.py=vo1_app.py
