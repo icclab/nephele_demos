@@ -18,7 +18,7 @@ spec:
           emptyDir: {}
         - name: scripts
           configMap:
-            name: vo-scripts
+            name: vo2-scripts
             items:
             - key: app.py
               path: app.py

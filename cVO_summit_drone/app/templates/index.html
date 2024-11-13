@@ -92,20 +92,10 @@
                     {% endif %}
                 </div>
 
-                <!-- Store Map in VO's DB for Summit-Xl -->
-                <div class="mb-4">
-                    <h3>Store Map in VO's DB</h3>
-                    <form action="/store_map_db_summit" method="get">
-                        <label for="filename_tosave" class="form-label">Filename to use:</label>
-                        <input type="text" id="filename_tosave" name="filename_tosave" class="form-control">
-                        <button type="submit" class="btn btn-secondary mt-2">Store Map</button>
-                    </form>
-                </div>
-
 
                 <!-- Read Properties Periodically on Summit-Xl -->
                 <div class="mb-4">
-                    <h3>Read Properties on Summit-Xl</h3>
+                    <h3>Read Periodic Properties on Summit-Xl</h3>
                     <form action="/current_values_summit" method="get">
                         <button type="submit" class="btn btn-secondary">Current Values</button>
                     </form>
@@ -222,19 +212,9 @@
                     {% endif %}
                 </div>
 
-                <!-- Store Map in VO's DB for Drone -->
-                <div class="mb-4">
-                    <h3>Store Map in VO's DB</h3>
-                    <form action="/store_map_db_drone" method="get">
-                        <label for="filename_tosave_drone" class="form-label">Filename to use:</label>
-                        <input type="text" id="filename_tosave_drone" name="filename_tosave_drone" class="form-control">
-                        <button type="submit" class="btn btn-secondary mt-2">Store Map</button>
-                    </form>
-                </div>
-
                 <!-- Read Properties Periodically on Drone -->
                 <div class="mb-4">
-                    <h3>Read Properties on Drone</h3>
+                    <h3>Read Periodic values on Drone</h3>
                     <form action="/current_values_drone" method="get">
                         <button type="submit" class="btn btn-secondary">Current Values</button>
                     </form>

@@ -37,6 +37,7 @@ ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV CYCLONEDDS_URI=file:///home/ros/cyclonedds.xml
 
 
+
 # Download the zenoh-bridge-ros2dds binary from the release page
 # https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds/actions
 #COPY zenoh-bridge-ros2dds /zenoh-bridge-ros2dds
