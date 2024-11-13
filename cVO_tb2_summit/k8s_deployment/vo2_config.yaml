@@ -1,0 +1,43 @@
+# ====================================
+# vo2 Descriptor
+# ====================================
+name: vo2
+type: VO
+resourceType:
+  specification: WoT
+  version: 1.1
+deploymentType: A
+catalogue: 9090 
+bindingNB:
+  bindingModeNB: [H]
+  hostname: vo2
+  ports:
+    httpPort: 8080
+bindingSB:
+  bindingModeSB: [Z]
+#  securitySB:
+#      securitySBMQTT:
+#        securityScheme: basic
+#        username: user
+#        password: pass
+  routerURL: "160.85.253.140:30447"
+databaseConfig:
+  timeseriesDB:
+    influxDB: disabled
+  persistentDB:
+    SQLite: enabled
+genericFunction: [vo_status, device_status]
+periodicFunction:
+  check: 1000
+  read_property_from_summit: 5000
+consumedVOs:
+  summit:
+    url: "http://ngnix-service-td/summit"
+proxy:
+  propertiesMap:
+    allAvailableResources_summit: summit
+  actionsMap:
+    triggerBringup_summit: summit
+    mapExport_summit: summit
+    currentValues_summit: summit
+

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask App - Dual Robot Control</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-5">Dual Robot Control Dashboard</h1>
+
+        <!-- Shared Section for Both Robots (e.g., Shared Map) -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-center">Shared Resources</h2>
+                
+                <!-- Shared Map -->
+                <div class="mb-4 text-center">
+                    <h3>Shared Map</h3>
+                    <img src="{{ shared_map_url }}" alt="Shared Map" class="img-fluid">
+                    <form action="/shared_map_export" method="get" class="mt-2">
+                        <button type="submit" class="btn btn-secondary">Export Shared Map</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row with two columns -->
+        <div class="row">
+            <!-- Left Column (Summit-Xl) -->
+            <div class="col-md-6">
+                <h2>Summit-Xl Controls</h2>
+
+
+                <!-- Trigger Action on Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Trigger Action on Summit-Xl</h3>
+                    <form action="/trigger_execution_summit" method="post" class="form-check">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="bringup" name="launchfile_id_summit" value="bringup">
+                            <label class="form-check-label" for="bringup">Bringup</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="startmapping" name="launchfile_id_summit" value="startmapping">
+                            <label class="form-check-label" for="startmapping">Start Mapping</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="savemap" name="launchfile_id_summit" value="savemap">
+                            <label class="form-check-label" for="savemap">Save Map</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="savebag" name="launchfile_id_summit" value="savebag">
+                            <label class="form-check-label" for="savebag">Start rosbag</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="stopbag" name="launchfile_id_summit" value="stopbag">
+                            <label class="form-check-label" for="stopbag">Stop rosbag</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Trigger Execution</button>
+                    </form>
+                    {% if execution_status %}
+                        <div class="alert alert-info mt-3">Execution Status: {{ execution_status }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Foxglove Dashboard Link for Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Link to Summit Foxglove Dashboard</h3>
+                    <a href="https://foxglove-demo-vo2.robopaas.dev/?ds=foxglove-websocket&ds.url=wss%3A%2F%2Fbridges-vo2.robopaas.dev" class="btn btn-info">Foxglove Dashboard</a>
+                </div>
+
+                <!-- Environment Map for Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Environment Map</h3>
+                    <img src="{{ image_url }}" alt="Summit-Xl Map" class="img-fluid">
+                    <form action="/map_export_summit" method="get" class="mt-2">
+                        <button type="submit" class="btn btn-secondary">Export Map</button>
+                    </form>
+                </div>
+
+                <!-- Read Data for Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Read Properties on Summit-Xl</h3>
+                    <form action="/read_data_summit" method="get">
+                        <button type="submit" class="btn btn-secondary">Read Data</button>
+                    </form>
+                    {% if data %}
+                        <h4>Data</h4>
+                        <pre>{{ data }}</pre>
+                    {% endif %}
+                </div>
+
+
+                <!-- Read Properties Periodically on Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Read Periodic Properties on Summit-Xl</h3>
+                    <form action="/current_values_summit" method="get">
+                        <button type="submit" class="btn btn-secondary">Current Values</button>
+                    </form>
+                    {% if current_status_summit %}
+                        <p>Current Values: {{ current_status_summit }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Store Map on VO's DB for Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Store Map on VO's DB</h3>
+                    <form action="/store_map_db_summit" method="get">
+                        <label for="filename_tosave_summit" class="form-label">Filename to use:</label>
+                        <input type="text" id="filename_tosave_summit" name="filename_tosave_summit" class="form-control">
+                        <button type="submit" class="btn btn-secondary mt-2">Store map on DB</button>
+                    </form>
+                </div>
+
+                <!-- List Filenames on VO's DB for Summit-Xl -->
+                <div class="mb-4">
+                    <h3>List Filenames on VO's DB</h3>
+                    <form action="/read_data_db_summit" method="get">
+                        <button type="submit" class="btn btn-secondary">Read Filenames stored on VO's DB</button>
+                    </form>
+                    {% if data_db_summit %}
+                        <h4>Data</h4>
+                        <pre>{{ data_db_summit }}</pre>
+                    {% endif %}
+                </div>
+
+                <!-- Get Environment Map from VO's DB for Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Get Environment Map</h3>
+                    <img src="{{ map_from_db_summit }}" alt="Summit Map" class="img-fluid">
+                    <form action="/read_map_from_db_summit" method="get" class="mt-2">
+                        <label for="filename_map_summit" class="form-label">Filename:</label>
+                        <input type="text" id="filename_map_summit" name="filename_map_summit" class="form-control">
+                        <button type="submit" class="btn btn-secondary mt-2">Get Map</button>
+                    </form>
+                </div>
+
+                <!-- Save Rosbag on VO's FS for Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Save rosbag on VO's FS</h3>
+                    <form action="/store_bag_vo_summit" method="get">
+                        <label for="bagname_tosave_summit" class="form-label">Filename (.mcap):</label>
+                        <input type="text" id="bagname_tosave_summit" name="bagname_tosave_summit" class="form-control">
+                        <button type="submit" class="btn btn-secondary mt-2">Save rosbag</button>
+                    </form>
+                </div>
+            </div>
+
+            
+            
+            <!-- Right Column (Turtlebot) -->
+            <div class="col-md-6">
+                <h2>Turtlebot Controls</h2>
+
+                <!-- Trigger Action on Turtlebot -->
+                <div class="mb-4">
+                    <h3>Trigger Action on Turtlebot</h3>
+                    <form action="/trigger_execution_tb2" method="post" class="form-check">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="bringup2" name="launchfile_id_tb2" value="bringup">
+                            <label class="form-check-label" for="bringup2">Bringup</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="startmapping2" name="launchfile_id_tb2" value="startmapping">
+                            <label class="form-check-label" for="startmapping2">Start Mapping</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="savemap2" name="launchfile_id_tb2" value="savemap">
+                            <label class="form-check-label" for="savemap2">Save Map</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="savebag2" name="launchfile_id_tb2" value="savebag">
+                            <label class="form-check-label" for="savebag2">Start rosbag</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="stopbag2" name="launchfile_id_tb2" value="stopbag">
+                            <label class="form-check-label" for="stopbag2">Stop rosbag</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Trigger Execution</button>
+                    </form>
+                    {% if execution_status_tb2 %}
+                        <div class="alert alert-info mt-3">Execution Status: {{ execution_status_tb2 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Foxglove Dashboard Link for Turtlebot -->
+                <div class="mb-4">
+                    <h3>Link to Turtlebot Foxglove Dashboard</h3>
+                    <a href="https://foxglove-demo-vo1.robopaas.dev/?ds=foxglove-websocket&ds.url=wss%3A%2F%2Fbridges-vo1.robopaas.dev" class="btn btn-info">Foxglove Dashboard</a>
+                </div>
+
+                <!-- Environment Map for Turtlebot -->
+                <div class="mb-4">
+                    <h3>Environment Map</h3>
+                    <img src="{{ image_url_tb2 }}" alt="Turtlebot Map" class="img-fluid">
+                    <form action="/map_export_tb2" method="get" class="mt-2">
+                        <button type="submit" class="btn btn-secondary">Export Map</button>
+                    </form>
+                </div>
+
+                <!-- Read Data for Turtlebot -->
+                <div class="mb-4">
+                    <h3>Read Properties on Turtlebot</h3>
+                    <form action="/read_data_tb2" method="get">
+                        <button type="submit" class="btn btn-secondary">Read Data</button>
+                    </form>
+                    {% if data_tb2 %}
+                        <h4>Data</h4>
+                        <pre>{{ data_tb2 }}</pre>
+                    {% endif %}
+                </div>
+
+                <!-- Read Properties Periodically on Turtlebot -->
+                <div class="mb-4">
+                    <h3>Read Periodic values on Turtlebot</h3>
+                    <form action="/current_values_tb2" method="get">
+                        <button type="submit" class="btn btn-secondary">Current Values</button>
+                    </form>
+                    {% if current_status_tb2 %}
+                        <p>Current Values: {{ current_status_tb2 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Store Map on VO's DB for Turtlebot -->
+                <div class="mb-4">
+                    <h3>Store Map on VO's DB</h3>
+                    <form action="/store_map_db_tb2" method="get">
+                        <label for="filename_tosave_tb2" class="form-label">Filename to use:</label>
+                        <input type="text" id="filename_tosave_tb2" name="filename_tosave_tb2" class="form-control">
+                        <button type="submit" class="btn btn-secondary mt-2">Store map on DB</button>
+                    </form>
+                </div>
+
+                <!-- List Filenames on VO's DB for Turtlebot -->
+                <div class="mb-4">
+                    <h3>List Filenames on VO's DB</h3>
+                    <form action="/read_data_db_tb2" method="get">
+                        <button type="submit" class="btn btn-secondary">Read Filenames stored on VO's DB</button>
+                    </form>
+                    {% if data_db_tb2 %}
+                        <h4>Data</h4>
+                        <pre>{{ data_db_tb2 }}</pre>
+                    {% endif %}
+                </div>
+
+                <!-- Get Environment Map from VO's DB for Turtlebot -->
+                <div class="mb-4">
+                    <h3>Get Environment Map</h3>
+                    <img src="{{ map_from_db_tb2 }}" alt="Turtlebot Map" class="img-fluid">
+                    <form action="/read_map_from_db_tb2" method="get" class="mt-2">
+                        <label for="filename_map_tb2" class="form-label">Filename:</label>
+                        <input type="text" id="filename_map_tb2" name="filename_map_tb2" class="form-control">
+                        <button type="submit" class="btn btn-secondary mt-2">Get Map</button>
+                    </form>
+                </div>
+
+                <!-- Save Rosbag on VO's FS for Turtlebot -->
+                <div class="mb-4">
+                    <h3>Save rosbag on VO's FS</h3>
+                    <form action="/store_bag_vo_tb2" method="get">
+                        <label for="bagname_tosave_tb2" class="form-label">Filename (.mcap):</label>
+                        <input type="text" id="bagname_tosave_tb2" name="bagname_tosave_tb2" class="form-control">
+                        <button type="submit" class="btn btn-secondary mt-2">Save rosbag</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+

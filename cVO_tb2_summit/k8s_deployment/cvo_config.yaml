@@ -1,0 +1,47 @@
+# ====================================
+# cvo Descriptor
+# ====================================
+name: cvo
+type: cVO
+resourceType:
+  specification: WoT
+  version: 1.1
+deploymentType: A
+catalogue: 9090 
+bindingNB:
+  bindingModeNB: [H]
+  hostname: cvo
+  ports:
+    httpPort: 8080
+bindingSB:
+  bindingModeSB: [H]
+  securitySB:
+    securitySBHTTP:
+      securityScheme: bearer
+      token: token
+databaseConfig:
+  timeseriesDB:
+    influxDB: disabled
+  persistentDB:
+    SQLite: enabled
+genericFunction: []
+#periodicFunction:
+#  check: 1000
+#  read_property_from_summit: 5000
+consumedVOs:
+  vo1:
+    url: "http://vo1:9090/vo1"
+  vo2:
+    url: "http://vo2:9090/vo2"
+proxy:
+  propertiesMap:
+    allAvailableResources_tb2: vo1
+    allAvailableResources_summit: vo2
+  actionsMap:
+    triggerBringup_tb2: vo1
+    mapExport_tb2: vo1
+    currentValues_tb2: vo1
+    triggerBringup_summit: vo2
+    mapExport_summit: vo2
+    currentValues_summit: vo2
+

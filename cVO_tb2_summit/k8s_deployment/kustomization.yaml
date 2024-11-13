@@ -1,0 +1,39 @@
+configMapGenerator:
+- name: foxglove-demo-vo1
+  files:
+  - default-layout-1.json 
+- name: foxglove-demo-vo2
+  files:
+  - default-layout-2.json 
+- name: vo1-scripts
+  files:
+  - app.py=vo1_app.py
+  - config.yaml=vo1_config.yaml
+  - td.json=vo1_td.json
+- name: vo2-scripts
+  files:
+  - app.py=vo2_app.py
+  - config.yaml=vo2_config.yaml
+  - td.json=vo2_td.json
+- name: cvo-scripts
+  files:
+  - app.py=cvo_app.py
+  - config.yaml=cvo_config.yaml
+  - td.json=cvo_td.json
+- name: summit
+  files:
+  - summit=summit
+- name: tb2
+  files:
+  - tb2=tb2
+generatorOptions:
+   disableNameSuffixHash: true
+resources:
+- zenoh-router.yaml
+- flask-app.yaml
+- foxglove-zenoh_vo1.yaml
+- foxglove-zenoh_vo2.yaml
+- nginx_vo-2_deploy.yaml
+- nginx_vo-1_deploy.yaml
+- nginx_td.yaml
+- cvo_deploy.yaml
