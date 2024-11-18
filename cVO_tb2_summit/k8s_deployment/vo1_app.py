@@ -59,12 +59,12 @@ async def filenamesReadDB_tb2_handler(params):
 async def mapReadDB_tb2_handler(params):
     params = params['input'] if params['input'] else {}
     # Default values
-    filename_map = 'test'
-    filename_map = params.get('filename_map', filename_map)
-    LOGGER.info('Result after params is {}'.format(filename_map))
+    filename_map_tb2 = 'test'
+    filename_map_tb2 = params.get('filename_map_tb2', filename_map_tb2)
+    LOGGER.info('Result after params is {}'.format(filename_map_tb2))
     servient = exposed_thing.servient
     sqlite_db = servient.sqlite_db
-    result=sqlite_db.execute_query("SELECT content FROM string_data_table WHERE filename='%s'" % filename_map)
+    result=sqlite_db.execute_query("SELECT content FROM string_data_table WHERE filename='%s'" % filename_map_tb2)
    # result= sqlite_db.execute_query("SELECT filename FROM string_data_table") 
     parsed_result=result[0][0]
     return parsed_result
@@ -73,10 +73,10 @@ async def mapReadDB_tb2_handler(params):
 async def mapStoreDB_tb2_handler(params):
     params = params['input'] if params['input'] else {}
      # Default values
-    filename_tosave = 'map1'
+    filename_tosave_tb2 = 'map1'
 
     # Check if params are provided
-    filename_tosave = params.get('filename_tosave', filename_tosave)
+    filename_tosave_tb2 = params.get('filename_tosave_tb2', filename_tosave_tb2)
     LOGGER.info('Consumed Thing: {}'.format(consumed_vos["tb2"]))
     mapstring = await consumed_vos["tb2"].invoke_action("mapExport_tb2")
             
@@ -89,7 +89,7 @@ async def mapStoreDB_tb2_handler(params):
         "content": "TEXT"
     }
     sqlite_db.create_table_if_not_exists(TABLE_NAME, columns)
-    result=sqlite_db.insert_data(TABLE_NAME, (filename_tosave, content))
+    result=sqlite_db.insert_data(TABLE_NAME, (filename_tosave_tb2, content))
     
     return {'message': f'Your map storing on db is in progress!'}
 
@@ -97,10 +97,10 @@ async def mapStoreDB_tb2_handler(params):
 async def bagStoreVO_tb2_handler(params):
     params = params['input'] if params['input'] else {}
      # Default values
-    filename_tosave = 'rosbag.mcap'
+    bagname_tosave_tb2 = 'rosbag.mcap'
 
     # Check if params are provided
-    filename_tosave = params.get('filename_tosave', filename_tosave)
+    bagname_tosave_tb2 = params.get('bagname_tosave_tb2', bagname_tosave_tb2)
     LOGGER.info('Consumed Thing: {}'.format(consumed_vos["tb2"]))
     bagstring = await consumed_vos["tb2"].invoke_action("bagExport_tb2")
     LOGGER.info('Result after params is {}'.format(bagstring))

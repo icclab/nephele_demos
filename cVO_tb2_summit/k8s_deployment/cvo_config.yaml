@@ -41,7 +41,16 @@ proxy:
     triggerBringup_tb2: vo1
     mapExport_tb2: vo1
     currentValues_tb2: vo1
+    mapStoreDB_tb2: vo1
+    mapReadDB_tb2: vo1
+    filenamesReadDB_tb2: vo1
+    bagStoreVO_tb2: vo1
+
     triggerBringup_summit: vo2
     mapExport_summit: vo2
     currentValues_summit: vo2
+    mapStoreDB_summit: vo2
+    mapReadDB_summit: vo2
+    filenamesReadDB_summit: vo2
+    bagStoreVO_summit: vo2
 

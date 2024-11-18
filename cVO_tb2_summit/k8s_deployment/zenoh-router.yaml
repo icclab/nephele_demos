@@ -49,8 +49,8 @@ spec:
           name: zenoh-api
         resources:
           requests:
-            cpu: "6"
+            cpu: "4"
             memory: 20Gi
           limits:
-            cpu: "6"
+            cpu: "4"
             memory: 20Gi   

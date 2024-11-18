@@ -59,12 +59,12 @@ async def filenamesReadDB_summit_handler(params):
 async def mapReadDB_summit_handler(params):
     params = params['input'] if params['input'] else {}
     # Default values
-    filename_map = 'test'
-    filename_map = params.get('filename_map', filename_map)
-    LOGGER.info('Result after params is {}'.format(filename_map))
+    filename_map_summit = 'test'
+    filename_map_summit = params.get('filename_map_summit', filename_map_summit)
+    LOGGER.info('Result after params is {}'.format(filename_map_summit))
     servient = exposed_thing.servient
     sqlite_db = servient.sqlite_db
-    result=sqlite_db.execute_query("SELECT content FROM string_data_table WHERE filename='%s'" % filename_map)
+    result=sqlite_db.execute_query("SELECT content FROM string_data_table WHERE filename='%s'" % filename_map_summit)
    # result= sqlite_db.execute_query("SELECT filename FROM string_data_table") 
     parsed_result=result[0][0]
     return parsed_result
@@ -73,10 +73,10 @@ async def mapReadDB_summit_handler(params):
 async def mapStoreDB_summit_handler(params):
     params = params['input'] if params['input'] else {}
      # Default values
-    filename_tosave = 'map1'
+    filename_tosave_summit = 'map1'
 
     # Check if params are provided
-    filename_tosave = params.get('filename_tosave', filename_tosave)
+    filename_tosave_summit = params.get('filename_tosave_summit', filename_tosave_summit)
     LOGGER.info('Consumed Thing: {}'.format(consumed_vos["summit"]))
     mapstring = await consumed_vos["summit"].invoke_action("mapExport_summit")
             
@@ -89,7 +89,7 @@ async def mapStoreDB_summit_handler(params):
         "content": "TEXT"
     }
     sqlite_db.create_table_if_not_exists(TABLE_NAME, columns)
-    result=sqlite_db.insert_data(TABLE_NAME, (filename_tosave, content))
+    result=sqlite_db.insert_data(TABLE_NAME, (filename_tosave_summit, content))
     
     return {'message': f'Your map storing on db is in progress!'}
 
@@ -97,10 +97,10 @@ async def mapStoreDB_summit_handler(params):
 async def bagStoreVO_summit_handler(params):
     params = params['input'] if params['input'] else {}
      # Default values
-    filename_tosave = 'rosbag.mcap'
+    filename_tosave_summit = 'rosbag.mcap'
 
     # Check if params are provided
-    filename_tosave = params.get('filename_tosave', filename_tosave)
+    filename_tosave_summit = params.get('filename_tosave_summit', filename_tosave_summit)
     LOGGER.info('Consumed Thing: {}'.format(consumed_vos["summit"]))
     bagstring = await consumed_vos["summit"].invoke_action("bagExport_summit")
     LOGGER.info('Result after params is {}'.format(bagstring))

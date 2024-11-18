@@ -39,24 +39,24 @@
                     <h3>Trigger Action on Summit-Xl</h3>
                     <form action="/trigger_execution_summit" method="post" class="form-check">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="bringup" name="launchfile_id_summit" value="bringup">
-                            <label class="form-check-label" for="bringup">Bringup</label>
+                            <input class="form-check-input" type="radio" id="bringup_summit" name="launchfile_id_summit" value="bringup_summit">
+                            <label class="form-check-label" for="bringup_summit">Bringup</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="startmapping" name="launchfile_id_summit" value="startmapping">
-                            <label class="form-check-label" for="startmapping">Start Mapping</label>
+                            <input class="form-check-input" type="radio" id="startmapping_summit" name="launchfile_id_summit" value="startmapping_summit">
+                            <label class="form-check-label" for="startmapping_summit">Start Mapping</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="savemap" name="launchfile_id_summit" value="savemap">
-                            <label class="form-check-label" for="savemap">Save Map</label>
+                            <input class="form-check-input" type="radio" id="savemap_summit" name="launchfile_id_summit" value="savemap_summit">
+                            <label class="form-check-label" for="savemap_summit">Save Map</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="savebag" name="launchfile_id_summit" value="savebag">
-                            <label class="form-check-label" for="savebag">Start rosbag</label>
+                            <input class="form-check-input" type="radio" id="savebag_summit" name="launchfile_id_summit" value="savebag_summit">
+                            <label class="form-check-label" for="savebag_summit">Start rosbag</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="stopbag" name="launchfile_id_summit" value="stopbag">
-                            <label class="form-check-label" for="stopbag">Stop rosbag</label>
+                            <input class="form-check-input" type="radio" id="stopbag_summit" name="launchfile_id_summit" value="stopbag_summit">
+                            <label class="form-check-label" for="stopbag_stummit">Stop rosbag</label>
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Trigger Execution</button>
                     </form>
@@ -86,9 +86,8 @@
                     <form action="/read_data_summit" method="get">
                         <button type="submit" class="btn btn-secondary">Read Data</button>
                     </form>
-                    {% if data %}
-                        <h4>Data</h4>
-                        <pre>{{ data }}</pre>
+                    {% if data_summit %}
+                    <div class="alert alert-info mt-3">Data: {{data_summit }}</div>
                     {% endif %}
                 </div>
 
@@ -100,7 +99,7 @@
                         <button type="submit" class="btn btn-secondary">Current Values</button>
                     </form>
                     {% if current_status_summit %}
-                        <p>Current Values: {{ current_status_summit }}</p>
+                        <div class="alert alert-info mt-3">Current Values: {{current_status_summit}}</div>
                     {% endif %}
                 </div>
 
@@ -121,8 +120,7 @@
                         <button type="submit" class="btn btn-secondary">Read Filenames stored on VO's DB</button>
                     </form>
                     {% if data_db_summit %}
-                        <h4>Data</h4>
-                        <pre>{{ data_db_summit }}</pre>
+                    <div class="alert alert-info mt-3">Data: {{data_db_summmit }}</div>
                     {% endif %}
                 </div>
 
@@ -150,7 +148,7 @@
                  <!-- Read Rosbag on VO's FS for Summit-Xl -->
                 <div class="mb-4">
                     <h3>View the rosbag on VO's FS</h3>
-                    <a href="https://foxglove-demo.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo1.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
+                    <a href="https://foxglove-demo.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo2.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
                 </div>
             </div>
 
@@ -164,24 +162,24 @@
                     <h3>Trigger Action on Turtlebot</h3>
                     <form action="/trigger_execution_tb2" method="post" class="form-check">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="bringup2" name="launchfile_id_tb2" value="bringup">
-                            <label class="form-check-label" for="bringup2">Bringup</label>
+                            <input class="form-check-input" type="radio" id="bringup_tb2" name="launchfile_id_tb2" value="bringup_tb2">
+                            <label class="form-check-label" for="bringup_tb2">Bringup</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="startmapping2" name="launchfile_id_tb2" value="startmapping">
-                            <label class="form-check-label" for="startmapping2">Start Mapping</label>
+                            <input class="form-check-input" type="radio" id="startmapping_tb2" name="launchfile_id_tb2" value="startmapping_tb2">
+                            <label class="form-check-label" for="startmapping_tb2">Start Mapping</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="savemap2" name="launchfile_id_tb2" value="savemap">
-                            <label class="form-check-label" for="savemap2">Save Map</label>
+                            <input class="form-check-input" type="radio" id="savemap_tb2" name="launchfile_id_tb2" value="savemap_tb2">
+                            <label class="form-check-label" for="savemap_tb2">Save Map</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="savebag2" name="launchfile_id_tb2" value="savebag">
-                            <label class="form-check-label" for="savebag2">Start rosbag</label>
+                            <input class="form-check-input" type="radio" id="savebag_tb2" name="launchfile_id_tb2" value="savebag_tb2">
+                            <label class="form-check-label" for="savebag_tb2">Start rosbag</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="stopbag2" name="launchfile_id_tb2" value="stopbag">
-                            <label class="form-check-label" for="stopbag2">Stop rosbag</label>
+                            <input class="form-check-input" type="radio" id="stopbag_tb2" name="launchfile_id_tb2" value="stopbag_tb2">
+                            <label class="form-check-label" for="stopbag_tb2">Stop rosbag</label>
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Trigger Execution</button>
                     </form>
@@ -199,7 +197,11 @@
                 <!-- Environment Map for Turtlebot -->
                 <div class="mb-4">
                     <h3>Environment Map</h3>
-                    <img src="{{ image_url_tb2 }}" alt="Turtlebot Map" class="img-fluid">
+                    {% if image_url_tb2 %}
+                    <img src="{{ image_url_tb2 }}" alt="Turtlebot Map">
+                    {% endif %}
+                    
+                   <!-- <img src="{{ image_url_tb2 }}" alt="Turtlebot Map" class="img-fluid"> CONTINUA QUI-->
                     <form action="/map_export_tb2" method="get" class="mt-2">
                         <button type="submit" class="btn btn-secondary">Export Map</button>
                     </form>
@@ -212,10 +214,10 @@
                         <button type="submit" class="btn btn-secondary">Read Data</button>
                     </form>
                     {% if data_tb2 %}
-                        <h4>Data</h4>
-                        <pre>{{ data_tb2 }}</pre>
+                    <div class="alert alert-info mt-3">Data: {{data_tb2 }}</div>
                     {% endif %}
                 </div>
+
 
                 <!-- Read Properties Periodically on Turtlebot -->
                 <div class="mb-4">
@@ -224,7 +226,7 @@
                         <button type="submit" class="btn btn-secondary">Current Values</button>
                     </form>
                     {% if current_status_tb2 %}
-                        <p>Current Values: {{ current_status_tb2 }}</p>
+                    <div class="alert alert-info mt-3">Current Values: {{current_status_tb2}}</div>
                     {% endif %}
                 </div>
 
@@ -245,8 +247,7 @@
                         <button type="submit" class="btn btn-secondary">Read Filenames stored on VO's DB</button>
                     </form>
                     {% if data_db_tb2 %}
-                        <h4>Data</h4>
-                        <pre>{{ data_db_tb2 }}</pre>
+                    <div class="alert alert-info mt-3">Data: {{data_db_tb2 }}</div>
                     {% endif %}
                 </div>
 
@@ -272,10 +273,10 @@
                 </div>
 
                 
-                 <!-- Read Rosbag on VO's FS for Summit-Xl -->
+                 <!-- Read Rosbag on VO's FS for Turtlebot -->
                  <div class="mb-4">
                     <h3>View the rosbag on VO's FS</h3>
-                    <a href="https://foxglove-demo.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo2.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
+                    <a href="https://foxglove-demo.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo1.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
                 </div>
 
             </div>

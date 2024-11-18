@@ -140,7 +140,7 @@
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_tosave": { 
+                    "filename_tosave_tb2": { 
                         "type": "string", 
                         "description": "which filename to save rosbag on FS" 
                     }

@@ -4,7 +4,7 @@
 import asyncio
 
 import requests
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, session
 import time
 
 from wotpy.wot.servient import Servient
@@ -26,6 +26,7 @@ LOGGER.setLevel(logging.INFO)
 app = Flask(__name__,
             static_folder='/app')
 
+app.secret_key = '1245'  # Needed for session management
 
 @app.route('/')
 def index():
@@ -78,7 +79,7 @@ async def current_summit():
 def read_data_summit():
     result_summit = asyncio.run(read_summit())
     print("read_summit", result_summit)
-    return render_template('index.html', data=result_summit)
+    return render_template('index.html', data_summit=result_summit)
 
 async def read_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -115,7 +116,7 @@ async def export_map_summit():
 def read_data_db_summit():
     result_summit = asyncio.run(read_db_summit())
     print("read_db", result_summit)
-    return render_template('index.html', data_db=result_summit)
+    return render_template('index.html', data_db_summit=result_summit)
 
 async def read_db_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -136,8 +137,8 @@ def store_map_db_summit():
 async def storemapdb_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
     # Get the filename from the query parameters
-    filename_tosave_summit = request.args.get('filename_tosave')
-    result_summit = await consumed_thing_summit.invoke_action("mapStoreDB_summit", {'filename_tosave': filename_tosave_summit }) 
+    filename_tosave_summit = request.args.get('filename_tosave_summit')
+    result_summit = await consumed_thing_summit.invoke_action("mapStoreDB_summit", {'filename_tosave_summit': filename_tosave_summit }) 
     #result = await consumed_thing.invoke_action("mapStoreDB")
     print(result_summit)
     return result_summit
@@ -151,8 +152,8 @@ def store_bag_vo_summit():
 async def storebagvo_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
     # Get the filename from the query parameters
-    bagname_tosave_summit = request.args.get('bagname_tosave')
-    result_summit = await consumed_thing_summit.invoke_action("bagStoreVO_summit", {'filename_tosave': bagname_tosave_summit }) 
+    bagname_tosave_summit = request.args.get('bagname_tosave_summit')
+    result_summit = await consumed_thing_summit.invoke_action("bagStoreVO_summit", {'filename_tosave_summit': bagname_tosave_summit }) 
     #result = await consumed_thing.invoke_action("mapStoreDB")
     print(result_summit)
     return result_summit
@@ -161,17 +162,17 @@ async def storebagvo_summit():
 @app.route("/read_map_from_db_summit", methods=['GET'])
 def read_map_from_db_summit():
     result_summit = asyncio.run(read_map_db_summit())
-    return render_template('index.html', map_from_db=result_summit)
+    return render_template('index.html', map_from_db_summit=result_summit)
 
 
 async def read_map_db_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
     
     # Get the filename from the query parameters
-    filename_map_summit = request.args.get('filename_map')
+    filename_map_summit = request.args.get('filename_map_summit')
 
     #result = await consumed_thing.read_property("someStringProperty")
-    result_summit = await consumed_thing_summit.invoke_action("mapReadDB_summit", {'filename_map': filename_map_summit })
+    result_summit = await consumed_thing_summit.invoke_action("mapReadDB_summit", {'filename_map_summit': filename_map_summit })
     if result_summit is None:
         return None
     else:
@@ -217,7 +218,7 @@ async def current_tb2():
 def read_data_tb2():
     result_tb2 = asyncio.run(read_tb2())
     print("read_tb2", result_tb2)
-    return render_template('index.html', data=result_tb2)
+    return render_template('index.html', data_tb2=result_tb2)
 
 async def read_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -231,7 +232,10 @@ async def read_tb2():
 @app.route('/map_export_tb2', methods=['GET'])
 def map_export_tb2():
     result_tb2 = asyncio.run(export_map_tb2())
-    return render_template('index.html', image_url_tb2=result_tb2)
+    if result_tb2:
+        session['image_url_tb2'] = result_tb2  # Store image path in session
+    return render_template('index.html', image_url_tb2=session.get('image_url_tb2'))
+    #return render_template('index.html', image_url_tb2=result_tb2)
 
 async def export_map_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -252,7 +256,7 @@ async def export_map_tb2():
 def read_data_db_tb2():
     result_tb2 = asyncio.run(read_db_tb2())
     print("read_db", result_tb2)
-    return render_template('index.html', data_db=result_tb2)
+    return render_template('index.html', data_db_tb2=result_tb2)
 
 async def read_db_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo") 
@@ -268,8 +272,8 @@ def store_map_db_tb2():
 async def storemapdb_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
     # Get the filename from the query parameters
-    filename_tosave_tb2 = request.args.get('filename_tosave')
-    result_tb2 = await consumed_thing_tb2.invoke_action("mapStoreDB_tb2", {'filename_tosave': filename_tosave_tb2 }) 
+    filename_tosave_tb2 = request.args.get('filename_tosave_tb2')
+    result_tb2 = await consumed_thing_tb2.invoke_action("mapStoreDB_tb2", {'filename_tosave_tb2': filename_tosave_tb2 }) 
     #result = await consumed_thing.invoke_action("mapStoreDB")
     print(result_tb2)
     return result_tb2
@@ -283,8 +287,8 @@ def store_bag_vo_tb2():
 async def storebagvo_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
     # Get the filename from the query parameters
-    bagname_tosave_tb2 = request.args.get('bagname_tosave')
-    result_tb2 = await consumed_thing_tb2.invoke_action("bagStoreVO_tb2", {'filename_tosave': bagname_tosave_tb2 }) 
+    bagname_tosave_tb2 = request.args.get('bagname_tosave_tb2')
+    result_tb2 = await consumed_thing_tb2.invoke_action("bagStoreVO_tb2", {'bagname_tosave_tb2': bagname_tosave_tb2 }) 
     #result = await consumed_thing.invoke_action("mapStoreDB")
     print(result_tb2)
     return result_tb2
@@ -293,17 +297,17 @@ async def storebagvo_tb2():
 @app.route("/read_map_from_db_tb2", methods=['GET'])
 def read_map_from_db_tb2():
     result_tb2 = asyncio.run(read_map_db_tb2())
-    return render_template('index.html', map_from_db=result_tb2)
+    return render_template('index.html', map_from_db_tb2=result_tb2)
 
 
 async def read_map_db_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
     
     # Get the filename from the query parameters
-    filename_map_tb2 = request.args.get('filename_map')
+    filename_map_tb2 = request.args.get('filename_map_tb2')
 
     #result = await consumed_thing.read_property("someStringProperty")
-    result_tb2 = await consumed_thing_tb2.invoke_action("mapReadDB_tb2", {'filename_map': filename_map_tb2 })
+    result_tb2 = await consumed_thing_tb2.invoke_action("mapReadDB_tb2", {'filename_map_tb2': filename_map_tb2 })
     if result_tb2 is None:
         return None
     else:
