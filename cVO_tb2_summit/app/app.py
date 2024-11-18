@@ -31,8 +31,26 @@ app.secret_key = '1245'  # Needed for session management
 @app.route('/')
 def index():
     #return render_template('index.html')
-    timestamp = int(time.time())  # Current time in seconds
-    return render_template('index.html', timestamp=timestamp)
+    # Pass all session variables to ensure state persistence
+    return render_template(
+        'index.html',
+        execution_status_summit=session.get('execution_status_summit'),
+        current_status_summit=session.get('current_status_summit'),
+        data_summit=session.get('data_summit'),
+        image_url_summit=session.get('image_url_summit'),
+        data_db_summit=session.get('data_db_summit'),
+        store_map_db_summit=session.get('store_map_db_summit'),
+        store_bag_vo_summit=session.get('store_bag_vo_summit'),
+        map_from_db_summit=session.get('map_from_db_summit'),
+        execution_status_tb2=session.get('execution_status_tb2'),
+        current_status_tb2=session.get('current_status_tb2'),
+        data_tb2=session.get('data_tb2'),
+        image_url_tb2=session.get('image_url_tb2'),
+        data_db_tb2=session.get('data_db_tb2'),
+        store_map_db_tb2=session.get('store_map_db_tb2'),
+        map_from_db_tb2=session.get('map_from_db_tb2'),
+        store_bag_vo_tb2=session.get('store_bag_vo_tb2')
+    )
 
 http_client = HTTPClient()
 security_scheme_dict = {
@@ -54,7 +72,9 @@ def trigger_execution_summit():
     launchfile_id_summit = request.form['launchfile_id_summit']
     result_summit = asyncio.run(trigger_summit(launchfile_id_summit))
     print("trigger_summit", result_summit)
-    return render_template('index.html', execution_status_summit=result_summit)
+    #return render_template('index.html', execution_status_summit=result_summit)
+    session['execution_status_summit'] = result_summit
+    return index()
 
 async def trigger_summit(launchfile_id_summit):
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -68,7 +88,9 @@ async def trigger_summit(launchfile_id_summit):
 def current_values_summit():
     result_summit = asyncio.run(current_summit())
     print("current_summit", result_summit)
-    return render_template('index.html', current_status_summit=result_summit)
+    session['current_status_summit'] = result_summit
+    return index()
+    #return render_template('index.html', current_status_summit=result_summit)
 
 async def current_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -79,7 +101,9 @@ async def current_summit():
 def read_data_summit():
     result_summit = asyncio.run(read_summit())
     print("read_summit", result_summit)
-    return render_template('index.html', data_summit=result_summit)
+    session['data_summit'] = result_summit
+    return index()
+  #  return render_template('index.html', data_summit=result_summit)
 
 async def read_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -93,7 +117,9 @@ async def read_summit():
 @app.route('/map_export_summit', methods=['GET'])
 def map_export_summit():
     result_summit = asyncio.run(export_map_summit())
-    return render_template('index.html', image_url_summit=result_summit)
+    session['image_url_summit'] = result_summit
+    return index()
+   # return render_template('index.html', image_url_summit=result_summit)
 
 async def export_map_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -116,7 +142,9 @@ async def export_map_summit():
 def read_data_db_summit():
     result_summit = asyncio.run(read_db_summit())
     print("read_db", result_summit)
-    return render_template('index.html', data_db_summit=result_summit)
+    session['data_db_summit'] = result_summit
+    return index()
+   # return render_template('index.html', data_db_summit=result_summit)
 
 async def read_db_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -132,7 +160,9 @@ async def read_db_summit():
 @app.route("/store_map_db_summit", methods=['GET'])
 def store_map_db_summit():
     result_summit = asyncio.run(storemapdb_summit())
-    return render_template('index.html', store_map_db_summit=result_summit)
+  #  return render_template('index.html', store_map_db_summit=result_summit)
+    session['store_map_db_summit'] = result_summit
+    return index()
 
 async def storemapdb_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -147,7 +177,9 @@ async def storemapdb_summit():
 @app.route("/store_bag_vo_summit", methods=['GET'])
 def store_bag_vo_summit():
     result_summit = asyncio.run(storebagvo_summit())
-    return render_template('index.html', store_bag_vo=result_summit)
+    session['store_bag_vo_summit'] = result_summit
+    return index()
+   # return render_template('index.html', store_bag_vo_summit=result_summit)
 
 async def storebagvo_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -162,8 +194,9 @@ async def storebagvo_summit():
 @app.route("/read_map_from_db_summit", methods=['GET'])
 def read_map_from_db_summit():
     result_summit = asyncio.run(read_map_db_summit())
-    return render_template('index.html', map_from_db_summit=result_summit)
-
+   # return render_template('index.html', map_from_db_summit=result_summit)
+    session['map_from_db_summit'] = result_summit
+    return index()
 
 async def read_map_db_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -185,9 +218,6 @@ async def read_map_db_summit():
         return image_path_db_summit
 
 
-##
-##  DRONE RELATED FUNCTIONS
-##
 
    
 @app.route('/trigger_execution_tb2', methods=['POST'])
@@ -195,7 +225,9 @@ def trigger_execution_tb2():
     launchfile_id_tb2 = request.form['launchfile_id_tb2']
     result_tb2 = asyncio.run(trigger_tb2(launchfile_id_tb2))
     print("trigger_tb2", result_tb2)
-    return render_template('index.html', execution_status_tb2=result_tb2)
+ #  return render_template('index.html', execution_status_tb2=result_tb2)
+    session['execution_status_tb2'] = result_tb2
+    return index()
 
 async def trigger_tb2(launchfile_id_tb2):
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -207,7 +239,9 @@ async def trigger_tb2(launchfile_id_tb2):
 def current_values_tb2():
     result_tb2 = asyncio.run(current_tb2())
     print("current_tb2", result_tb2)
-    return render_template('index.html', current_status_tb2=result_tb2)
+ #   return render_template('index.html', current_status_tb2=result_tb2)
+    session['current_status_tb2'] = result_tb2
+    return index()
 
 async def current_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -218,7 +252,9 @@ async def current_tb2():
 def read_data_tb2():
     result_tb2 = asyncio.run(read_tb2())
     print("read_tb2", result_tb2)
-    return render_template('index.html', data_tb2=result_tb2)
+    #return render_template('index.html', data_tb2=result_tb2)
+    session['data_tb2'] = result_tb2
+    return index()
 
 async def read_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -234,8 +270,9 @@ def map_export_tb2():
     result_tb2 = asyncio.run(export_map_tb2())
     if result_tb2:
         session['image_url_tb2'] = result_tb2  # Store image path in session
-    return render_template('index.html', image_url_tb2=session.get('image_url_tb2'))
-    #return render_template('index.html', image_url_tb2=result_tb2)
+    #return render_template('index.html', image_url_tb2=session.get('image_url_tb2'))
+    session['image_url_tb2'] = result_tb2
+    return index()
 
 async def export_map_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -256,7 +293,9 @@ async def export_map_tb2():
 def read_data_db_tb2():
     result_tb2 = asyncio.run(read_db_tb2())
     print("read_db", result_tb2)
-    return render_template('index.html', data_db_tb2=result_tb2)
+    #return render_template('index.html', data_db_tb2=result_tb2)
+    session['data_db_tb2'] = result_tb2
+    return index()
 
 async def read_db_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo") 
@@ -267,7 +306,9 @@ async def read_db_tb2():
 @app.route("/store_map_db_tb2", methods=['GET'])
 def store_map_db_tb2():
     result_tb2 = asyncio.run(storemapdb_tb2())
-    return render_template('index.html', store_map_db_tb2=result_tb2)
+   # return render_template('index.html', store_map_db_tb2=result_tb2)
+    session['store_map_db_tb2'] = result_tb2
+    return index()
 
 async def storemapdb_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -282,7 +323,9 @@ async def storemapdb_tb2():
 @app.route("/store_bag_vo_tb2", methods=['GET'])
 def store_bag_vo_tb2():
     result_tb2 = asyncio.run(storebagvo_tb2())
-    return render_template('index.html', store_bag_vo=result_tb2)
+   # return render_template('index.html', store_bag_vo=result_tb2)
+    session['store_bag_vo_tb2'] = result_tb2
+    return index()
 
 async def storebagvo_tb2():
     consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
@@ -297,7 +340,9 @@ async def storebagvo_tb2():
 @app.route("/read_map_from_db_tb2", methods=['GET'])
 def read_map_from_db_tb2():
     result_tb2 = asyncio.run(read_map_db_tb2())
-    return render_template('index.html', map_from_db_tb2=result_tb2)
+   # return render_template('index.html', map_from_db_tb2=result_tb2)
+    session['map_from_db_tb2'] = result_tb2
+    return index()
 
 
 async def read_map_db_tb2():
