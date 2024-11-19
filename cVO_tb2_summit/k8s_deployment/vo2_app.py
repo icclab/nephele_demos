@@ -97,12 +97,14 @@ async def mapStoreDB_summit_handler(params):
 async def bagStoreVO_summit_handler(params):
     params = params['input'] if params['input'] else {}
      # Default values
-    filename_tosave_summit = 'rosbag.mcap'
+    bagname_tosave_summit = 'rosbag.mcap'
 
     # Check if params are provided
-    filename_tosave_summit = params.get('filename_tosave_summit', filename_tosave_summit)
+    bagname_tosave_summit = params.get('bagname_tosave_summit', bagname_tosave_summit)
     LOGGER.info('Consumed Thing: {}'.format(consumed_vos["summit"]))
+    LOGGER.info('VO1 funciton')
     bagstring = await consumed_vos["summit"].invoke_action("bagExport_summit")
+    LOGGER.info('VO1 funvton 2')
     LOGGER.info('Result after params is {}'.format(bagstring))
 
     

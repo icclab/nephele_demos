@@ -62,7 +62,7 @@ allAvailableResources_summit_init = {
  #   'battery_charging': read_from_sensor('HDD Usage (SXLS0_180227AA)')[1],
 }
 
-possibleLaunchfiles_summit_init = ['startmapping', 'bringup', 'savemap', 'savebag', 'stopbag']
+possibleLaunchfiles_summit_init = ['startmapping_summit', 'bringup_summit', 'savemap_summit', 'savebag_summit', 'stopbag_summit']
 mapdataExportTF_init = [True, False]
 
 def get_map_as_string(map_file_path):
@@ -99,7 +99,7 @@ async def triggerBringup_summit_handler(params):
     params = params['input'] if params['input'] else {}
 
     # Default values
-    launchfileId = 'startmapping'
+    launchfileId = 'startmapping_summit'
 
     # Check if params are provided
     launchfileId = params.get('launchfileId', launchfileId)
@@ -121,7 +121,7 @@ async def triggerBringup_summit_handler(params):
     
 
     #if launchfileId == 'bringup' and batterypercent is None :
-    if launchfileId == 'bringup':
+    if launchfileId == 'bringup_summit':
         # If battery percentage is None, start the summit launch file
         print("Battery status unknown, start summit_bringup!")
         process_bringup = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'summit_xl_real.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -138,7 +138,7 @@ async def triggerBringup_summit_handler(params):
             bringupaction = False
 
    # if launchfileId == 'startmapping' and batterypercent >= 30:
-    if launchfileId == 'startmapping':
+    if launchfileId == 'startmapping_summit':
         # If battery percentage is more than 50, allow to start the mapping launch file
         print("Battery sufficient, start summit mapping!")
         #process_mapping = subprocess.Popen(['ros2', 'launch', 'slam_toolbox', 'online_async_launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -154,7 +154,7 @@ async def triggerBringup_summit_handler(params):
             print("Failed to start mapping.")
             mappingaction = False
 
-    if launchfileId == 'savemap': #and mappingaction == True:
+    if launchfileId == 'savemap_summit': #and mappingaction == True:
         print("Mapping finished, save the map!")
         process_savemapping = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'map_save.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         time.sleep(20) 
@@ -162,7 +162,7 @@ async def triggerBringup_summit_handler(params):
         print("Map saved successfully.")
         saveaction = True
         
-    if launchfileId == 'savebag':
+    if launchfileId == 'savebag_summit':
         print("Starting recording rosbag!")
         global process_bagrecording
         process_bagrecording = subprocess.Popen(['exec ros2 bag record -s mcap -o my_bag -d 20 -b 50000000 -a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
@@ -171,7 +171,7 @@ async def triggerBringup_summit_handler(params):
         print("Bag recording started.")
         savebagaction = True
     
-    if launchfileId == 'stopbag':
+    if launchfileId == 'stopbag_summit':
         print("Stopping recording rosbag!")
         if process_bagrecording.poll() is None:
             process_bagrecording.terminate()
@@ -213,15 +213,15 @@ async def triggerBringup_summit_handler(params):
     await exposed_thing.properties['allAvailableResources_summit'].write(newResources)
 
     # Finally deliver the launchfile
-    if launchfileId == 'bringup':
+    if launchfileId == 'bringup_summit':
         return {'result': bringupaction, 'message': f'Your {launchfileId} is in progress!'}
-    elif launchfileId == 'startmapping':
+    elif launchfileId == 'startmapping_summit':
         return {'result': mappingaction, 'message': f'Your {launchfileId} is in progress!'}
-    elif launchfileId == 'savemap':
+    elif launchfileId == 'savemap_summit':
         return {'result': saveaction, 'message': f'Your {launchfileId} is in progress!'}
-    elif launchfileId == 'savebag':
+    elif launchfileId == 'savebag_summit':
         return {'result': savebagaction, 'message': f'Your {launchfileId} is in progress!'}
-    elif launchfileId == 'stopbag':
+    elif launchfileId == 'stopbag_summit':
          return {'result': stopbagaction, 'message': f'Your {launchfileId} is in progress!'}
     
 async def mapExport_summit_handler(params):
@@ -236,7 +236,7 @@ async def bagExport_summit_handler(params):
     bag_string = get_rosbag_as_string(bag_file_path)
     return bag_string
     
-async def allAvailableResources_read_summit_handler():
+async def allAvailableResources_summit_read_handler():
     allAvailableResources_summit_current = {
     'battery_percent': read_from_sensor()
  #   'battery_percent': read_from_sensor('HDD Usage (SXLS0_180227AA)')[0],

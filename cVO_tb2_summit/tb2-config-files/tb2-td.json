@@ -77,7 +77,7 @@
                 "type": "object", 
                 "description": "Returns rosbag in string format.", 
                 "properties": { 
-                    "maptoString": { 
+                    "bagtoString": { 
                         "type": "string" 
                     }
                 } 

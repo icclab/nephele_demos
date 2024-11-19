@@ -30,3 +30,4 @@ async def read_property_from_summit():
     await exposed_thing.properties['allAvailableResources_summit'].write(allAvailableResources_summit)
     await exposed_thing.properties['possibleLaunchfiles_summit'].write(possibleLaunchfiles_summit)
 
+

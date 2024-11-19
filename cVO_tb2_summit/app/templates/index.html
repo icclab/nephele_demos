@@ -148,7 +148,7 @@
                  <!-- Read Rosbag on VO's FS for Summit-Xl -->
                 <div class="mb-4">
                     <h3>View the rosbag on VO's FS</h3>
-                    <a href="https://foxglove-demo.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo2.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
+                    <a href="https://foxglove-demo-vo2.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo2.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
                 </div>
             </div>
 
@@ -238,6 +238,10 @@
                         <input type="text" id="filename_tosave_tb2" name="filename_tosave_tb2" class="form-control">
                         <button type="submit" class="btn btn-secondary mt-2">Store map on DB</button>
                     </form>
+                    {% if store_map_db_tb2 %}
+                    <div class="alert alert-info mt-3">Execution Status: {{store_map_db_tb2 }}</div>
+                    {% endif %}
+
                 </div>
 
                 <!-- List Filenames on VO's DB for Turtlebot -->
@@ -260,6 +264,9 @@
                         <input type="text" id="filename_map_tb2" name="filename_map_tb2" class="form-control">
                         <button type="submit" class="btn btn-secondary mt-2">Get Map</button>
                     </form>
+                    {% if map_from_db_tb2 %}
+                    <div class="alert alert-info mt-3">Execution Status: {{map_from_db_tb2 }}</div>
+                    {% endif %}
                 </div>
 
                 <!-- Save Rosbag on VO's FS for Turtlebot -->
@@ -270,15 +277,19 @@
                         <input type="text" id="bagname_tosave_tb2" name="bagname_tosave_tb2" class="form-control">
                         <button type="submit" class="btn btn-secondary mt-2">Save rosbag</button>
                     </form>
+                    {% if store_bag_vo_tb2 %}
+                    <div class="alert alert-info mt-3">Execution Status: {{store_bag_vo_tb2 }}</div>
+                    {% endif %}
+                    
                 </div>
 
                 
                  <!-- Read Rosbag on VO's FS for Turtlebot -->
                  <div class="mb-4">
                     <h3>View the rosbag on VO's FS</h3>
-                    <a href="https://foxglove-demo.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo1.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
+                    <a href="https://foxglove-demo-vo1.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo1.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
                 </div>
-
+                
             </div>
         </div>
     </div>

@@ -100,9 +100,11 @@ async def bagStoreVO_tb2_handler(params):
     bagname_tosave_tb2 = 'rosbag.mcap'
 
     # Check if params are provided
-    bagname_tosave_tb2 = params.get('bagname_tosave_tb2', bagname_tosave_tb2)
+    bagname_tosave_tb2 = params.get('bagname_tosave_tb2', bagname_tosave_tb2) 
     LOGGER.info('Consumed Thing: {}'.format(consumed_vos["tb2"]))
+    LOGGER.info('VO1 funciton')
     bagstring = await consumed_vos["tb2"].invoke_action("bagExport_tb2")
+    LOGGER.info('VO1 funvton 2')
     LOGGER.info('Result after params is {}'.format(bagstring))
 
     

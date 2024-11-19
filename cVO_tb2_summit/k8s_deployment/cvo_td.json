@@ -100,7 +100,7 @@
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_tosave": { 
+                    "filename_tosave_summit": { 
                         "type": "string", 
                         "description": "which filename to save map in db" 
                     }
@@ -125,7 +125,7 @@
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_map": { 
+                    "filename_map_summit": { 
                         "type": "string", 
                         "description": "which filename to get from db" 
                     }
@@ -148,7 +148,7 @@
                 "type": "object", 
                 "description": "Returns map in string format from DB on VO.", 
                 "properties": { 
-                    "filenames_db": { 
+                    "filenames_db_summit": { 
                         "type": "string", 
                         "description": "which filename to get from db" 
                     }
@@ -161,7 +161,7 @@
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_tosave": { 
+                    "bagname_tosave_summit": { 
                         "type": "string", 
                         "description": "which filename to save rosbag on FS" 
                     }
@@ -230,7 +230,7 @@
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_tosave": { 
+                    "filename_tosave_tb2": { 
                         "type": "string", 
                         "description": "which filename to save map in db" 
                     }
@@ -255,7 +255,7 @@
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_map": { 
+                    "filename_map_tb2": { 
                         "type": "string", 
                         "description": "which filename to get from db" 
                     }
@@ -278,7 +278,7 @@
                 "type": "object", 
                 "description": "Returns map in string format from DB on VO.", 
                 "properties": { 
-                    "filenames_db": { 
+                    "filenames_db_tb2": { 
                         "type": "string", 
                         "description": "which filename to get from db" 
                     }
@@ -291,7 +291,7 @@
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_tosave": { 
+                    "bagname_tosave_tb2": { 
                         "type": "string", 
                         "description": "which filename to save rosbag on FS" 
                     }

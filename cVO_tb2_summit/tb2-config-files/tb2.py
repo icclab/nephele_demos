@@ -154,7 +154,7 @@ async def triggerBringup_tb2_handler(params):
     if launchfileId == 'savebag_tb2':
         print("Starting recording rosbag!")
         global process_bagrecording
-        process_bagrecording = subprocess.Popen(['exec ros2 bag record -s mcap -o my_bag -d 20 -b 50000000 -a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
+        process_bagrecording = subprocess.Popen(['exec ros2 bag record -s mcap -o my_bag -d 20 -b 10000000 -a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
         time.sleep(1) 
        
         print("Bag recording started.")
@@ -224,7 +224,7 @@ async def bagExport_tb2_handler(params):
     params = params['input'] if params['input'] else {}
     bag_file_path = '/home/ros/my_bag/my_bag_0.mcap'
     bag_string = get_rosbag_as_string(bag_file_path)
-    print("handler function 2")
+    print('done bag string')
     return bag_string
     
 async def allAvailableResources_tb2_read_handler():
