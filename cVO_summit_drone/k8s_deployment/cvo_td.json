@@ -32,6 +32,27 @@
             "items": { 
                 "type": "string" 
             } 
+        },
+        "allAvailableResources_tb2": {  
+            "type": "object", 
+            "description": "Current level of all available resources given as an integer percentage for each particular resource. The data is obtained from the machine's sensors but can be set manually in case the sensors are broken.", 
+            "properties": { 
+                "battery_percent": { 
+                    "type": "integer", 
+                    "minimum": 0, 
+                    "maximum": 100 
+                }
+           	} 
+        }, 
+        "someStringProperty": {
+            "type": "string"
+        },
+        "possibleLaunchfiles_tb2": { 
+            "type": "array", 
+            "description": "The list of possible launchfiles. Doesn't depend on the available resources.", 
+            "items": { 
+                "type": "string" 
+            } 
         }
     },
     "actions": { 
@@ -79,7 +100,7 @@
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_tosave": { 
+                    "filename_tosave_summit": { 
                         "type": "string", 
                         "description": "which filename to save map in db" 
                     }
@@ -104,7 +125,7 @@
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_map": { 
+                    "filename_map_summit": { 
                         "type": "string", 
                         "description": "which filename to get from db" 
                     }
@@ -127,7 +148,7 @@
                 "type": "object", 
                 "description": "Returns map in string format from DB on VO.", 
                 "properties": { 
-                    "filenames_db": { 
+                    "filenames_db_summit": { 
                         "type": "string", 
                         "description": "which filename to get from db" 
                     }
@@ -140,7 +161,7 @@
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_tosave": { 
+                    "bagname_tosave_summit": { 
                         "type": "string", 
                         "description": "which filename to save rosbag on FS" 
                     }
@@ -161,10 +182,143 @@
         },
         "currentValues_summit": {
             "description": "Returns current Values for battery status from summit through the Consumed Thing"
+        },
+        "triggerBringup_tb2": { 
+            "title": "Trigger ROS launchfiles", 
+            "description": "Brings hw components up (corresponding ROS launch files are launched). Accepts launchfile id as input. Brings up all if no input is specified.", 
+            "input": { 
+                "type": "object", 
+                "properties": { 
+                    "launchfileId": { 
+                        "type": "string", 
+                        "description": "Defines what HW to bring up, launchfileId is one of possibleLaunchfiles property values, e.g., bringup_complete" 
+                    }
+                }
+            },
+            "output": { 
+                "type": "object", 
+                "description": "Returns True/false and a message when all invoked promises are resolved (asynchronous).", 
+                "properties": { 
+                    "result": { 
+                        "type": "boolean" 
+                    }, 
+                    "message": { 
+                        "type": "string" 
+                    } 
+                } 
+            } 
+        },
+        "mapExport_tb2": { 
+            "title": "Export map data", 
+            "description": "Get map data", 
+            "output": { 
+                "type": "object", 
+                "description": "Returns map in string format.", 
+                "properties": { 
+                    "maptoString": { 
+                        "type": "string" 
+                    }
+                } 
+            } 
+        },
+        "mapStoreDB_tb2": { 
+            "title": "Store map on DB", 
+            "description": "Get map data and store it to DB of the VO", 
+            "input": { 
+                "type": "object", 
+                "properties": { 
+                    "filename_tosave_tb2": { 
+                        "type": "string", 
+                        "description": "which filename to save map in db" 
+                    }
+                }
+            },
+            "output": { 
+                "type": "object", 
+                "description": "Returns map in string format.", 
+                "properties": { 
+                    "result": { 
+                        "type": "boolean" 
+                    }, 
+                    "message": { 
+                        "type": "string" 
+                    } 
+                } 
+            } 
+        },
+        "mapReadDB_tb2": { 
+            "title": "Read map from DB", 
+            "description": "Get map from DB of the VO", 
+            "input": { 
+                "type": "object", 
+                "properties": { 
+                    "filename_map_tb2": { 
+                        "type": "string", 
+                        "description": "which filename to get from db" 
+                    }
+                }
+            },
+            "output": { 
+                "type": "object", 
+                "description": "Returns map in string format from DB on VO.", 
+                "properties": { 
+                    "maptoString": { 
+                        "type": "string" 
+                    }
+                }
+            } 
+        },
+        "filenamesReadDB_tb2": { 
+            "title": "Read map from DB", 
+            "description": "Get map from DB of the VO", 
+            "output": { 
+                "type": "object", 
+                "description": "Returns map in string format from DB on VO.", 
+                "properties": { 
+                    "filenames_db_tb2": { 
+                        "type": "string", 
+                        "description": "which filename to get from db" 
+                    }
+                }
+            } 
+        },
+        "bagStoreVO_tb2": { 
+            "title": "Store rosbag on VO's FS", 
+            "description": "Get rosbag data and store it to FS of the VO", 
+            "input": { 
+                "type": "object", 
+                "properties": { 
+                    "bagname_tosave_tb2": { 
+                        "type": "string", 
+                        "description": "which filename to save rosbag on FS" 
+                    }
+                }
+            },
+            "output": { 
+                "type": "object", 
+                "description": "Returns rosbag in string format.", 
+                "properties": { 
+                    "result": { 
+                        "type": "boolean" 
+                    }, 
+                    "message": { 
+                        "type": "string" 
+                    } 
+                } 
+            } 
+        },
+        "currentValues_tb2": {
+            "description": "Returns current Values for battery status from tb2 through the Consumed Thing"
         }
     }, 
     "events": { 
-        "outOfResource_summmit": { 
+        "outOfResource_summit": { 
+            "description": "Out of resource event. Emitted when the available resource level is not sufficient to operate further (e.g., battery level).", 
+            "data": { 
+                "type": "string" 
+            } 
+        },
+        "outOfResource_tb2": { 
             "description": "Out of resource event. Emitted when the available resource level is not sufficient to operate further (e.g., battery level).", 
             "data": { 
                 "type": "string" 

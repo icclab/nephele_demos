@@ -25,9 +25,6 @@ databaseConfig:
   persistentDB:
     SQLite: enabled
 genericFunction: []
-#periodicFunction:
-#  check: 1000
-#  read_property_from_summit: 5000
 consumedVOs:
   vo1:
     url: "http://vo1:9090/vo1"

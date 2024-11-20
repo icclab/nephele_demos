@@ -1,41 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fxg-zenoh-bridges
+  name: fxg-zenoh-bridges-vo2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: foxglove-zenoh-bridges
+      name: foxglove-zenoh-bridges-vo2
   template:
     metadata:
-      name: foxglove-zenoh-bridges
+      name: foxglove-zenoh-bridges-vo2
       labels:
-        name: foxglove-zenoh-bridges
+        name: foxglove-zenoh-bridges-vo2
     spec:
       volumes:
-        - name: foxglove-config
+        - name: foxglove-config-vo2
           configMap:
-            name: foxglove-demo
-      hostname: "foxglove-zenoh-bridges"
+            name: foxglove-demo-vo2
+            items:
+            - key: default-layout.json
+              path: default-layout.json
+      hostname: "foxglove-zenoh-bridges-vo2"
       hostAliases:
       - ip: "127.0.0.1"
         hostnames:
-        - "foxglove-zenoh-bridges"
+        - "foxglove-zenoh-bridges-vo2"
       containers:
-      - name: foxglove-zenoh-bridges-container       
-        image: robopaas/foxglove-zenoh-bridges
+      - name: foxglove-zenoh-bridges-vo2-container       
+        image: robopaas/foxglove-zenoh-bridge-summit
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: "7"
-            memory: 15Gi
+            cpu: "2"
+            memory: 5Gi
           limits:
-            cpu: "7"
-            memory: 15Gi         
+            cpu: "2"
+            memory: 5Gi          
         env:
           - name: ROS_HOSTNAME
-            value: foxglove-zenoh-bridges
+            value: foxglove-zenoh-bridges-vo2
         command:
          - /run_bridge.sh
         ports:
@@ -51,21 +54,21 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: "7"
-            memory: 15Gi
+            cpu: "2"
+            memory: 5Gi
           limits:
-            cpu: "7"
-            memory: 15Gi          
+            cpu: "2"
+            memory: 5Gi         
         env:
           - name: ROS_HOSTNAME
-            value: foxglove-zenoh-bridges
+            value: foxglove-zenoh-bridges-vo2
         ports:
         - containerPort: 8080
           name: fxg-std
         volumeMounts:
-        - mountPath: /foxglove/default-layout.json
+        - name: foxglove-config-vo2
+          mountPath: /foxglove/default-layout.json
           subPath: default-layout.json
-          name: foxglove-config
         securityContext:
           capabilities:
             add:
@@ -75,7 +78,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: foxglove-zenoh-bridges
+  name: foxglove-zenoh-bridges-vo2
 spec:
   clusterIP: None
   ports:
@@ -86,44 +89,44 @@ spec:
       port: 8080
       targetPort: 8080
   selector:
-    name: foxglove-zenoh-bridges
+    name: foxglove-zenoh-bridges-vo2
   type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: foxglove-zenoh-bridges-ingress
+  name: foxglove-zenoh-bridges-vo2-ingress
   labels:
-    name: foxglove-zenoh-bridges
+    name: foxglove-zenoh-bridges-vo2
 spec:
   rules:
-  - host: bridges.robopaas.dev
+  - host: bridges-vo2.robopaas.dev
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: foxglove-zenoh-bridges
+            name: foxglove-zenoh-bridges-vo2
             port:
               number: 8765
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: foxglove-ingress
+  name: foxglove-ingress-vo2
   labels:
-    name: foxglove-zenoh-bridges
+    name: foxglove-zenoh-bridges-vo2
 spec:
   rules:
-  - host: foxglove-demo.robopaas.dev
+  - host: foxglove-demo-vo2.robopaas.dev
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: foxglove-zenoh-bridges
+            name: foxglove-zenoh-bridges-vo2
             port:
               number: 8080
 ---

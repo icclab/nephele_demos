@@ -56,7 +56,7 @@
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="stopbag_summit" name="launchfile_id_summit" value="stopbag_summit">
-                            <label class="form-check-label" for="stopbag_stummit">Stop rosbag</label>
+                            <label class="form-check-label" for="stopbag_summit">Stop rosbag</label>
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Trigger Execution</button>
                     </form>
@@ -64,6 +64,8 @@
                         <div class="alert alert-info mt-3">Execution Status: {{ execution_status_summit }}</div>
                     {% endif %}
                 </div>
+                
+                
 
                 <!-- Foxglove Dashboard Link for Summit-Xl -->
                 <div class="mb-4">
@@ -74,11 +76,15 @@
                 <!-- Environment Map for Summit-Xl -->
                 <div class="mb-4">
                     <h3>Environment Map</h3>
-                    <img src="{{ image_url_summit }}" alt="Summit-Xl Map" class="img-fluid">
+                    {% if image_url_summit %}
+                    <img src="{{ image_url_summit }}" alt="Summit-Xl Map">
+                    {% endif %}
                     <form action="/map_export_summit" method="get" class="mt-2">
                         <button type="submit" class="btn btn-secondary">Export Map</button>
                     </form>
                 </div>
+
+
 
                 <!-- Read Data for Summit-Xl -->
                 <div class="mb-4">
@@ -103,6 +109,7 @@
                     {% endif %}
                 </div>
 
+
                 <!-- Store Map on VO's DB for Summit-Xl -->
                 <div class="mb-4">
                     <h3>Store Map on VO's DB</h3>
@@ -111,7 +118,11 @@
                         <input type="text" id="filename_tosave_summit" name="filename_tosave_summit" class="form-control">
                         <button type="submit" class="btn btn-secondary mt-2">Store map on DB</button>
                     </form>
+                    {% if store_map_db_summit %}
+                    <div class="alert alert-info mt-3">Execution Status: {{store_map_db_summit }}</div>
+                    {% endif %}
                 </div>
+
 
                 <!-- List Filenames on VO's DB for Summit-Xl -->
                 <div class="mb-4">
@@ -120,9 +131,10 @@
                         <button type="submit" class="btn btn-secondary">Read Filenames stored on VO's DB</button>
                     </form>
                     {% if data_db_summit %}
-                    <div class="alert alert-info mt-3">Data: {{data_db_summmit }}</div>
+                    <div class="alert alert-info mt-3">Data: {{data_db_summit }}</div>
                     {% endif %}
                 </div>
+
 
                 <!-- Get Environment Map from VO's DB for Summit-Xl -->
                 <div class="mb-4">
@@ -133,6 +145,9 @@
                         <input type="text" id="filename_map_summit" name="filename_map_summit" class="form-control">
                         <button type="submit" class="btn btn-secondary mt-2">Get Map</button>
                     </form>
+                    {% if map_from_db_summit %}
+                    <div class="alert alert-info mt-3">Execution Status: {{map_from_db_summit }}</div>
+                    {% endif %}
                 </div>
 
                 <!-- Save Rosbag on VO's FS for Summit-Xl -->
@@ -143,6 +158,10 @@
                         <input type="text" id="bagname_tosave_summit" name="bagname_tosave_summit" class="form-control">
                         <button type="submit" class="btn btn-secondary mt-2">Save rosbag</button>
                     </form>
+                    {% if store_bag_vo_summit %}
+                    <div class="alert alert-info mt-3">Execution Status: {{store_bag_vo_summit }}</div>
+                    {% endif %}
+                    
                 </div>
 
                  <!-- Read Rosbag on VO's FS for Summit-Xl -->
@@ -201,7 +220,6 @@
                     <img src="{{ image_url_tb2 }}" alt="Turtlebot Map">
                     {% endif %}
                     
-                   <!-- <img src="{{ image_url_tb2 }}" alt="Turtlebot Map" class="img-fluid"> CONTINUA QUI-->
                     <form action="/map_export_tb2" method="get" class="mt-2">
                         <button type="submit" class="btn btn-secondary">Export Map</button>
                     </form>

@@ -6,7 +6,7 @@
 # Authors:      Leonardo Militano
 # Date:         2024-03-23
 ################################################################################
-export IMAGE_NAME=robopaas/myflaskapp:latest
+export IMAGE_NAME=robopaas/flaskapp_summit_tb2:latest
 
 # Get this script's path
 pushd `dirname $0` > /dev/null

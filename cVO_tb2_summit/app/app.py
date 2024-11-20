@@ -63,15 +63,12 @@ http_client.set_security(security_scheme_dict, credentials_dict)
 wot = WoT(servient=Servient(clients=[http_client]))
 
 
-##
-##  SUMMIT RELATED FUNCTIONS
-##
     
 @app.route('/trigger_execution_summit', methods=['POST'])
 def trigger_execution_summit():
     launchfile_id_summit = request.form['launchfile_id_summit']
     result_summit = asyncio.run(trigger_summit(launchfile_id_summit))
-    print("trigger_summit", result_summit)
+    app.logger.info("trigger_summit",result_summit)
     #return render_template('index.html', execution_status_summit=result_summit)
     session['execution_status_summit'] = result_summit
     return index()
@@ -141,7 +138,8 @@ async def export_map_summit():
 @app.route("/read_data_db_summit", methods=['GET'])
 def read_data_db_summit():
     result_summit = asyncio.run(read_db_summit())
-    print("read_db", result_summit)
+    #print("read_db", result_summit)
+    app.logger.info("read_db",result_summit)
     session['data_db_summit'] = result_summit
     return index()
    # return render_template('index.html', data_db_summit=result_summit)

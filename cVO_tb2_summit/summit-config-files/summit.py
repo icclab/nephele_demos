@@ -56,7 +56,7 @@ def read_from_sensor():
 
     return battery_percent#, battery_charging
     
-allAvailableResources_summit_init = {
+allAvailableResources_init = {
     'battery_percent': read_from_sensor()
  #   'battery_percent': read_from_sensor('HDD Usage (SXLS0_180227AA)')[0],
  #   'battery_charging': read_from_sensor('HDD Usage (SXLS0_180227AA)')[1],
@@ -142,9 +142,9 @@ async def triggerBringup_summit_handler(params):
         # If battery percentage is more than 50, allow to start the mapping launch file
         print("Battery sufficient, start summit mapping!")
         #process_mapping = subprocess.Popen(['ros2', 'launch', 'slam_toolbox', 'online_async_launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        process_mapping = subprocess.Popen(['ros2', 'launch', 'summit_xl_navigation', 'nav2_bringup_launch.py', 'use_sim_time:=false', 'slam:=True'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        time.sleep(20) 
-
+       # process_mapping = subprocess.Popen(['ros2', 'launch', 'summit_xl_navigation', 'nav2_bringup_launch.py', 'use_sim_time:=false', 'slam:=True'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process_mapping = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'summit_xl_nav2.launch.py', 'use_sim_time:=false', 'slam:=True', 'params_file:=/home/ros/colcon_ws/install/icclab_summit_xl/share/icclab_summit_xl/config/nav2_params_real.yaml'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        time.sleep(10) 
 
 
         if process_mapping.poll() is None:
@@ -165,7 +165,7 @@ async def triggerBringup_summit_handler(params):
     if launchfileId == 'savebag_summit':
         print("Starting recording rosbag!")
         global process_bagrecording
-        process_bagrecording = subprocess.Popen(['exec ros2 bag record -s mcap -o my_bag -d 20 -b 50000000 -a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
+        process_bagrecording = subprocess.Popen(['exec ros2 bag record -s mcap -o my_bag -d 20 -b 50000 -a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
         time.sleep(20) 
        
         print("Bag recording started.")
@@ -214,6 +214,7 @@ async def triggerBringup_summit_handler(params):
 
     # Finally deliver the launchfile
     if launchfileId == 'bringup_summit':
+        print('bringup finishded')
         return {'result': bringupaction, 'message': f'Your {launchfileId} is in progress!'}
     elif launchfileId == 'startmapping_summit':
         return {'result': mappingaction, 'message': f'Your {launchfileId} is in progress!'}
@@ -237,13 +238,13 @@ async def bagExport_summit_handler(params):
     return bag_string
     
 async def allAvailableResources_summit_read_handler():
-    allAvailableResources_summit_current = {
+    allAvailableResources_current = {
     'battery_percent': read_from_sensor()
  #   'battery_percent': read_from_sensor('HDD Usage (SXLS0_180227AA)')[0],
  #   'battery_charging': read_from_sensor('HDD Usage (SXLS0_180227AA)')[1],
     }
 
-    return allAvailableResources_summit_current
+    return allAvailableResources_current
 
 async def currentValues_summit_handler(params):
     return {

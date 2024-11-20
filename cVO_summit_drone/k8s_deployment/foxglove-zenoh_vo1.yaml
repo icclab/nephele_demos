@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fxg-zenoh-bridges-vo1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: foxglove-zenoh-bridges-vo1
+  template:
+    metadata:
+      name: foxglove-zenoh-bridges-vo1
+      labels:
+        name: foxglove-zenoh-bridges-vo1
+    spec:
+      volumes:
+        - name: foxglove-config-vo1
+          configMap:
+            name: foxglove-demo-vo1
+            items:
+            - key: default-layout.json
+              path: default-layout.json
+      hostname: "foxglove-zenoh-bridges-vo1"
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "foxglove-zenoh-bridges-vo1"
+      containers:
+      - name: foxglove-zenoh-bridges-vo1-container       
+        image: robopaas/foxglove-zenoh-bridge-tb2
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "2"
+            memory: 5Gi
+          limits:
+            cpu: "2"
+            memory: 5Gi         
+        env:
+          - name: ROS_HOSTNAME
+            value: foxglove-zenoh-bridges-vo1
+        command:
+         - /run_bridge.sh
+        ports:
+        - containerPort: 8765
+          name: fxg-ws
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+          privileged: true
+      - name: fxg-std    
+        image: robopaas/foxglove-studio:latest #ghcr.io/foxglove/studio:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "2"
+            memory: 5Gi
+          limits:
+            cpu: "2"
+            memory: 5Gi          
+        env:
+          - name: ROS_HOSTNAME
+            value: foxglove-zenoh-bridges-vo1
+        ports:
+        - containerPort: 8080
+          name: fxg-std
+        volumeMounts:
+        - name: foxglove-config-vo1
+          mountPath: /foxglove/default-layout.json
+          subPath: default-layout.json
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+          privileged: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: foxglove-zenoh-bridges-vo1
+spec:
+  clusterIP: None
+  ports:
+    - name: fxg-ws
+      port: 8765
+      protocol: TCP
+    - name: webgui
+      port: 8080
+      targetPort: 8080
+  selector:
+    name: foxglove-zenoh-bridges-vo1
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: foxglove-zenoh-bridges-vo1-ingress
+  labels:
+    name: foxglove-zenoh-bridges-vo1
+spec:
+  rules:
+  - host: bridges-vo1.robopaas.dev
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: foxglove-zenoh-bridges-vo1
+            port:
+              number: 8765
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: foxglove-ingress-vo1
+  labels:
+    name: foxglove-zenoh-bridges-vo1
+spec:
+  rules:
+  - host: foxglove-demo-vo1.robopaas.dev
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: foxglove-zenoh-bridges-vo1
+            port:
+              number: 8080
+---

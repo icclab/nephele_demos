@@ -183,9 +183,6 @@
         "currentValues_summit": {
             "description": "Returns current Values for battery status from summit through the Consumed Thing"
         },
-
-
-    
         "triggerBringup_tb2": { 
             "title": "Trigger ROS launchfiles", 
             "description": "Brings hw components up (corresponding ROS launch files are launched). Accepts launchfile id as input. Brings up all if no input is specified.", 
@@ -315,7 +312,7 @@
         }
     }, 
     "events": { 
-        "outOfResource_summmit": { 
+        "outOfResource_summit": { 
             "description": "Out of resource event. Emitted when the available resource level is not sufficient to operate further (e.g., battery level).", 
             "data": { 
                 "type": "string" 

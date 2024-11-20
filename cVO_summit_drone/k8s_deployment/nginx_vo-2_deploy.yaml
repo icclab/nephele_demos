@@ -64,10 +64,10 @@ spec:
         image: robopaas/cors
         resources:
           requests:
-            cpu: "2"
+            cpu: "1"
             memory: 2048Mi
           limits:
-            cpu: "2"
+            cpu: "1"
             memory: 2048Mi 
         volumeMounts:
           - name: summit
@@ -90,12 +90,12 @@ spec:
   ports:
   - port: 8080
     targetPort: 8080
-    nodePort: 30885
+    nodePort: 30895
     protocol: TCP
     name: http
   - port: 9090
     targetPort: 9090
-    nodePort: 30886
+    nodePort: 30896
     protocol: TCP
     name: catalogue-port
   selector:
@@ -120,12 +120,12 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx-ingress
+  name: nginx-ingress-vo2
   labels:
-    name: nginx-ingress
+    name: nginx-ingress-vo2
 spec:
   rules:
-  - host: ngnix.robopaas.dev
+  - host: ngnix-vo2.robopaas.dev
     http:
       paths:
       - path: /

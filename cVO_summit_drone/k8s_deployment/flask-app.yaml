@@ -28,7 +28,7 @@ spec:
     spec: 
       containers: 
       - name: flaskapp-container 
-        image: robopaas/myflaskapp 
+        image: robopaas/flaskapp_summit_tb2:latest 
         ports: 
         - containerPort: 5000 
 

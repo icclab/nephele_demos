@@ -70,6 +70,8 @@ async def mapReadDB_summit_handler(params):
     return parsed_result
 
 
+
+
 async def mapStoreDB_summit_handler(params):
     params = params['input'] if params['input'] else {}
      # Default values

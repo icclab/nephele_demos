@@ -25,20 +25,29 @@ databaseConfig:
   persistentDB:
     SQLite: enabled
 genericFunction: []
-#periodicFunction:
-#  check: 1000
-#  read_property_from_summit: 5000
 consumedVOs:
-#  vo1:
-#    url: "http://vo1:9090/vo1"
+  vo1:
+    url: "http://vo1:9090/vo1"
   vo2:
     url: "http://vo2:9090/vo2"
 proxy:
   propertiesMap:
+    allAvailableResources_tb2: vo1
     allAvailableResources_summit: vo2
-    #allAvailableResources_drone: vo1
   actionsMap:
+    triggerBringup_tb2: vo1
+    mapExport_tb2: vo1
+    currentValues_tb2: vo1
+    mapStoreDB_tb2: vo1
+    mapReadDB_tb2: vo1
+    filenamesReadDB_tb2: vo1
+    bagStoreVO_tb2: vo1
+
     triggerBringup_summit: vo2
     mapExport_summit: vo2
     currentValues_summit: vo2
+    mapStoreDB_summit: vo2
+    mapReadDB_summit: vo2
+    filenamesReadDB_summit: vo2
+    bagStoreVO_summit: vo2
 
