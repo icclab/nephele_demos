@@ -341,19 +341,19 @@
       "publishRate": 1,
       "upButton": {
         "field": "linear-x",
-        "value": "0.1"
+        "value": "0.05"
       },
       "downButton": {
         "field": "linear-x",
-        "value": "-0.1"
+        "value": "-0.05"
       },
       "leftButton": {
         "field": "angular-z",
-        "value": "0.1"
+        "value": "0.05"
       },
       "rightButton": {
         "field": "angular-z",
-        "value": "-0.1"
+        "value": "-0.05"
       }
     },
     "Tab!1iwj6dm": {

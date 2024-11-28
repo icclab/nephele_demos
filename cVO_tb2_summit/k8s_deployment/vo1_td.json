@@ -23,9 +23,6 @@
                 }
            	} 
         }, 
-        "someStringProperty": {
-            "type": "string"
-        },
         "possibleLaunchfiles_tb2": { 
             "type": "array", 
             "description": "The list of possible launchfiles. Doesn't depend on the available resources.", 

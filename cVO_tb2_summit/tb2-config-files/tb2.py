@@ -154,7 +154,7 @@ async def triggerBringup_tb2_handler(params):
     if launchfileId == 'savebag_tb2':
         print("Starting recording rosbag!")
         global process_bagrecording
-        process_bagrecording = subprocess.Popen(['exec ros2 bag record -s mcap -o my_bag -d 20 -b 5000000 -a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
+        process_bagrecording = subprocess.Popen(['exec ros2 bag record -s mcap -o my_bag -d 20 -b 50000 -a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
         time.sleep(1) 
        
         print("Bag recording started.")
@@ -193,10 +193,10 @@ async def triggerBringup_tb2_handler(params):
     newResources['battery_charging'] = read_from_sensor('kobuki: Battery')[1]
     
     # Check if the amount of available resources is sufficient to launch
-    if newResources['battery_percent'] <= 30:
+   # if newResources['battery_percent'] <= 30:
         # Emit outOfResource event
-        exposed_thing.emit_event('outOfResource_tb2', 'Low level of Battery Percentage')
-        return {'result': False, 'message': 'battery is not sufficient'}
+   #     exposed_thing.emit_event('outOfResource_tb2', 'Low level of Battery Percentage')
+   #     return {'result': False, 'message': 'battery is not sufficient'}
     
     # Now store the new level of allAvailableResources 
     await exposed_thing.properties['allAvailableResources_tb2'].write(newResources)
@@ -220,7 +220,6 @@ async def mapExport_tb2_handler(params):
     return map_string
 
 async def bagExport_tb2_handler(params):
-
     params = params['input'] if params['input'] else {}
     bag_file_path = '/home/ros/my_bag/my_bag_0.mcap'
     bag_string = get_rosbag_as_string(bag_file_path)

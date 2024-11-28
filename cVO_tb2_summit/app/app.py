@@ -183,7 +183,7 @@ async def storebagvo_summit():
     consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
     # Get the filename from the query parameters
     bagname_tosave_summit = request.args.get('bagname_tosave_summit')
-    result_summit = await consumed_thing_summit.invoke_action("bagStoreVO_summit", {'filename_tosave_summit': bagname_tosave_summit }) 
+    result_summit = await consumed_thing_summit.invoke_action("bagStoreVO_summit", {'bagname_tosave_summit': bagname_tosave_summit }) 
     #result = await consumed_thing.invoke_action("mapStoreDB")
     print(result_summit)
     return result_summit

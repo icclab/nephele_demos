@@ -4,7 +4,6 @@
 # Authors:      Mark Straub and Leonardo Militano
 # Date:         2023-11-01
 ################################################################################
-
 # Base image
 FROM robopaas/rosdocked-humble-nephele-summit:latest AS BASE
 
@@ -35,6 +34,7 @@ RUN bash -c "cd /home/ros/colcon_ws && \
 
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV CYCLONEDDS_URI=file:///home/ros/cyclonedds.xml
+ENV ROS_PACKAGE_PATH=/home/ros/colcon_ws/src:/opt/ros/humble/share
 
 
 
@@ -52,4 +52,13 @@ ADD ./run_bridge.sh /run_bridge.sh
 
 # Source ROS
 # . /opt/ros/humble/setup.bash
+RUN bash -c "source /home/ros/colcon_ws/install/setup.bash"
+# Create URDF files (necessary with rosbridge (rosbridge do not transport mesh files))
+#RUN bash -c "cd /home/ros/colcon_ws && \
+#    source /opt/ros/humble/setup.bash && \
+#    colcon build && \
+#    source /home/ros/colcon_ws/install/setup.bash && \
+#    xacro /home/ros//colcon_ws/src/icclab_summit_xl/icclab_summit_xl/robots/summit_xls_icclab.urdf.xacro > /home/ros/rosbot.urdf "
 
+
+# Latest version of Foxglove: https://github.com/foxglove/studio/pkgs/container/studio

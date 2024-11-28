@@ -64,10 +64,10 @@ spec:
         image: robopaas/cors
         resources:
           requests:
-            cpu: "1"
+            cpu: "2"
             memory: 2048Mi
           limits:
-            cpu: "1"
+            cpu: "2"
             memory: 2048Mi 
         volumeMounts:
           - name: summit
@@ -90,12 +90,12 @@ spec:
   ports:
   - port: 8080
     targetPort: 8080
-    nodePort: 30895
+    nodePort: 30875
     protocol: TCP
     name: http
   - port: 9090
     targetPort: 9090
-    nodePort: 30896
+    nodePort: 30876
     protocol: TCP
     name: catalogue-port
   selector:

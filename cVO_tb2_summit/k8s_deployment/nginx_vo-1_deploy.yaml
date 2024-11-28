@@ -64,10 +64,10 @@ spec:
         image: robopaas/cors
         resources:
           requests:
-            cpu: "1"
+            cpu: "2"
             memory: 2048Mi
           limits:
-            cpu: "1"
+            cpu: "2"
             memory: 2048Mi 
         volumeMounts:
           - name: tb2
@@ -90,12 +90,12 @@ spec:
   ports:
   - port: 8080
     targetPort: 8080
-    nodePort: 30995
+    nodePort: 30825
     protocol: TCP
     name: http
   - port: 9090
     targetPort: 9090
-    nodePort: 30996
+    nodePort: 30826
     protocol: TCP
     name: catalogue-port
   selector:
@@ -105,7 +105,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ngnix-service-vo1
+  name: ngnix-service
 spec:
   selector:
     app: nginx-vo1
@@ -132,6 +132,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: ngnix-service-vo1
+            name: ngnix-service
             port:
               number: 80

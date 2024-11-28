@@ -13,40 +13,6 @@ LOGGER.setLevel(logging.INFO)
 
 TABLE_NAME = "string_data_table"
 
-
-
-async def someStringProperty_write_handler(value):
-    servient = exposed_thing.servient
-    sqlite_db = servient.sqlite_db
-    filename = value["filename"]
-    content = value["content"]
-
-    columns = {
-        "filename": "TEXT",
-        "content": "TEXT"
-    }
-    sqlite_db.create_table_if_not_exists(TABLE_NAME, columns)
-    sqlite_db.insert_data(TABLE_NAME, (filename, content))
-
-async def map_write_handler(value):
-    servient = exposed_thing.servient
-    sqlite_db = servient.sqlite_db
-    filename = value["filename"]
-    content = value["content"]
-
-    columns = {
-        "filename": "TEXT",
-        "content": "TEXT"
-    }
-    sqlite_db.create_table_if_not_exists(TABLE_NAME, columns)
-    sqlite_db.insert_data(TABLE_NAME, (filename, content))
-
-async def someStringProperty_read_handler():
-    servient = exposed_thing.servient
-    sqlite_db = servient.sqlite_db
-
-    return servient.sqlite_db.execute_query("SELECT content FROM string_data_table WHERE filename='filename2'")
-    #return servient.sqlite_db.fetch_all_rows(TABLE_NAME)
     
 async def filenamesReadDB_summit_handler(params):
     params = params['input'] if params['input'] else {}
@@ -120,6 +86,7 @@ async def bagStoreVO_summit_handler(params):
     
     
     return {'message': f'Your bag storing on VO is in progress!'}
+
 
 
 async def read_property_from_summit():

@@ -126,7 +126,7 @@ async def triggerBringup_summit_handler(params):
         print("Battery status unknown, start summit_bringup!")
         process_bringup = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'summit_xl_real.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # Allow some time for the launch file to start
-        time.sleep(20)  
+        time.sleep(10)  
 
 
         # Check if the process is still running
@@ -157,7 +157,7 @@ async def triggerBringup_summit_handler(params):
     if launchfileId == 'savemap_summit': #and mappingaction == True:
         print("Mapping finished, save the map!")
         process_savemapping = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'map_save.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        time.sleep(20) 
+        time.sleep(10) 
        
         print("Map saved successfully.")
         saveaction = True
@@ -165,8 +165,8 @@ async def triggerBringup_summit_handler(params):
     if launchfileId == 'savebag_summit':
         print("Starting recording rosbag!")
         global process_bagrecording
-        process_bagrecording = subprocess.Popen(['exec ros2 bag record -s mcap -o my_bag -d 20 -b 50000 -a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
-        time.sleep(20) 
+        process_bagrecording = subprocess.Popen(['exec ros2 bag record -s mcap -o my_bag -d 20 -b 5000000 -a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
+        time.sleep(1) 
        
         print("Bag recording started.")
         savebagaction = True
@@ -176,7 +176,7 @@ async def triggerBringup_summit_handler(params):
         if process_bagrecording.poll() is None:
             process_bagrecording.terminate()
             process_bagrecording.wait()
-            time.sleep(20)
+            time.sleep(1)
         #print(process_bagrecording)
         #process_bagrecording.terminate()#kill()
         #os.killpg(process_bagrecording, signal.SIGTERM)
@@ -204,6 +204,7 @@ async def triggerBringup_summit_handler(params):
    # newResources['battery_charging'] = read_from_sensor('HDD Usage (SXLS0_180227AA)')[1]
     
     # Check if the amount of available resources is sufficient to launch
+    #Commenting for now as it gives an error with the return
     if newResources['battery_percent'] <= 30:
         # Emit outOfResource event
         exposed_thing.emit_event('outOfResource_summit', 'Low level of Battery Percentage')
@@ -214,7 +215,7 @@ async def triggerBringup_summit_handler(params):
 
     # Finally deliver the launchfile
     if launchfileId == 'bringup_summit':
-        print('bringup finishded')
+        print("Launch file return successfully.")
         return {'result': bringupaction, 'message': f'Your {launchfileId} is in progress!'}
     elif launchfileId == 'startmapping_summit':
         return {'result': mappingaction, 'message': f'Your {launchfileId} is in progress!'}

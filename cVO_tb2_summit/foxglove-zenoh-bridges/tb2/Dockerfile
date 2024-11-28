@@ -6,7 +6,7 @@
 ################################################################################
 
 # Base image
-FROM robopaas/rosdocked-humble-nephele-summit:latest AS BASE
+FROM robopaas/rosdocked-hum-tb2_nephele:latest AS BASE
 
 ENV ROS_VERSION=2
 USER ros
@@ -35,7 +35,7 @@ RUN bash -c "cd /home/ros/colcon_ws && \
 
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV CYCLONEDDS_URI=file:///home/ros/cyclonedds.xml
-
+ENV ROS_PACKAGE_PATH=/home/ros/colcon_ws/src:/opt/ros/humble/share
 
 
 # Download the zenoh-bridge-ros2dds binary from the release page
@@ -52,4 +52,5 @@ ADD ./run_bridge.sh /run_bridge.sh
 
 # Source ROS
 # . /opt/ros/humble/setup.bash
+RUN bash -c "source /home/ros/colcon_ws/install/setup.bash"
 
