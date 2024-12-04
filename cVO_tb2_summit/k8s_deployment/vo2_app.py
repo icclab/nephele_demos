@@ -13,7 +13,35 @@ LOGGER.setLevel(logging.INFO)
 
 TABLE_NAME = "string_data_table"
 
+
+
+import zenoh
+import json
+import time
+
+config = zenoh.Config()
+config.insert_json5("mode", json.dumps("client"))
+router_url = "tcp/160.85.253.140:30447"
+config.insert_json5("connect/endpoints", json.dumps([router_url]))
+print("Opening Zenoh session...")
+zenoh_session = zenoh.open(config)
+zenoh.init_log_from_env_or("error")
+
+async def myRosbagAction_summit_handler(params):
+    params = params['input'] if params['input'] else {}
     
+    data = params['data']
+    key = "process_trigger"
+    print(f"Declaring Publisher on '{key}'...")
+    pub = zenoh_session.declare_publisher(key)
+    payload = f"{data}"
+    LOGGER.info('Published topic is {}'.format(key))
+    LOGGER.info('Published message is {}'.format(payload))
+    pub.put(payload.encode('utf-8'))
+    time.sleep(1)
+    return {'message': f'{payload} rosbag storing trigger has been processed on the VO!'}
+
+
 async def filenamesReadDB_summit_handler(params):
     params = params['input'] if params['input'] else {}
     # Default values

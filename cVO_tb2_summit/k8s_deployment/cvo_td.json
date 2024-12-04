@@ -149,21 +149,11 @@
                 }
             } 
         },
-        "bagStoreVO_summit": { 
-            "title": "Store rosbag on VO's FS", 
-            "description": "Get rosbag data and store it to FS of the VO", 
-            "input": { 
-                "type": "object", 
-                "properties": { 
-                    "bagname_tosave_summit": { 
-                        "type": "string", 
-                        "description": "which filename to save rosbag on FS" 
-                    }
-                }
-            },
+        "myRosbagAction_summit": { 
+            "title": "Start/stop rosbag saver ", 
+            "description": "STore rosbag on local FS", 
             "output": { 
                 "type": "object", 
-                "description": "Returns rosbag in string format.", 
                 "properties": { 
                     "result": { 
                         "type": "boolean" 
@@ -276,21 +266,11 @@
                 }
             } 
         },
-        "bagStoreVO_tb2": { 
-            "title": "Store rosbag on VO's FS", 
-            "description": "Get rosbag data and store it to FS of the VO", 
-            "input": { 
-                "type": "object", 
-                "properties": { 
-                    "bagname_tosave_tb2": { 
-                        "type": "string", 
-                        "description": "which filename to save rosbag on FS" 
-                    }
-                }
-            },
+        "myRosbagAction_tb2": { 
+            "title": "Start/stop rosbag saver ", 
+            "description": "STore rosbag on local FS", 
             "output": { 
                 "type": "object", 
-                "description": "Returns rosbag in string format.", 
                 "properties": { 
                     "result": { 
                         "type": "boolean" 

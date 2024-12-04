@@ -60,7 +60,7 @@ allAvailableResources_init = {
     'battery_charging': read_from_sensor('kobuki: Battery')[1],
 }
 
-possibleLaunchfiles_tb2_init = ['startmapping_tb2', 'bringup_tb2', 'savemap_tb2', 'savebag_tb2', 'stopbag_tb2']
+possibleLaunchfiles_tb2_init = ['startmapping_tb2', 'bringup_tb2', 'savemap_tb2']
 mapdataExportTF_init = [True, False]
 
 def get_map_as_string(map_file_path):
@@ -77,20 +77,7 @@ def get_map_as_string(map_file_path):
     except FileNotFoundError:
         print("Error: Map file not found.")
         return None
-    
-def get_rosbag_as_string(bag_file_path):
-
-    try:
-        # Read the bag file as binary
-        with open(bag_file_path, 'rb') as file:
-            bag_data = file.read()
-        # Convert the MCAP binary data to a string ??? How???
-        bag_string = base64.b64encode(bag_data).decode('utf-8')
-        return bag_string
-
-    except FileNotFoundError:
-        print("Error: Bagfile not found.")
-        return None
+   
 
 async def triggerBringup_tb2_handler(params):
     params = params['input'] if params['input'] else {}
@@ -110,9 +97,7 @@ async def triggerBringup_tb2_handler(params):
     bringupaction = None
     mappingaction = None
     saveaction = None
-    savebagaction = None
-    stopbagaction = None
-    #process_bagrecording = None
+
     
 
     if launchfileId == 'bringup_tb2' and batterypercent is None :
@@ -150,38 +135,7 @@ async def triggerBringup_tb2_handler(params):
        
         print("Map saved successfully.")
         saveaction = True
-        
-    if launchfileId == 'savebag_tb2':
-        print("Starting recording rosbag!")
-        global process_bagrecording
-        process_bagrecording = subprocess.Popen(['exec ros2 bag record -s mcap -o my_bag -d 20 -b 50000 -a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
-        time.sleep(1) 
-       
-        print("Bag recording started.")
-        savebagaction = True
-    
-    if launchfileId == 'stopbag_tb2':
-        print("Stopping recording rosbag!")
-        if process_bagrecording.poll() is None:
-            process_bagrecording.terminate()
-            process_bagrecording.wait()
-            time.sleep(1)
-        #print(process_bagrecording)
-        #process_bagrecording.terminate()#kill()
-        #os.killpg(process_bagrecording, signal.SIGTERM)
-        print("Bag recording stopped.")
-        stopbagaction = True
 
-            
-        
-
-
-       # if process_savemapping.poll() is None:
-       #     print("Map saved successfully.")
-       #     saveaction = True
-       # else:
-       #     print("Failed to save map.")
-       #     saveaction = False
     
 
     # Read the current level of allAvailableResources
@@ -208,10 +162,7 @@ async def triggerBringup_tb2_handler(params):
         return {'result': mappingaction, 'message': f'Your {launchfileId} is in progress!'}
     elif launchfileId == 'savemap_tb2':
         return {'result': saveaction, 'message': f'Your {launchfileId} is in progress!'}
-    elif launchfileId == 'savebag_tb2':
-        return {'result': savebagaction, 'message': f'Your {launchfileId} is in progress!'}
-    elif launchfileId == 'stopbag_tb2':
-         return {'result': stopbagaction, 'message': f'Your {launchfileId} is in progress!'}
+
     
 async def mapExport_tb2_handler(params):
     params = params['input'] if params['input'] else {}
@@ -219,12 +170,6 @@ async def mapExport_tb2_handler(params):
     map_string = get_map_as_string(map_file_path)
     return map_string
 
-async def bagExport_tb2_handler(params):
-    params = params['input'] if params['input'] else {}
-    bag_file_path = '/home/ros/my_bag/my_bag_0.mcap'
-    bag_string = get_rosbag_as_string(bag_file_path)
-    print('done bag string')
-    return bag_string
     
 async def allAvailableResources_tb2_read_handler():
     allAvailableResources_current = {

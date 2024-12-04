@@ -6,6 +6,17 @@
     <title>Flask App - Dual Robot Control</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .button-group {
+            display: flex;
+            gap: 10px; /* Space between buttons */
+            align-items: center;
+            justify-content: flex-start; /* Align items to the left */
+        }
+        h3 {
+            margin-bottom: 20px; /* Add spacing below the heading */
+        }
+    </style>
 </head>
 <body>
     <div class="container my-5">
@@ -150,26 +161,43 @@
                     {% endif %}
                 </div>
 
-                <!-- Save Rosbag on VO's FS for Summit-Xl -->
-                <div class="mb-4">
-                    <h3>Save rosbag on VO's FS</h3>
-                    <form action="/store_bag_vo_summit" method="get">
-                        <label for="bagname_tosave_summit" class="form-label">Filename (.mcap):</label>
-                        <input type="text" id="bagname_tosave_summit" name="bagname_tosave_summit" class="form-control">
-                        <button type="submit" class="btn btn-secondary mt-2">Save rosbag</button>
-                    </form>
-                    {% if store_bag_vo_summit %}
-                    <div class="alert alert-info mt-3">Execution Status: {{store_bag_vo_summit }}</div>
+
+
+
+                <div class="container mt-5">
+                    <h3>Control rosbag for Summit</h3>
+                    <div class="button-group">
+                        <!-- Start rosbag on Summit -->
+                        <form action="/startstorezenoh_bag_vo_summit" method="get">
+                            <button type="submit" class="btn btn-secondary">Start</button>
+                        </form>
+            
+                        <!-- Stop rosbag on Turtlebot -->
+                        <form action="/stopstorezenoh_bag_vo_summit" method="get">
+                            <button type="submit" class="btn btn-secondary">Stop</button>
+                        </form>
+                    </div>
+            
+                    <!-- Execution Status Messages -->
+                    {% if startstorezenoh_bag_vo_summit %}
+                    <div class="alert alert-info mt-3">Execution Status: {{ startstorezenoh_bag_vo_summit }}</div>
                     {% endif %}
-                    
+                    {% if stopstorezenoh_bag_vo_summit %}
+                    <div class="alert alert-info mt-3">Execution Status: {{ stopstorezenoh_bag_vo_summit }}</div>
+                    {% endif %}
                 </div>
 
-                 <!-- Read Rosbag on VO's FS for Summit-Xl -->
+                
+                 <!-- Read Rosbag on VO's FS for Turtlebot -->
                 <div class="mb-4">
                     <h3>View the rosbag on VO's FS</h3>
-                    <a href="https://foxglove-demo-vo2.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo2.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
+                    <a href="https://foxglove-demo-vo2.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo1.robopaas.dev%2Fmy_rosbag/my_rosbag_0.mcap" class="btn btn-info">Rosbag stored on VO</a>
                 </div>
-            </div>
+        </div>
+
+
+
+
 
             
             <!-- Right Column (Turtlebot) -->
@@ -237,6 +265,8 @@
                 </div>
 
 
+
+
                 <!-- Read Properties Periodically on Turtlebot -->
                 <div class="mb-4">
                     <h3>Read Periodic values on Turtlebot</h3>
@@ -287,25 +317,35 @@
                     {% endif %}
                 </div>
 
-                <!-- Save Rosbag on VO's FS for Turtlebot -->
-                <div class="mb-4">
-                    <h3>Save rosbag on VO's FS</h3>
-                    <form action="/store_bag_vo_tb2" method="get">
-                        <label for="bagname_tosave_tb2" class="form-label">Filename (.mcap):</label>
-                        <input type="text" id="bagname_tosave_tb2" name="bagname_tosave_tb2" class="form-control">
-                        <button type="submit" class="btn btn-secondary mt-2">Save rosbag</button>
-                    </form>
-                    {% if store_bag_vo_tb2 %}
-                    <div class="alert alert-info mt-3">Execution Status: {{store_bag_vo_tb2 }}</div>
+
+                <div class="container mt-5">
+                    <h3>Control rosbag for Turtlebot</h3>
+                    <div class="button-group">
+                        <!-- Start rosbag on Turtlebot -->
+                        <form action="/startstorezenoh_bag_vo_tb2" method="get">
+                            <button type="submit" class="btn btn-secondary">Start</button>
+                        </form>
+            
+                        <!-- Stop rosbag on Turtlebot -->
+                        <form action="/stopstorezenoh_bag_vo_tb2" method="get">
+                            <button type="submit" class="btn btn-secondary">Stop</button>
+                        </form>
+                    </div>
+            
+                    <!-- Execution Status Messages -->
+                    {% if startstorezenoh_bag_vo_tb2 %}
+                    <div class="alert alert-info mt-3">Execution Status: {{ startstorezenoh_bag_vo_tb2 }}</div>
                     {% endif %}
-                    
+                    {% if stopstorezenoh_bag_vo_tb2 %}
+                    <div class="alert alert-info mt-3">Execution Status: {{ stopstorezenoh_bag_vo_tb2 }}</div>
+                    {% endif %}
                 </div>
 
                 
                  <!-- Read Rosbag on VO's FS for Turtlebot -->
                  <div class="mb-4">
                     <h3>View the rosbag on VO's FS</h3>
-                    <a href="https://foxglove-demo-vo1.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo1.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
+                    <a href="https://foxglove-demo-vo1.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo1.robopaas.dev%2Fmy_rosbag/my_rosbag_0.mcap" class="btn btn-info">Rosbag stored on VO</a>
                 </div>
                 
             </div>

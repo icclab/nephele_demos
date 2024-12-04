@@ -70,19 +70,6 @@
                 } 
             } 
         },
-        "bagExport_summit": { 
-            "title": "Export rosbag data", 
-            "description": "Get rosbag data", 
-            "output": { 
-                "type": "object", 
-                "description": "Returns rosbag in string format.", 
-                "properties": { 
-                    "bagtoString": { 
-                        "type": "string" 
-                    }
-                } 
-            } 
-        },
         "currentValues_summit": {
             "description": "Returns the current values"
         }

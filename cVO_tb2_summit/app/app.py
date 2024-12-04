@@ -40,8 +40,9 @@ def index():
         image_url_summit=session.get('image_url_summit'),
         data_db_summit=session.get('data_db_summit'),
         store_map_db_summit=session.get('store_map_db_summit'),
-        store_bag_vo_summit=session.get('store_bag_vo_summit'),
         map_from_db_summit=session.get('map_from_db_summit'),
+        startstorezenoh_bag_vo_summit=session.get('startstorezenoh_bag_vo_summit'),
+        stopstorezenoh_bag_vo_summit=session.get('stopstorezenoh_bag_vo_summit'),
         execution_status_tb2=session.get('execution_status_tb2'),
         current_status_tb2=session.get('current_status_tb2'),
         data_tb2=session.get('data_tb2'),
@@ -49,7 +50,8 @@ def index():
         data_db_tb2=session.get('data_db_tb2'),
         store_map_db_tb2=session.get('store_map_db_tb2'),
         map_from_db_tb2=session.get('map_from_db_tb2'),
-        store_bag_vo_tb2=session.get('store_bag_vo_tb2')
+        startstorezenoh_bag_vo_tb2=session.get('startstorezenoh_bag_vo_tb2'),
+        stopstorezenoh_bag_vo_tb2=session.get('stopstorezenoh_bag_vo_tb2')
     )
 
 http_client = HTTPClient()
@@ -61,6 +63,7 @@ credentials_dict = {
 }
 http_client.set_security(security_scheme_dict, credentials_dict)
 wot = WoT(servient=Servient(clients=[http_client]))
+
 
 
     
@@ -172,22 +175,6 @@ async def storemapdb_summit():
     return result_summit
 
 
-@app.route("/store_bag_vo_summit", methods=['GET'])
-def store_bag_vo_summit():
-    result_summit = asyncio.run(storebagvo_summit())
-    session['store_bag_vo_summit'] = result_summit
-    return index()
-   # return render_template('index.html', store_bag_vo_summit=result_summit)
-
-async def storebagvo_summit():
-    consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
-    # Get the filename from the query parameters
-    bagname_tosave_summit = request.args.get('bagname_tosave_summit')
-    result_summit = await consumed_thing_summit.invoke_action("bagStoreVO_summit", {'bagname_tosave_summit': bagname_tosave_summit }) 
-    #result = await consumed_thing.invoke_action("mapStoreDB")
-    print(result_summit)
-    return result_summit
-
 
 @app.route("/read_map_from_db_summit", methods=['GET'])
 def read_map_from_db_summit():
@@ -214,6 +201,33 @@ async def read_map_db_summit():
         # Convert to PNG format
             img.save(image_path_db_summit, format="PNG")
         return image_path_db_summit
+    
+    
+@app.route("/startstorezenoh_bag_vo_summit", methods=['GET'])
+def startstorezenoh_bag_vo_summit():
+    resultzenoh_summit = asyncio.run(startstorebagvozenoh_summit())
+    session['startstorezenoh_bag_vo_summit'] = resultzenoh_summit
+    return index()
+
+async def startstorebagvozenoh_summit():
+    consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
+    # Get the filename from the query parameters
+    result_summit = await consumed_thing_summit.invoke_action("myRosbagAction_summit", {'data': 'start' }) 
+    return result_summit
+
+
+
+@app.route("/stopstorezenoh_bag_vo_summit", methods=['GET'])
+def stopstorezenoh_bag_vo_summit():
+    resultzenoh_summit = asyncio.run(stopstorebagvozenoh_summit())
+    session['stopstorezenoh_bag_vo_summit'] = resultzenoh_summit
+    return index()
+
+async def stopstorebagvozenoh_summit():
+    consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
+    # Get the filename from the query parameters
+    result_summit = await consumed_thing_summit.invoke_action("myRosbagAction_summit", {'data': 'stop' }) 
+    return result_summit
 
 
 
@@ -318,23 +332,6 @@ async def storemapdb_tb2():
     return result_tb2
 
 
-@app.route("/store_bag_vo_tb2", methods=['GET'])
-def store_bag_vo_tb2():
-    result_tb2 = asyncio.run(storebagvo_tb2())
-   # return render_template('index.html', store_bag_vo=result_tb2)
-    session['store_bag_vo_tb2'] = result_tb2
-    return index()
-
-async def storebagvo_tb2():
-    consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
-    # Get the filename from the query parameters
-    bagname_tosave_tb2 = request.args.get('bagname_tosave_tb2')
-    result_tb2 = await consumed_thing_tb2.invoke_action("bagStoreVO_tb2", {'bagname_tosave_tb2': bagname_tosave_tb2 }) 
-    #result = await consumed_thing.invoke_action("mapStoreDB")
-    print(result_tb2)
-    return result_tb2
-
-
 @app.route("/read_map_from_db_tb2", methods=['GET'])
 def read_map_from_db_tb2():
     result_tb2 = asyncio.run(read_map_db_tb2())
@@ -361,6 +358,34 @@ async def read_map_db_tb2():
         # Convert to PNG format
             img.save(image_path_db_tb2, format="PNG")
         return image_path_db_tb2
+
+
+@app.route("/startstorezenoh_bag_vo_tb2", methods=['GET'])
+def startstorezenoh_bag_vo_tb2():
+    resultzenoh_tb2 = asyncio.run(startstorebagvozenoh_tb2())
+    session['startstorezenoh_bag_vo_tb2'] = resultzenoh_tb2
+    return index()
+
+async def startstorebagvozenoh_tb2():
+    consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
+    # Get the filename from the query parameters
+    result_tb2 = await consumed_thing_tb2.invoke_action("myRosbagAction_tb2", {'data': 'start' }) 
+    return result_tb2
+
+
+
+@app.route("/stopstorezenoh_bag_vo_tb2", methods=['GET'])
+def stopstorezenoh_bag_vo_tb2():
+    resultzenoh_tb2 = asyncio.run(stopstorebagvozenoh_tb2())
+    session['stopstorezenoh_bag_vo_tb2'] = resultzenoh_tb2
+    return index()
+
+async def stopstorebagvozenoh_tb2():
+    consumed_thing_tb2 = await wot.consume_from_url("http://cvo:9090/cvo")
+    # Get the filename from the query parameters
+    result_tb2 = await consumed_thing_tb2.invoke_action("myRosbagAction_tb2", {'data': 'stop' }) 
+    return result_tb2
+
 
 if __name__ == "__main__":
     app.run(debug=True)
