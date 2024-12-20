@@ -64,11 +64,11 @@ spec:
         image: robopaas/cors
         resources:
           requests:
-            cpu: "2"
-            memory: 2048Mi
+            memory: "256Mi"
+            cpu: "1"
           limits:
-            cpu: "2"
-            memory: 2048Mi 
+            memory: "512Mi"
+            cpu: "1"
         volumeMounts:
           - name: tb2
             mountPath: /usr/share/nginx/html/tb2
