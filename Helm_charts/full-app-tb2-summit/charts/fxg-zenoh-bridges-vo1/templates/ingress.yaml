@@ -1,0 +1,22 @@
+{{- range .Values.ingress.configurations }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .name }}
+  labels:
+    {{- include "fxg-zenoh-bridges-vo1.labels" $ | nindent 4 }}
+spec:
+  rules:
+    - host: {{ .host }}
+      http:
+        paths:
+          - path: {{ .path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $.Values.fullnameOverride }}-service
+                port:
+                  number: {{ .port }}
+---
+{{- end }}
+

@@ -1,0 +1,7 @@
+apiVersion: v2
+name: fxg-zenoh-bridges-vo2
+description: A Helm chart for deploying Foxglove Zenoh Bridges with configuration in Kubernetes
+type: application
+version: 1.0.0
+appVersion: "latest"
+

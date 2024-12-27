@@ -1,0 +1,29 @@
+apiVersion: v2
+name: full-app-tb2-summit
+version: 1.0.0
+
+dependencies:
+  - name: cvo
+    version: "1.0.0"
+    repository: "file://./charts/cvo"
+  - name: flask-gui
+    version: "1.0.0"
+    repository: "file://./charts/flask-gui"
+  - name: fxg-zenoh-bridges-vo1
+    version: "1.0.0"
+    repository: "file://./charts/fxg-zenoh-bridges-vo1"
+  - name: fxg-zenoh-bridges-vo2
+    version: "1.0.0"
+    repository: "file://./charts/fxg-zenoh-bridges-vo2"
+  - name: nginx-td
+    version: "1.0.0"
+    repository: "file://./charts/nginx-td"
+  - name: nginx-vo1
+    version: "1.0.0"
+    repository: "file://./charts/nginx-vo1"
+  - name: nginx-vo2
+    version: "1.0.0"
+    repository: "file://./charts/nginx-vo2"
+  - name: zenoh-helm
+    version: "1.0.0"
+    repository: "file://./charts/zenoh-helm"

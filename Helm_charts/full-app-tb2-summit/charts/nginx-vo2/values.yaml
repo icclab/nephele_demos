@@ -1,0 +1,28 @@
+fullnameOverride: nginx-vo2
+replicaCount: 1
+
+image:
+  wotpy: nepheleproject/vo-wot
+  corsNginx: robopaas/cors
+  rosbagsaver: robopaas/rosbagsaver:latest
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "1"
+  limits:
+    memory: "512Mi"
+    cpu: "1"
+
+ports:
+  http: 8080
+  catalogue: 9090
+  nginx: 80
+
+configMaps:
+  scripts: vo2-scripts
+  summit: summit  # Reference existing ConfigMap in the cluster
+
+ingress:
+  host: nginx-vo2.robopaas.dev
+

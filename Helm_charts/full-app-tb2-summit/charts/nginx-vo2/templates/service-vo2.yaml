@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vo2
+  labels:
+    app: vo2
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.ports.http }}
+      targetPort: {{ .Values.ports.http }}
+      nodePort: 30875
+      protocol: TCP
+      name: http
+    - port: {{ .Values.ports.catalogue }}
+      targetPort: {{ .Values.ports.catalogue }}
+      nodePort: 30876
+      protocol: TCP
+      name: catalogue-port
+  selector:
+    app: nginx-vo2
+

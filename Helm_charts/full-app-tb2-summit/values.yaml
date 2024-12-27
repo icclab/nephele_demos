@@ -1,0 +1,37 @@
+cvo:
+  fullnameOverride: cvo
+  replicaCount: 1
+#  image:
+#    repository: new-chart1-repo  # Overridden repository
+#    tag: latest
+
+flask-gui:
+  fullnameOverride: flask-gui
+  replicaCount: 1
+#  image:
+#    repository: new-chart2-repo  # Overridden repository
+#    tag: stable
+
+fxg-zenoh-bridges-vo1:
+  fullnameOverride: fxg-zenoh-bridges-vo1
+  replicaCount: 1
+
+fxg-zenoh-bridges-vo2:
+  fullnameOverride: fxg-zenoh-bridges-vo2
+  replicaCount: 1
+  
+nginx-td:
+  fullnameOverride: nginx-td
+  replicaCount: 1
+
+nginx-vo1:
+  fullnameOverride: nginx-vo1
+  replicaCount: 1
+  
+nginx-vo2:
+  fullnameOverride: nginx-vo2
+  replicaCount: 1
+
+zenoh-helm:
+  fullnameOverride: zenoh-helm
+  replicaCount: 1

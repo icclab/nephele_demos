@@ -1,0 +1,57 @@
+fullnameOverride: fxg-zenoh-bridges-vo2
+replicaCount: 1
+
+image:
+  foxgloveZenohBridge:
+    repository: robopaas/foxglove-zenoh-bridge-summit
+    tag: latest
+    pullPolicy: Always
+  foxgloveStudio:
+    repository: robopaas/foxglove-studio
+    tag: latest
+    pullPolicy: Always
+    
+resources:
+  foxgloveZenohBridge:
+    requests:
+      memory: "256Mi"
+      cpu: "1"
+    limits:
+      memory: "512Mi"
+      cpu: "1"
+  foxgloveStudio:
+    requests:
+      memory: "256Mi"
+      cpu: "1"
+    limits:
+      memory: "512Mi"
+      cpu: "1"
+      
+env:
+  ROS_HOSTNAME: foxglove-zenoh-bridges-vo2
+  ROS_PACKAGE_PATH: "/home/root/colcon_ws/src:/opt/ros/humble/share"
+  
+service:
+  ports:
+    fxgWsPort: 8765
+    webguiPort: 8080  
+  
+ingress:
+  enabled: true
+  configurations:
+    - name: foxglove-zenoh-bridges-vo2-ingress
+      host: bridges-vo2.robopaas.dev
+      path: /
+      port: 8765
+      labels: foxglove-zenoh-bridges-vo2
+    - name: foxglove-demo-vo2-ingress
+      host: foxglove-demo-vo2.robopaas.dev
+      labels: foxglove-demo-vo2
+      path: /
+      port: 8080
+      
+volumes:
+  foxgloveConfig:
+    name: foxglove-config-vo2
+    configMap:
+      name: foxglove-demo-vo2

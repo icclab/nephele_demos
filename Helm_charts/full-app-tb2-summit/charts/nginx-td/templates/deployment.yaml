@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.fullnameOverride | default .Chart.Name }}-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        resources:
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+        volumeMounts:
+          - name: summit
+            mountPath: /usr/share/nginx/html/summit
+            subPath: summit
+          - name: tb2
+            mountPath: /usr/share/nginx/html/tb2
+            subPath: tb2
+        ports:
+        - containerPort: {{ .Values.service.port }}
+      volumes:
+        - name: summit
+          configMap:
+            name: {{ .Values.volumes.summit.configMapName }}
+            items:
+            - key: {{ .Values.volumes.summit.configMapKey }}
+              path: summit
+        - name: tb2
+          configMap:
+            name: {{ .Values.volumes.tb2.configMapName }}
+            items:
+            - key: {{ .Values.volumes.tb2.configMapKey }}
+              path: tb2
+

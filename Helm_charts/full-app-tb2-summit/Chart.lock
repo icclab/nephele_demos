@@ -1,0 +1,27 @@
+dependencies:
+- name: cvo
+  repository: file://./charts/cvo
+  version: 1.0.0
+- name: flask-gui
+  repository: file://./charts/flask-gui
+  version: 1.0.0
+- name: fxg-zenoh-bridges-vo1
+  repository: file://./charts/fxg-zenoh-bridges-vo1
+  version: 1.0.0
+- name: fxg-zenoh-bridges-vo2
+  repository: file://./charts/fxg-zenoh-bridges-vo2
+  version: 1.0.0
+- name: nginx-td
+  repository: file://./charts/nginx-td
+  version: 1.0.0
+- name: nginx-vo1
+  repository: file://./charts/nginx-vo1
+  version: 1.0.0
+- name: nginx-vo2
+  repository: file://./charts/nginx-vo2
+  version: 1.0.0
+- name: zenoh-helm
+  repository: file://./charts/zenoh-helm
+  version: 1.0.0
+digest: sha256:5516feab29d3741b074983ecab1b01e07d525603276e4bc3d7b9f18e650b5e45
+generated: "2024-12-24T10:30:41.18498742+01:00"

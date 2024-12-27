@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.fullnameOverride | default .Chart.Name }}-deployment
+  labels:
+    app: nginx-vo1
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: nginx-vo1
+  template:
+    metadata:
+      labels:
+        app: nginx-vo1
+    spec:
+      volumes:
+        - name: shared-data
+          emptyDir: {}
+        - name: scripts
+          configMap:
+            name: vo1-scripts
+            items:
+              - key: app.py
+                path: app.py
+              - key: config.yaml
+                path: config.yaml
+              - key: td.json
+                path: td.json        
+        - name: tb2
+          configMap:
+            name: {{ .Values.configmap.tb2 }}
+            items:
+              - key: tb2
+                path: tb2
+      containers:
+        - name: wotpy
+          image: {{ .Values.image.wotpy.repository }}
+          imagePullPolicy: {{ .Values.image.wotpy.pullPolicy }}
+          volumeMounts:
+            - name: scripts
+              mountPath: /app.py
+              subPath: app.py
+            - name: scripts
+              mountPath: /config.yaml
+              subPath: config.yaml
+            - name: scripts
+              mountPath: /td.json
+              subPath: td.json
+            - name: shared-data
+              mountPath: /pod-data
+          ports:
+            - containerPort: 8080
+            - containerPort: 9090
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9090
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          env:
+            - name: HOSTNAME
+              value: "{{ .Values.env.HOSTNAME }}"
+
+        - name: cors-nginx
+          image: {{ .Values.image.corsNginx.repository }}
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
+          volumeMounts:
+            - name: tb2
+              mountPath: /usr/share/nginx/html/tb2
+              subPath: tb2
+            - name: shared-data
+              mountPath: /usr/share/nginx/html
+          ports:
+            - containerPort: 80
+
+        - name: rosbagsaver-tb2
+          image: {{ .Values.image.rosbagSaver.repository }}
+          imagePullPolicy: {{ .Values.image.rosbagSaver.pullPolicy }}
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
+          env:
+            - name: ROS_DOMAIN_ID
+              value: "{{ .Values.env.ROS_DOMAIN_ID }}"
+          command:
+            - /run_rosbagsaver_tb2.sh
+          volumeMounts:
+            - name: shared-data
+              mountPath: /pod-data
+

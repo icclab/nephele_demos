@@ -1,0 +1,29 @@
+fullnameOverride: nginx-td
+replicaCount: 1
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: latest
+
+service:
+  name: ngnix-service-td
+  type: NodePort
+  port: 80
+  targetPort: 80
+
+resources:
+  requests:
+    cpu: "1"
+    memory: 1024Mi
+  limits:
+    cpu: "1"
+    memory: 1024Mi
+
+volumes:
+  summit:
+    configMapName: summit
+    configMapKey: summit
+  tb2:
+    configMapName: tb2
+    configMapKey: tb2
+

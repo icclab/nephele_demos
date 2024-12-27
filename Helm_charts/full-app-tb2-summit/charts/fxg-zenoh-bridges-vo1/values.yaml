@@ -1,0 +1,59 @@
+fullnameOverride: fxg-zenoh-bridges-vo1
+replicaCount: 1
+
+image:
+  foxgloveZenohBridge:
+    repository: robopaas/foxglove-zenoh-bridge-tb2
+    tag: latest
+    pullPolicy: Always
+  foxgloveStudio:
+    repository: robopaas/foxglove-studio
+    tag: latest
+    pullPolicy: Always
+
+resources:
+  foxgloveZenohBridge:
+    requests:
+      memory: "256Mi"
+      cpu: "1"
+    limits:
+      memory: "512Mi"
+      cpu: "1"
+  foxgloveStudio:
+    requests:
+      memory: "256Mi"
+      cpu: "1"
+    limits:
+      memory: "512Mi"
+      cpu: "1"
+
+env:
+  ROS_HOSTNAME: foxglove-zenoh-bridges-vo1
+
+service:
+  ports:
+    fxgWsPort: 8765
+    webguiPort: 8080
+
+
+ingress:
+  enabled: true
+  configurations:
+    - name: foxglove-zenoh-bridges-vo1-ingress
+      host: bridges-vo1.robopaas.dev
+      path: /
+      port: 8765
+      labels: foxglove-zenoh-bridges-vo1
+    - name: foxglove-demo-vo1-ingress
+      host: foxglove-demo-vo1.robopaas.dev
+      labels: foxglove-demo-vo1
+      path: /
+      port: 8080
+      
+      
+volumes:
+  foxgloveConfig:
+    name: foxglove-config-vo1
+    configMap:
+      name: foxglove-demo-vo1
+

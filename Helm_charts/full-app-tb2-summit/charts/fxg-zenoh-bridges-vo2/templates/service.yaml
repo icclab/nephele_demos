@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.fullnameOverride }}-service
+  labels:
+    {{- include "fxg-zenoh-bridges-vo2.labels" . | nindent 4 }}
+spec:
+  ports:
+    - name: fxg-ws
+      port: {{ .Values.service.ports.fxgWsPort }}
+      targetPort: {{ .Values.service.ports.fxgWsPort }}
+      protocol: TCP
+    - name: webgui
+      port: {{ .Values.service.ports.webguiPort }}
+      targetPort: {{ .Values.service.ports.webguiPort }}
+  selector:
+    {{- include "fxg-zenoh-bridges-vo2.selectorLabels" . | nindent 4 }}
+  type: ClusterIP
+
+  
+
+

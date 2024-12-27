@@ -1,0 +1,7 @@
+apiVersion: v2
+name: zenoh-helm
+description: A Helm chart for deploying Zenoh with VPA and Services
+type: application
+version: 1.0.0
+appVersion: "latest"
+

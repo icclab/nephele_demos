@@ -1,0 +1,5 @@
+apiVersion: v2
+name: nginx-td
+description: A Helm chart for deploying nginx with mounted configmaps
+version: 1.0.0
+

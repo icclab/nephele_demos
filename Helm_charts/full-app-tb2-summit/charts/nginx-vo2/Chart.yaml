@@ -1,0 +1,7 @@
+apiVersion: v2
+name: nginx-vo2
+description: A Helm chart for deploying nginx-vo2 with multiple containers and services
+type: application
+version: 1.0.0
+appVersion: "latest"
+

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.fullnameOverride }}-deployment
+  labels:
+     {{- include "fxg-zenoh-bridges-vo2.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "fxg-zenoh-bridges-vo2.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+      {{- include "fxg-zenoh-bridges-vo2.selectorLabels" . | nindent 8 }}
+    spec:
+      volumes:
+        - name: foxglove-config-vo2
+          configMap:
+            name: {{ .Values.volumes.foxgloveConfig.configMap.name }}
+            items:
+              - key: default-layout.json
+                path: default-layout.json
+      containers:
+        - name: foxglove-zenoh-bridges-vo2-container
+          image: "{{ .Values.image.foxgloveZenohBridge.repository }}:{{ .Values.image.foxgloveZenohBridge.tag }}"
+          imagePullPolicy: {{ .Values.image.foxgloveZenohBridge.pullPolicy }}
+          env:
+            - name: ROS_HOSTNAME
+              value: {{ .Values.env.ROS_HOSTNAME }}
+          command:
+            - /run_bridge.sh
+          ports:
+            - containerPort: {{ .Values.service.ports.fxgWsPort }}
+              name: fxg-ws
+        - name: fxg-std
+          image: "{{ .Values.image.foxgloveStudio.repository }}:{{ .Values.image.foxgloveStudio.tag }}"
+          imagePullPolicy: {{ .Values.image.foxgloveStudio.pullPolicy }}
+          env:
+            - name: ROS_HOSTNAME
+              value: {{ .Values.env.ROS_HOSTNAME }}
+            - name: ROS_PACKAGE_PATH
+              value: {{ .Values.env.ROS_PACKAGE_PATH }}
+          ports:
+            - containerPort: {{ .Values.service.ports.webguiPort }}
+              name: fxg-std
+          volumeMounts:
+            - name: foxglove-config-vo2
+              mountPath: /foxglove/default-layout.json
+              subPath: default-layout.json
+

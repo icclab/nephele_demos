@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.volumes.summit.configMapName }}
+data:
+  summit: |
+{{ .Files.Get "files/summit" | indent 4 }}

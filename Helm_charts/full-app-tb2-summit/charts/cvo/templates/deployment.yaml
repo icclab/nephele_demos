@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.fullnameOverride | default .Chart.Name }}-deployment
+  labels:
+    {{- include "cvo.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "cvo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "cvo.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: wotpy
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - containerPort: 8080
+          - containerPort: 9090
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9090
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        env:
+          - name: HOSTNAME
+            value: "{{ .Values.env.HOSTNAME }}"
+        volumeMounts:
+        - name: scripts
+          mountPath: /app.py
+          subPath: app.py
+        - name: scripts
+          mountPath: /config.yaml
+          subPath: config.yaml
+        - name: scripts
+          mountPath: /td.json
+          subPath: td.json
+      volumes:
+      - name: scripts
+        configMap:
+          name: {{ .Values.volumes.scripts.configMapName }}
+          items:
+          {{- range .Values.volumes.scripts.items }}
+          - key: {{ .key }}
+            path: {{ .path }}
+          {{- end }}
+

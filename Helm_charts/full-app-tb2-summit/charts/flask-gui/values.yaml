@@ -1,0 +1,28 @@
+fullnameOverride: flask-gui
+replicaCount: 1
+
+image:
+  repository: robopaas/flaskapp_summit_tb2
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  name: my-service-flaskapp
+  type: ClusterIP
+  port: 5000
+
+ingress:
+  name: flaskapp-ingress
+  enabled: true
+  host: flask-gui.robopaas.dev
+  path: /
+  pathType: Prefix
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "250m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+

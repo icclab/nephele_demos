@@ -1,0 +1,40 @@
+fullnameOverride: nginx-vo1
+replicaCount: 1
+
+image:
+  wotpy: 
+    repository: nepheleproject/vo-wot
+    pullPolicy: Always
+  corsNginx:
+    repository: robopaas/cors
+  rosbagSaver:
+    repository: robopaas/rosbagsaver
+    pullPolicy: Always
+
+service:
+  vo1:
+    nodePort: 
+      http: 30825
+      cataloguePort: 30826
+  nginx:
+    nodePort: 30827
+
+ingress:
+  nginxHost: ngnix-vo1.robopaas.dev
+
+env:
+  HOSTNAME: vo1
+  ROS_DOMAIN_ID: "0"
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "1"
+  limits:
+    memory: "512Mi"
+    cpu: "1"   
+
+configmap:
+  tb2: tb2
+
+
