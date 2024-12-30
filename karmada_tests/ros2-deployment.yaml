@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ros2-deployment
+  labels:
+    app: ros2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ros2
+  template:
+    metadata:
+      labels:
+        app: ros2
+    spec:
+      hostNetwork: true          # Equivalent to --network=host
+      hostIPC: true              # Equivalent to --ipc=host
+      hostPID: true              # Equivalent to --pid=host
+      containers:
+        - name: ros2
+          image: robopaas/rosdocked-humble-nephele-summit:zenoh_30447
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              export ROS_DISTRO=humble && \
+              export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp && \
+              export CYCLONEDDS_URI=file:////home/summit/nephele/cyclonedds-bridge.xml && \
+              source /opt/ros/humble/setup.bash && source /home/ros/colcon_ws/install/setup.bash && vo-wot -t summit-td.json -f summit.yaml summit.py & \
+              zenoh-bridge-ros2dds -c /home/summit/nephele/zenoh-bridge-conf.json5  & \ 
+              source /opt/ros/humble/setup.bash && source /home/ros/colcon_ws/install/setup.bash && ros2 launch icclab_summit_xl astra_mini.launch.py & \ 
+              source /opt/ros/humble/setup.bash && source /home/ros/colcon_ws/install/setup.bash && ros2 launch icclab_summit_xl oak.camera.launch.py namespace:=summit 
+#              wait
+          securityContext:
+            privileged: true      # Equivalent to --privileged
+          env:
+            - name: UID
+              value: "{{ .Values.user.uid }}"
+            - name: GID
+              value: "{{ .Values.user.gid }}"
+          volumeMounts:
+            - name: dev
+              mountPath: /dev/
+            - name: home-summit
+              mountPath: /home/summit
+            - name: lidar-front
+              mountPath: /dev/lidar_front
+            - name: lidar-rear
+              mountPath: /dev/lidar_rear
+            - name: astra-s
+              mountPath: /dev/astra_s
+            - name: ttyusb-gripper
+              mountPath: /dev/ttyUSB_gripper
+      volumes:
+        - name: dev
+          hostPath:
+            path: /dev/
+            type: Directory
+        - name: home-summit
+          hostPath:
+            path: /home/summit
+            type: Directory
+        - name: lidar-front
+          hostPath:
+            path: /dev/lidar_front
+            type: CharDevice
+        - name: lidar-rear
+          hostPath:
+            path: /dev/lidar_rear
+            type: CharDevice
+        - name: astra-s
+          hostPath:
+            path: /dev/astra_s
+            type: CharDevice
+        - name: ttyusb-gripper
+          hostPath:
+            path: /dev/ttyUSB_gripper
+            type: CharDevice
+

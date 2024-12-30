@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ros1-bridge
+  labels:
+    app: ros1-bridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ros1-bridge
+  template:
+    metadata:
+      labels:
+        app: ros1-bridge
+    spec:
+      hostNetwork: true       # Equivalent to --network=host
+      hostIPC: true           # Equivalent to --ipc=host
+      hostPID: true           # Equivalent to --pid=host
+      containers:
+        - name: ros1-bridge
+          image: ros:galactic-ros1-bridge
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp && \
+              export CYCLONEDDS_URI=file:////home/summit/nephele/cyclonedds-bridge.xml && \
+              source /opt/ros/galactic/setup.bash && source /opt/ros/noetic/setup.bash &&  ros2 run ros1_bridge dynamic_bridge --bridge-all-topics
+          securityContext:
+            privileged: true   # Equivalent to --privileged
+          volumeMounts:
+            - name: summit-home
+              mountPath: /home/summit
+      volumes:
+        - name: summit-home
+          hostPath:
+            path: /home/summit  # Mount the host path into the pod
+            type: Directory
+
