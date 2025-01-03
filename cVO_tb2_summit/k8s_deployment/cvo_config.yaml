@@ -13,6 +13,8 @@ bindingNB:
   hostname: cvo
   ports:
     httpPort: 8080
+  securityNB:
+    securityScheme: nosec
 bindingSB:
   bindingModeSB: [H]
   securitySB:
@@ -28,11 +30,11 @@ genericFunction: []
 consumedVOs:
   vo1:
     url: "http://vo1:9090/vo1"
-    events:
+        events:
     - outOfResource_tb2
   vo2:
     url: "http://vo2:9090/vo2"
-    events:
+        events:
     - outOfResource_summit
 proxy:
   propertiesMap:

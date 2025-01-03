@@ -76,4 +76,6 @@ spec:
           requests:
             cpu: "1"
             memory: 50Mi
- 
+        args:
+         - "--cfg=listen/timeout_ms:1000"
+         - "--cfg=listen/exit_on_failure:false"
