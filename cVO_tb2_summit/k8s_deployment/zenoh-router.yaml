@@ -16,8 +16,8 @@ spec:
     containerPolicies:
       - containerName: '*'
         minAllowed:
-          cpu: 100m
-          memory: 50Mi
+          cpu: 2
+          memory: 500Mi
         maxAllowed:
           cpu: 8
           memory: 30Gi
@@ -76,6 +76,4 @@ spec:
           requests:
             cpu: "1"
             memory: 50Mi
-        args:
-         - "--cfg=listen/timeout_ms:1000"
-         - "--cfg=listen/exit_on_failure:false"
+

@@ -72,6 +72,6 @@
          }
        }
     },
- //   rest: { http_port: 8000 }
+    rest: { http_port: 8000 }
   }
 }

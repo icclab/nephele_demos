@@ -38,7 +38,8 @@ ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV CYCLONEDDS_URI=file:///root/ros/cyclonedds.xml
 RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list > /dev/null && \
   sudo apt update && sudo bash -c "apt install -y zenoh-bridge-ros2dds=1.1.0 > /dev/null 2>1; echo $?"
-COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
+#COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
 ADD ./cyclonedds.xml /root/ros/cyclonedds.xml
 ADD ./run_rosbagsaver_tb2.sh /run_rosbagsaver_tb2.sh
+COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
 ADD ./run_rosbagsaver_summit.sh /run_rosbagsaver_summit.sh

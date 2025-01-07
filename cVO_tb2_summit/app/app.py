@@ -51,7 +51,9 @@ def index():
         store_map_db_tb2=session.get('store_map_db_tb2'),
         map_from_db_tb2=session.get('map_from_db_tb2'),
         startstorezenoh_bag_vo_tb2=session.get('startstorezenoh_bag_vo_tb2'),
-        stopstorezenoh_bag_vo_tb2=session.get('stopstorezenoh_bag_vo_tb2')
+        stopstorezenoh_bag_vo_tb2=session.get('stopstorezenoh_bag_vo_tb2'),
+        sensor_status=session.get('sensor_status'),
+        liquid_status=session.get('liquid_status')
     )
 
 http_client = HTTPClient()
@@ -65,7 +67,42 @@ http_client.set_security(security_scheme_dict, credentials_dict)
 wot = WoT(servient=Servient(clients=[http_client]))
 
 
+@app.route('/start_sensor_deployment', methods=['POST'])
+def start_sensor_deployment():
+    coordinates = []
+    for i in range(9):
+        x = request.form.get(f'coord_x_{i}')
+        y = request.form.get(f'coord_y_{i}')
+        if x and y:
+            coordinates.append((x, y))
+    session['sensor_status'] = f"Sensor deployment started with coordinates: {coordinates}"
+    result_summit = asyncio.run(deploy_sensor_summit(coordinates))
+    app.logger.info("deploy_sensor_summit",result_summit)
+    session['sensor_status'] = result_summit
+    return index()
 
+async def deploy_sensor_summit(coordinates):
+    consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
+    result_summit = await consumed_thing_summit.invoke_action("deploy_sensor_summit", {'coordinates': coordinates }) 
+    return result_summit
+
+@app.route('/start_liquid_sampling', methods=['POST'])
+def start_liquid_sampling():
+    coordinates = []
+    x = request.form.get(f'liquid_coord_x')
+    y = request.form.get(f'liquid_coord_y')
+    if x and y:
+        coordinates.append((x, y))
+    session['liquid_status'] = f"Liquid sampling started at coordinates: {coordinates}"
+    result_summit = asyncio.run(sample_liquid_summit(coordinates))
+    app.logger.info("sample_liquid_summit",result_summit)
+    session['liquid_status'] = result_summit
+    return index()
+
+async def sample_liquid_summit(coordinates):
+    consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
+    result_summit = await consumed_thing_summit.invoke_action("sample_liquid_summit", {'coordinates': coordinates }) 
+    return result_summit
     
 @app.route('/trigger_execution_summit', methods=['POST'])
 def trigger_execution_summit():

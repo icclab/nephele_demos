@@ -1,12 +1,12 @@
 #!/bin/bash
 source /opt/ros/humble/setup.bash
-source /home/ros/colcon_ws/install/setup.bash
+source /root/colcon_ws/install/setup.bash
 
 #source /root/colcon_ws/install/setup.bash
 #ros2 launch foxglove_bridge foxglove_bridge_launch.xml asset_uri_allowlist:="['^package://(?:\\w+/)*\\w+\\.(?:dae|fbx|glb|gltf|jpeg|jpg|mtl|obj|png|stl|tif|tiff|urdf|webp|xacro)$', '^package://summit_xl_description/.+\\.(?:dae|fbx|glb|gltf|jpeg|jpg|mtl|obj|png|stl|tif|tiff|urdf|webp|xacro)$']" &
-#ros2 launch foxglove_bridge foxglove_bridge_launch.xml &
+ros2 launch foxglove_bridge foxglove_bridge_launch.xml &
 #ros2 launch foxglove_bridge foxglove_bridge_launch.xml asset_uri_allowlist:="['^package://(?:\\w+/)*\\w+\\.(?:dae|fbx|glb|gltf|jpeg|jpg|mtl|obj|png|stl|tif|tiff|urdf|webp|xacro)$', '^package://summit_xl_description/.+\\.(?:dae|fbx|glb|gltf|jpeg|jpg|mtl|obj|png|stl|tif|tiff|urdf|webp|xacro)$', '^file://(?:[a-zA-Z]:)?(?:[\\\\/][^\\\\/:*?\"<>|]*)+\\.(?:dae|fbx|glb|gltf|jpeg|jpg|mtl|obj|png|stl|tif|tiff|urdf|webp|xacro)$']" &
-ros2 launch foxglove_bridge foxglove_bridge_launch.xml asset_uri_allowlist:="['^package://(?:\\w+/)*\\w+\\.(?:dae|fbx|glb|gltf|jpeg|jpg|mtl|obj|png|stl|tif|tiff|urdf|webp|xacro)$', '^package://summit_xl_description/.+\\.(?:dae|fbx|glb|gltf|jpeg|jpg|mtl|obj|png|stl|tif|tiff|urdf|webp|xacro)$']" &
+#ros2 launch foxglove_bridge foxglove_bridge_launch.xml asset_uri_allowlist:="['^package://(?:\\w+/)*\\w+\\.(?:dae|fbx|glb|gltf|jpeg|jpg|mtl|obj|png|stl|tif|tiff|urdf|webp|xacro)$', '^package://summit_xl_description/.+\\.(?:dae|fbx|glb|gltf|jpeg|jpg|mtl|obj|png|stl|tif|tiff|urdf|webp|xacro)$']" &
 
 BRIDGE_PID=$!
 

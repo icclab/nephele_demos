@@ -6,7 +6,7 @@
 # Authors:      Mark Straub
 # Date:         2024-01-23
 ################################################################################
-export IMAGE_NAME=robopaas/foxglove-zenoh-bridge-summit
+export IMAGE_NAME=robopaas/foxglove-zenoh-bridge-summit:070125
 
 # Get this script's path
 pushd `dirname $0` > /dev/null

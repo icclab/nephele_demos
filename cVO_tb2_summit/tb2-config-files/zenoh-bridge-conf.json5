@@ -2,21 +2,18 @@
 //// The "ros2" JSON5 object below can be used as such in the "plugins" part of a config file for the zenoh router (zenohd).
 ////
 {
+  mode: "client",
+  connect:{ 
+  timeout_ms: -1,
+  exit_on_failure: false,
+  endpoints: ["tcp/160.85.253.140:30447"] 
+  },
   plugins: {
     ////
     //// ROS2 related configuration
     //// All settings are optional and are unset by default - uncomment the ones you want to set
     ////
     ros2dds: {
-      ////
-      //// id: An identifier for this bridge, which must be unique in the system.
-      ///      The bridge will use this identifier in it's administration space: `@ros2/<id>/**`.
-      ///      This identifier will also appears in the logs of all other bridges on discovery events.
-      ///      By default a random UUID
-      ////
-     // id: "control1",
-
-      ////
       //// nodename: A ROS node name to be used by this bridge.
       ////            Default: "zenoh_bridge_ros2dds"
       ////
@@ -30,7 +27,7 @@
       ////               Note that this also applies to topics with absolute path such as "/rosout", "/tf" and "/tf_static".
       ////            Default: "/"
       ////
-      namespace: "/bot1",
+      namespace: "/tb2",
 
       ////
       //// domain: The DDS Domain ID. By default set to 0, or to "$ROS_DOMAIN_ID" is this environment variable is defined.
@@ -59,14 +56,20 @@
       ////               or is not specified at all, it means that NO such interface is allowed.
       ////               Use 'deny' to allow all except the specified interfaces. If an interface type is set to an empty list
       ////               or is not specified at all, it means that ALL such interface are allowed.
-      // allow: {
-      //   publishers: [".*/laser_scan", "/tf", ".*/pose"],
-      //   subscribers: [".*/cmd_vel"],
-      //   service_servers: [".*/.*_parameters"],
-      //   service_clients: [],
-      //   action_servers: [".*/rotate_absolute"],
-      //   action_clients: [],
-      // },
+     // allow: {
+     //  publishers: ["/tb2/.*"],
+     //  subscribers: ["/tb2/.*"],
+     //  service_servers: ["/tb2/.*"],
+     //  service_clients: ["/tb2/.*"],
+     //  action_servers: ["/tb2/.*"],
+     //  action_clients: ["/tb2/.*"],
+     // },
+      pub_max_frequencies: [
+        ".*/image_raw=5",
+        ".*/camera_info=5",
+        ".*/scan=10",
+        ".*/imu=50",
+      ],
     //  deny: {
     //     publishers: ["/rosout", "/parameter_events"],
     //     subscribers: ["/rosout"],
@@ -75,13 +78,13 @@
     //     action_servers: [".*/_internal/.*"],
     //     action_clients: [".*/_internal/.*"],
     //  },
-      ////
+	////
       //// pub_max_frequencies: Specify a list of maximum frequency of publications routing over zenoh for a set of Publishers.
       ////                      The strings must have the format "<regex>=<float>":
       ////                      - "regex" is a regular expression matching a Publisher interface name
       ////                      - "float" is the maximum frequency in Hertz;
       ////                        if publication rate is higher, downsampling will occur when routing.
-    //  pub_max_frequencies: [".*/laser_scan=5", "/tf=10"],
+      pub_max_frequencies: [".*/laser_scan=5", "/tf=10"],
 
       ////
       //// pub_priorities: Specify a list of priorities of publications routing over zenoh for a set of Publishers.
@@ -92,7 +95,7 @@
       ////                 - "integer" is a priority value in the range [1-7]. Highest priority is 1, lowest is 7 and default is 5.
       ////                   (see Zenoh Priority definition here: https://docs.rs/zenoh/latest/zenoh/publication/enum.Priority.html)
       ////
-      //pub_priorities: ["/pose=2", "/rosout=7"],
+      pub_priorities: ["/pose=2", "/rosout=7"],
 
       ////
       //// reliable_routes_blocking: When true, the publications from a RELIABLE DDS Writer will be
@@ -149,17 +152,17 @@
   ////
   //// mode: The bridge's mode (router, peer or client)
   ////
-  mode: "client",
+ // mode: "client",
 
   ////
   //// Which endpoints to connect to. E.g. tcp/localhost:7447.
   //// By configuring the endpoints, it is possible to tell zenoh which remote router or other zenoh-bridge-ros2dds to connect to at startup.
   ////
-  connect: {
-    endpoints: [
-       "tcp/160.85.253.140:30447"
-    ]
-  },
+ // connect: {
+  //  endpoints: [
+  //     "tcp/160.85.253.140:30447"
+  //  ]
+  //},
 }
   ////
   //// Which endpoints to listen on.
@@ -209,6 +212,4 @@
   //    autoconnect: { router: "", peer: "router|peer" },
   //  },
   //},
-
-
 

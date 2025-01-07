@@ -30,12 +30,8 @@ genericFunction: []
 consumedVOs:
   vo1:
     url: "http://vo1:9090/vo1"
-        events:
-    - outOfResource_tb2
   vo2:
     url: "http://vo2:9090/vo2"
-        events:
-    - outOfResource_summit
 proxy:
   propertiesMap:
     allAvailableResources_tb2: vo1
@@ -55,4 +51,6 @@ proxy:
     mapReadDB_summit: vo2
     filenamesReadDB_summit: vo2
     myRosbagAction_summit: vo2
+    sample_liquid_summit: vo2
+    deploy_sensor_summit: vo2
 

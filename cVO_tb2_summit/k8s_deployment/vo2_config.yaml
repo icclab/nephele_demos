@@ -40,4 +40,6 @@ proxy:
     triggerBringup_summit: summit
     mapExport_summit: summit
     currentValues_summit: summit
+    sample_liquid_summit: summit
+    deploy_sensor_summit: summit
 

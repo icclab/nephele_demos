@@ -17,6 +17,9 @@ LOGGER.setLevel(logging.INFO)
 import os
 import signal
 
+import asyncio
+import json
+
 def read_from_sensor():
 #def read_from_sensor(sensorType):
    # if sensorType != 'HDD Usage (SXLS0_180227AA)':
@@ -57,13 +60,18 @@ def read_from_sensor():
     return battery_percent#, battery_charging
     
 allAvailableResources_init = {
-    'battery_percent': read_from_sensor()
+    'battery_percent': read_from_sensor(),
+    'deployed_sensors': 0,
+    'liquid_samples': 0
  #   'battery_percent': read_from_sensor('HDD Usage (SXLS0_180227AA)')[0],
  #   'battery_charging': read_from_sensor('HDD Usage (SXLS0_180227AA)')[1],
 }
 
 possibleLaunchfiles_summit_init = ['startmapping_summit', 'bringup_summit', 'savemap_summit']
 mapdataExportTF_init = [True, False]
+
+count_deployed_sensors = 0
+count_liquid_samples = 0
 
 def get_map_as_string(map_file_path):
     try:
@@ -146,7 +154,6 @@ async def triggerBringup_summit_handler(params):
         print("Map saved successfully.")
         saveaction = True
    
-    
 
     # Read the current level of allAvailableResources_summit
     resources = await exposed_thing.read_property('allAvailableResources_summit')
@@ -175,7 +182,84 @@ async def triggerBringup_summit_handler(params):
     elif launchfileId == 'savemap_summit':
         return {'result': saveaction, 'message': f'Your {launchfileId} is in progress!'}
 
+async def execute_ros2_command(command):
+    try:
+        process = await asyncio.create_subprocess_exec(
+            *command,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        await asyncio.sleep(1)  # Non-blocking sleep
+        stdout, stderr = await process.communicate()
+        
+        if process.returncode == 0:
+            print("ROS2 command executed successfully.")
+            return True
+        else:
+            print(f"Error executing ROS2 command: {stderr.decode()}")
+            return False
+    except Exception as e:
+        print(f"Exception during ROS2 command execution: {e}")
+        return False
     
+async def simulate_execute_ros2_command(command):
+    try:
+        print("Simulating ROS2 command execution:")
+        print(f"Command: {' '.join(command)}")
+        await asyncio.sleep(1)  # Simulate a delay for execution
+        print("Simulation complete. Command executed successfully.")
+        return True
+    except Exception as e:
+        print(f"Simulation error: {e}")
+        return False
+    
+
+async def sample_liquid_summit_handler(params):
+    params = params.get('input', {}) or {}
+    coordinates = params.get('coordinates')
+
+    if coordinates:
+        print("Coordinates for liquid sampling are:")
+        print(coordinates)
+        global count_liquid_samples 
+        count_liquid_samples += len(coordinates)
+        coordinates_str=json.dumps(coordinates)
+        print("Coordinates string for liquid sampling are:")
+        print(coordinates_str)
+        #success = await execute_ros2_command(['ros2', 'launch', 'liquid_pickup', 'liquid_pickup_launch_real.py'])
+        #success = await simulate_execute_ros2_command(['ros2', 'launch', 'liquid_pickup', 'liquid_pickup_launch_real.py'])
+        success = await simulate_execute_ros2_command(["ros2", "launch", "liquid_pickup", "liquid_pickup_launch_real.py", "--ros-args","-p",f"coordinates:='{coordinates_str}'"])
+        return {
+            'result': success,
+            'message': f'Liquid sampling {"completed" if success else "failed"} at coordinates: {coordinates}!'
+        }
+
+    return {'result': False, 'message': 'No coordinates provided for liquid sampling.'}
+
+
+
+async def deploy_sensor_summit_handler(params):
+    params = params.get('input', {}) or {}
+    coordinates = params.get('coordinates')
+
+    if coordinates:
+        print("Coordinates for sensor deployment are:")
+        print(coordinates)
+        global count_deployed_sensors 
+        count_deployed_sensors += len(coordinates)
+        coordinates_str=json.dumps(coordinates)
+        print("Coordinates string for sensor deployment are:")
+        print(coordinates_str)
+        #success = await execute_ros2_command(['ros2', 'launch', 'liquid_pickup', 'sensors_deploy_launch.py'])
+        success = await simulate_execute_ros2_command(["ros2", "launch", "liquid_pickup", "sensors_deploy_launch.py", "--ros-args","-p",f"coordinates:='{coordinates_str}'"])
+        return {
+            'result': success,
+            'message': f'Sensor deployment {"completed" if success else "failed"} at coordinates: {coordinates}!'
+        }
+
+    return {'result': False, 'message': 'No coordinates provided for sensor deployment.'}
+
+ 
 async def mapExport_summit_handler(params):
     params = params['input'] if params['input'] else {}
     map_file_path = '/home/ros/my_map.pgm'
@@ -185,7 +269,9 @@ async def mapExport_summit_handler(params):
     
 async def allAvailableResources_summit_read_handler():
     allAvailableResources_current = {
-    'battery_percent': read_from_sensor()
+    'battery_percent': read_from_sensor(),
+    'deployed_sensors': count_deployed_sensors,
+    'liquid_samples': count_liquid_samples
  #   'battery_percent': read_from_sensor('HDD Usage (SXLS0_180227AA)')[0],
  #   'battery_charging': read_from_sensor('HDD Usage (SXLS0_180227AA)')[1],
     }
@@ -196,7 +282,9 @@ async def currentValues_summit_handler(params):
     return {
         'result': True,
         'message': {
-    'battery_percent': read_from_sensor()
+    'battery_percent': read_from_sensor(),
+    'deployed_sensors': count_deployed_sensors,
+    'liquid_samples': count_liquid_samples
  #   'battery_percent': read_from_sensor('HDD Usage (SXLS0_180227AA)')[0],
  #   'battery_charging': read_from_sensor('HDD Usage (SXLS0_180227AA)')[1],
         }

@@ -96,7 +96,6 @@
                 </div>
 
 
-
                 <!-- Read Data for Summit-Xl -->
                 <div class="mb-4">
                     <h3>Read Properties on Summit-Xl</h3>
@@ -105,6 +104,44 @@
                     </form>
                     {% if data_summit %}
                     <div class="alert alert-info mt-3">Data: {{data_summit }}</div>
+                    {% endif %}
+                </div>
+
+
+                <!-- Sensor Deployment for Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Start Sensor Deployment</h3>
+                    <form action="/start_sensor_deployment" method="post">
+                        {% for i in range(9) %}
+                        <div class="mb-2">
+                            <label>Coordinate {{ i+1 }}:</label>
+                            <input type="text" name="coord_x_{{ i }}" placeholder="X{{ i+1 }}" required>
+                            <input type="text" name="coord_y_{{ i }}" placeholder="Y{{ i+1 }}" required>
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary mt-2">Start Sensor Deployment</button>
+                    </form>
+                    {% if sensor_status %}
+                    <div class="alert alert-info mt-3">Status: {{ sensor_status }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Liquid Sampling for Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Start Liquid Sampling</h3>
+                    <form action="/start_liquid_sampling" method="post">
+                        <div class="mb-2">
+                            <label>X Coordinate:</label>
+                            <input type="text" name="liquid_coord_x" placeholder="X" required>
+                        </div>
+                        <div class="mb-2">
+                            <label>Y Coordinate:</label>
+                            <input type="text" name="liquid_coord_y" placeholder="Y" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Start Liquid Sampling</button>
+                    </form>
+                    {% if liquid_status %}
+                    <div class="alert alert-info mt-3">Status: {{ liquid_status }}</div>
                     {% endif %}
                 </div>
 
