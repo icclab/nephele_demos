@@ -114,22 +114,23 @@
       ////                  either a list of strings with format "<regex>=<float>" where:
       ////                      - "regex" is a regular expression matching an interface name
       ////                      - "float" is the timeout in seconds
-      // queries_timeout: {
+      queries_timeout: {
       //   //// default timeout that will apply to all query, except the ones specified below
       //   //// in 'transient_local_subscribers', 'services' and 'actions'
-      //   default: 5.0,
+         default: 100.0,
       //   //// timeouts for TRANSIENT_LOCAL subscriber when querying publishers for historical publications
-      //   transient_local_subscribers: 1.0,
+         transient_local_subscribers: 100.0,
       //   //// timeouts for Service clients calling a Service server
       //   services: ["add_two_ints=0.5", ".*=1.0"],
       //   //// timeouts for Action clients calling an Action server (send_goal, cancel_goal and get_result services)
-      //   actions: {
-      //     send_goal: 1.0,
-      //     cancel_goal: 1.0,
-      //     get_result: [".*long_mission=3600", ".*short_action=10.0"],
-      //   }
-      // }
+         actions: {
+           send_goal: 1000.0,
+           cancel_goal: 100.0,
+           get_result: [".*long_mission=3600", ".*short_action=100.0"],
+         }
+       }
     },
+
 
     ////
     //// REST API configuration (active only if this part is defined)

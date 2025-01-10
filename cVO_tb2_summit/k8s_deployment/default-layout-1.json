@@ -189,18 +189,18 @@
         }
       },
       "topics": {
-        "/map": {
+        "/tb2/map": {
           "visible": true
         },
-        "/global_costmap/costmap": {
+        "/tb2/global_costmap/costmap": {
           "visible": true,
           "colorMode": "costmap"
         },
-        "/local_costmap/costmap": {
+        "/tb2/local_costmap/costmap": {
           "visible": true,
           "colorMode": "costmap"
         },
-        "/scan": {
+        "/tb2/scan": {
           "visible": true,
           "colorField": "intensity",
           "colorMode": "flat",
@@ -208,7 +208,7 @@
           "flatColor": "#dbd300ff",
           "pointSize": 6
         },
-        "/robot_description": {
+        "/tb2/robot_description": {
           "visible": true,
           "fallbackColor": "#080000",
           "displayMode": "collision"
@@ -217,9 +217,9 @@
       "layers": {},
       "publish": {
         "type": "pose",
-        "poseTopic": "/goal_pose",
-        "pointTopic": "/clicked_point",
-        "poseEstimateTopic": "/initialpose",
+        "poseTopic": "/tb2/goal_pose",
+        "pointTopic": "/tb2/clicked_point",
+        "poseEstimateTopic": "/tb2/initialpose",
         "poseEstimateXDeviation": 0.5,
         "poseEstimateYDeviation": 0.5,
         "poseEstimateThetaDeviation": 0.26179939
@@ -372,18 +372,18 @@
         }
       },
       "topics": {
-        "/map": {
+        "/tb2/map": {
           "visible": true
         },
-        "/global_costmap/costmap": {
+        "/tb2/global_costmap/costmap": {
           "visible": false,
           "colorMode": "costmap"
         },
-        "/local_costmap/costmap": {
+        "/tb2/local_costmap/costmap": {
           "visible": false,
           "colorMode": "costmap"
         },
-        "/scan": {
+        "/tb2/scan": {
           "visible": false,
           "colorField": "intensity",
           "colorMode": "flat",
@@ -391,7 +391,7 @@
           "flatColor": "#dbd300ff",
           "pointSize": 6
         },
-        "/robot_description": {
+        "/tb2/robot_description": {
           "visible": true,
           "fallbackColor": "#080000",
           "displayMode": "collision"
@@ -400,9 +400,9 @@
       "layers": {},
       "publish": {
         "type": "pose_estimate",
-        "poseTopic": "/goal_pose",
-        "pointTopic": "/clicked_point",
-        "poseEstimateTopic": "/initialpose",
+        "poseTopic": "/tb2/goal_pose",
+        "pointTopic": "/tb2/clicked_point",
+        "poseEstimateTopic": "/tb2/initialpose",
         "poseEstimateXDeviation": 0.5,
         "poseEstimateYDeviation": 0.5,
         "poseEstimateThetaDeviation": 0.26179939
@@ -442,20 +442,20 @@
       "layers": {},
       "publish": {
         "type": "point",
-        "poseTopic": "/move_base_simple/goal",
-        "pointTopic": "/clicked_point",
-        "poseEstimateTopic": "/initialpose",
+        "poseTopic": "/tb2/move_base_simple/goal",
+        "pointTopic": "/tb2/clicked_point",
+        "poseEstimateTopic": "/tb2/initialpose",
         "poseEstimateXDeviation": 0.5,
         "poseEstimateYDeviation": 0.5,
         "poseEstimateThetaDeviation": 0.26179939
       },
       "imageMode": {
-        "imageTopic": "/camera/color/image/compressed",
-        "calibrationTopic": "/camera/depth/camera_info"
+        "imageTopic": "/tb2/camera/color/image/compressed",
+        "calibrationTopic": "/tb2/camera/depth/camera_info"
       }
     },
     "Teleop!4km4ztc": {
-      "topic": "/cmd_vel",
+      "topic": "/tb2/cmd_vel",
       "publishRate": 1,
       "upButton": {
         "field": "linear-x",

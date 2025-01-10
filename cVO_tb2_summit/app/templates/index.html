@@ -115,8 +115,8 @@
                         {% for i in range(9) %}
                         <div class="mb-2">
                             <label>Coordinate {{ i+1 }}:</label>
-                            <input type="text" name="coord_x_{{ i }}" placeholder="X{{ i+1 }}" required>
-                            <input type="text" name="coord_y_{{ i }}" placeholder="Y{{ i+1 }}" required>
+                            <input type="text" name="coord_x_{{ i }}" placeholder="X{{ i+1 }}">
+                            <input type="text" name="coord_y_{{ i }}" placeholder="Y{{ i+1 }}">
                         </div>
                         {% endfor %}
                         <button type="submit" class="btn btn-primary mt-2">Start Sensor Deployment</button>
@@ -132,11 +132,11 @@
                     <form action="/start_liquid_sampling" method="post">
                         <div class="mb-2">
                             <label>X Coordinate:</label>
-                            <input type="text" name="liquid_coord_x" placeholder="X" required>
+                            <input type="text" name="liquid_coord_x" placeholder="X">
                         </div>
                         <div class="mb-2">
                             <label>Y Coordinate:</label>
-                            <input type="text" name="liquid_coord_y" placeholder="Y" required>
+                            <input type="text" name="liquid_coord_y" placeholder="Y">
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Start Liquid Sampling</button>
                     </form>

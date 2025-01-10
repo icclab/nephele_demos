@@ -182,82 +182,97 @@ async def triggerBringup_summit_handler(params):
     elif launchfileId == 'savemap_summit':
         return {'result': saveaction, 'message': f'Your {launchfileId} is in progress!'}
 
-async def execute_ros2_command(command):
-    try:
-        process = await asyncio.create_subprocess_exec(
-            *command,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
-        )
-        await asyncio.sleep(1)  # Non-blocking sleep
-        stdout, stderr = await process.communicate()
-        
-        if process.returncode == 0:
-            print("ROS2 command executed successfully.")
-            return True
-        else:
-            print(f"Error executing ROS2 command: {stderr.decode()}")
-            return False
-    except Exception as e:
-        print(f"Exception during ROS2 command execution: {e}")
-        return False
-    
-async def simulate_execute_ros2_command(command):
-    try:
-        print("Simulating ROS2 command execution:")
-        print(f"Command: {' '.join(command)}")
-        await asyncio.sleep(1)  # Simulate a delay for execution
-        print("Simulation complete. Command executed successfully.")
-        return True
-    except Exception as e:
-        print(f"Simulation error: {e}")
-        return False
     
 
 async def sample_liquid_summit_handler(params):
-    params = params.get('input', {}) or {}
-    coordinates = params.get('coordinates')
-
-    if coordinates:
-        print("Coordinates for liquid sampling are:")
-        print(coordinates)
+        params = params.get('input', {}) or {}
+        coordinates = params.get('coordinates')
         global count_liquid_samples 
         count_liquid_samples += len(coordinates)
-        coordinates_str=json.dumps(coordinates)
-        print("Coordinates string for liquid sampling are:")
-        print(coordinates_str)
-        #success = await execute_ros2_command(['ros2', 'launch', 'liquid_pickup', 'liquid_pickup_launch_real.py'])
-        #success = await simulate_execute_ros2_command(['ros2', 'launch', 'liquid_pickup', 'liquid_pickup_launch_real.py'])
-        success = await simulate_execute_ros2_command(["ros2", "launch", "liquid_pickup", "liquid_pickup_launch_real.py", "--ros-args","-p",f"coordinates:='{coordinates_str}'"])
-        return {
-            'result': success,
-            'message': f'Liquid sampling {"completed" if success else "failed"} at coordinates: {coordinates}!'
-        }
+            # Ensure coordinates are in the correct format
+        print(f"Coordinates: {coordinates}")  
+        if not coordinates:
+            return {'result': False, 'message': 'No coordinates provided for sensor deployment.'}
 
-    return {'result': False, 'message': 'No coordinates provided for liquid sampling.'}
+
+        # Create the coordinates string without quotes around numbers
+        coordinates_str = json.dumps(coordinates)  # This will produce '[ [0.5, 0] ]'
+        
+        # Replace quotes around numbers (by re-serializing to a string)
+        coordinates_str = coordinates_str.replace('"', '')  # Remove quotes around numbers
+
+        # Format the coordinates string for ROS 2 launch
+        coordinates_str = f"'{coordinates_str}'"  # Wrap coordinates in single quotes for the ROS 2 command
+
+
+         # Now manually construct the final string to match: '"[[1, 0]]"'
+        coordinates_str = f"\"{coordinates_str}\""  # Wrap it with double quotes around the entire string
+        print(f"Formatted coordinates for ROS 2 command: {coordinates_str}")
+
+        # Source the ROS workspace and launch the ROS2 command
+        command = [
+            "bash", "-c",
+            f"ros2 launch liquid_pickup liquid_pickup_launch_real.py coordinates:={coordinates_str}"
+        ]
+        print(f"Final command: {command}")
+
+        # Execute the command in a subprocess
+        try:
+            subprocess.run(command, check=True)
+            return {
+            'result': True,
+            'message': f'Liquid sampling completed at coordinates: {coordinates_str}!'
+            }
+        except subprocess.CalledProcessError as e:
+            print(f"Command failed with return code {e.returncode}")
+            print(f"Error message: {e}")
+            return {'result': False, 'message': 'An undefined error occurred.'}
 
 
 
 async def deploy_sensor_summit_handler(params):
-    params = params.get('input', {}) or {}
-    coordinates = params.get('coordinates')
-
-    if coordinates:
-        print("Coordinates for sensor deployment are:")
-        print(coordinates)
-        global count_deployed_sensors 
+        params = params.get('input', {}) or {}
+        coordinates = params.get('coordinates')
+        global count_deployed_sensors
         count_deployed_sensors += len(coordinates)
-        coordinates_str=json.dumps(coordinates)
-        print("Coordinates string for sensor deployment are:")
-        print(coordinates_str)
-        #success = await execute_ros2_command(['ros2', 'launch', 'liquid_pickup', 'sensors_deploy_launch.py'])
-        success = await simulate_execute_ros2_command(["ros2", "launch", "liquid_pickup", "sensors_deploy_launch.py", "--ros-args","-p",f"coordinates:='{coordinates_str}'"])
-        return {
-            'result': success,
-            'message': f'Sensor deployment {"completed" if success else "failed"} at coordinates: {coordinates}!'
-        }
+            # Ensure coordinates are in the correct format
+        print(f"Coordinates: {coordinates}")  
+        if not coordinates:
+            return {'result': False, 'message': 'No coordinates provided for sensor deployment.'}
 
-    return {'result': False, 'message': 'No coordinates provided for sensor deployment.'}
+
+        # Create the coordinates string without quotes around numbers
+        coordinates_str = json.dumps(coordinates)  # This will produce '[ [0.5, 0] ]'
+        
+        # Replace quotes around numbers (by re-serializing to a string)
+        coordinates_str = coordinates_str.replace('"', '')  # Remove quotes around numbers
+
+        # Format the coordinates string for ROS 2 launch
+        coordinates_str = f"'{coordinates_str}'"  # Wrap coordinates in single quotes for the ROS 2 command
+
+
+         # Now manually construct the final string to match: '"[[1, 0]]"'
+        coordinates_str = f"\"{coordinates_str}\""  # Wrap it with double quotes around the entire string
+        print(f"Formatted coordinates for ROS 2 command: {coordinates_str}")
+
+        # Source the ROS workspace and launch the ROS2 command
+        command = [
+            "bash", "-c",
+            f"ros2 launch liquid_pickup sensors_deploy_launch_real.py coordinates:={coordinates_str}"
+        ]
+        print(f"Final command: {command}")
+
+        # Execute the command in a subprocess
+        try:
+            subprocess.run(command, check=True)
+            return {
+            'result': True,
+            'message': f'Sensor deployment completed at coordinates: {coordinates_str}!'
+            }
+        except subprocess.CalledProcessError as e:
+            print(f"Command failed with return code {e.returncode}")
+            print(f"Error message: {e}")
+            return {'result': False, 'message': 'An undefined error occurred.'}
 
  
 async def mapExport_summit_handler(params):

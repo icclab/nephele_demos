@@ -43,12 +43,12 @@
        action_servers: ["/summit/.*"],
        action_clients: ["/summit/.*"],
       },
-      pub_max_frequencies: [
-        ".*/image_raw=5",
-        ".*/camera_info=5",
-        ".*/scan=10",
-        ".*/imu=50",
-      ],
+//      pub_max_frequencies: [
+//        ".*/image_raw=5",
+        //".*/camera_info=5",
+       // ".*/scan=10",
+       // ".*/imu=50",
+     // ],
 
       //// queries_timeout: Timeouts configuration for various Zenoh queries.
       ////                  Each field is optional. If not set, the 'default' timeout (5.0 seconds by default) applies to all queries.
@@ -59,7 +59,7 @@
        queries_timeout: {
       //   //// default timeout that will apply to all query, except the ones specified below
       //   //// in 'transient_local_subscribers', 'services' and 'actions'
-         default: 100.0,
+         default: 300.0,
       //   //// timeouts for TRANSIENT_LOCAL subscriber when querying publishers for historical publications
          transient_local_subscribers: 100.0,
       //   //// timeouts for Service clients calling a Service server
@@ -68,7 +68,7 @@
          actions: {
            send_goal: 1000.0,
            cancel_goal: 100.0,
-           get_result: [".*long_mission=3600", ".*short_action=100.0"],
+           get_result: [".*long_mission=3600", ".*short_action=3600.0"],
          }
        }
     },
