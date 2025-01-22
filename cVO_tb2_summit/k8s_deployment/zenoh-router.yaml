@@ -61,7 +61,7 @@ spec:
       # runtimeClassName: "nvidia"
       containers:
       - name: zenoh
-        image: eclipse/zenoh:1.0.2 #eclipse/zenoh::1.0.2 #eclipse/zenoh:0.11.0 #eclipse/zenoh:0.11.0-rc.3 version for ros rmw  #eclipse/zenoh:0.11.0 version for demo tb2 
+        image: eclipse/zenoh:1.0.4 #eclipse/zenoh::1.0.2 #eclipse/zenoh:0.11.0 #eclipse/zenoh:0.11.0-rc.3 version for ros rmw  #eclipse/zenoh:0.11.0 version for demo tb2 
         env:
         - name: RUST_LOG
           value: "zenoh=debug"
@@ -76,4 +76,6 @@ spec:
           requests:
             cpu: "4"
             memory: 25Gi
-
+        args:
+        - "--cfg=connect/timeout_ms:1000"
+        - "--cfg=connect/exit_on_failure:false"

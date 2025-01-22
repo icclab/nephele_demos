@@ -41,11 +41,12 @@ ADD ./run_bridge.sh /run_bridge.sh
 # install fails because of no systemd in container
 
 
-COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
-RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list > /dev/null && \
-    sudo apt update && sudo bash -c "apt install -y zenoh-bridge-ros2dds=1.0.2 > /dev/null 2>1; echo $?"
-
 #COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
+RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list > /dev/null 
+
+RUN    sudo apt update && sudo bash -c "apt install -y zenoh-bridge-ros2dds=1.0.2 > /dev/null 2>1; echo $?"
+
+COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
 
 # Source ROS
 # . /opt/ros/humble/setup.bash

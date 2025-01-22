@@ -20,33 +20,21 @@ import signal
 import asyncio
 import json
 
+
+process_startfrontcamera = None
+process_startarmcamera = None
+
 def read_from_sensor():
-#def read_from_sensor(sensorType):
-   # if sensorType != 'HDD Usage (SXLS0_180227AA)':
-        #print(f"Sensor type '{sensorType}' is not supported.")
-        #return None
     
     battery_percent = None 
-   # battery_charging = None
 
     class BatteryRead(Node):
         def __init__(self):
             super().__init__('battery_read')
-            #self.subscription = self.create_subscription(DiagnosticArray, '/diagnostics', self.diagnostics_callback, 10)
             self.subscription = self.create_subscription(Float32, '/summit/robotnik_base_hw/battery', self.battery_callback, 10)
 
         def battery_callback(self, msg):
             nonlocal battery_percent
-       #     nonlocal battery_charging
-            battery_percent = msg.data
-      #      for status in msg.status:
-      #          if status.name == 'HDD Usage (SXLS0_180227AA)':
-      #              for item in status.values:
-      #                  if item.key == 'Update Status':
-      #                      battery_percent = float(item.value)
-      #                  if item.key == 'Disk Space Reading':
-    #                      if item.value == 'OK':
-    #                            battery_charging = True
 
     def main():
         rclpy.init()
@@ -57,17 +45,15 @@ def read_from_sensor():
 
     main()
 
-    return battery_percent#, battery_charging
+    return battery_percent
     
 allAvailableResources_init = {
     'battery_percent': read_from_sensor(),
     'deployed_sensors': 0,
     'liquid_samples': 0
- #   'battery_percent': read_from_sensor('HDD Usage (SXLS0_180227AA)')[0],
- #   'battery_charging': read_from_sensor('HDD Usage (SXLS0_180227AA)')[1],
 }
 
-possibleLaunchfiles_summit_init = ['startmapping_summit', 'bringup_summit', 'savemap_summit']
+possibleLaunchfiles_summit_init = ['startmapping_summit', 'bringup_summit', 'savemap_summit', 'startarmcamera_summit', 'stoparmcamera_summit', 'startfrontcamera_summit', 'stopfrontcamera_summit']
 mapdataExportTF_init = [True, False]
 
 count_deployed_sensors = 0
@@ -99,19 +85,19 @@ async def triggerBringup_summit_handler(params):
     launchfileId = params.get('launchfileId', launchfileId)
 
     # Check if there is resources
-    #battery_info = read_from_sensor('HDD Usage (SXLS0_180227AA)')
     battery_info = read_from_sensor()
-    #batterypercent = battery_info[0] if battery_info is not None else None
     batterypercent = battery_info if battery_info is not None else None
-    #batterycharging = battery_info[1] if battery_info is not None else None
     print(f'Battery Percentage: {batterypercent}%')
-    #print(f'Battery is charging: {batterycharging}')
     bringupaction = None
     mappingaction = None
     saveaction = None
-
+    startarmcameraaction = None
+    startfrontcameraaction = None
+    stoparmcameraaction = None
+    stopfrontcameraaction = None
+    global process_startarmcamera  
+    global process_startfrontcamera
     
-
     #if launchfileId == 'bringup' and batterypercent is None :
     if launchfileId == 'bringup_summit':
         # If battery percentage is None, start the summit launch file
@@ -133,8 +119,6 @@ async def triggerBringup_summit_handler(params):
     if launchfileId == 'startmapping_summit':
         # If battery percentage is more than 50, allow to start the mapping launch file
         print("Battery sufficient, start summit mapping!")
-        #process_mapping = subprocess.Popen(['ros2', 'launch', 'slam_toolbox', 'online_async_launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-       # process_mapping = subprocess.Popen(['ros2', 'launch', 'summit_xl_navigation', 'nav2_bringup_launch.py', 'use_sim_time:=false', 'slam:=True'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         process_mapping = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'summit_xl_nav2.launch.py', 'use_sim_time:=false', 'slam:=True', 'params_file:=/home/ros/colcon_ws/install/icclab_summit_xl/share/icclab_summit_xl/config/nav2_params_real.yaml'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         time.sleep(10) 
 
@@ -153,7 +137,75 @@ async def triggerBringup_summit_handler(params):
        
         print("Map saved successfully.")
         saveaction = True
+    
+    
+    if launchfileId == 'startarmcam_summit':
+        process_startarmcamera = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'oak.camera.launch.py', 'namespace:=summit'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        time.sleep(10) 
+
+        if process_startarmcamera.poll() is None:
+            print("Arm camera started successfully.")
+            startarmcameraaction = True
+        else:
+            print("Failed to start arm camera.")
+            startarmcameraaction = False
    
+    if launchfileId == 'stoparmcam_summit':
+        if process_startarmcamera:
+            # Ensure that the process exists and is running
+            if process_startarmcamera.poll() is None:
+                try:
+                    # Gracefully terminate the process
+                    process_startarmcamera.send_signal(signal.SIGINT)
+                    process_startarmcamera.wait(timeout=30)
+                    print("Process terminated gracefully.")
+                except subprocess.TimeoutExpired:
+                    # Forcefully kill the process if it didn't terminate
+                    print("Process did not terminate in time. Killing it forcefully.")
+                    process_startarmcamera.kill()
+                    process_startarmcamera.wait()
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+                stoparmcameraaction = True
+            print("Arm camera stopped.")
+        else:
+            print("No arm camera process running.")
+            stoparmcameraaction = False
+        process_startarmcamera = None  # Reset the process variable
+
+    if launchfileId == 'startfrontcam_summit':
+        process_startfrontcamera = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'astra_mini.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        time.sleep(10) 
+
+        if process_startfrontcamera.poll() is None:
+            print("Front camera started successfully.")
+            startfrontcameraaction = True
+        else:
+            print("Failed to start front camera.")
+            startfrontcameraaction = False
+   
+    if launchfileId == 'stopfrontcam_summit':
+        if process_startfrontcamera:
+            # Ensure that the process exists and is running
+            if process_startfrontcamera.poll() is None:
+                try:
+                    # Gracefully terminate the process
+                    process_startfrontcamera.send_signal(signal.SIGINT)
+                    process_startfrontcamera.wait(timeout=30)
+                    print("Process terminated gracefully.")
+                except subprocess.TimeoutExpired:
+                    # Forcefully kill the process if it didn't terminate
+                    print("Process did not terminate in time. Killing it forcefully.")
+                    process_startfrontcamera.kill()
+                    process_startfrontcamera.wait()
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+                stopfrontcameraaction = True
+            print("Front camera stopped.")
+        else:
+            print("No front camera process running.")
+            stopfrontcameraaction = False
+        process_startfrontcamera = None  # Reset the process variable
 
     # Read the current level of allAvailableResources_summit
     resources = await exposed_thing.read_property('allAvailableResources_summit')
@@ -161,10 +213,8 @@ async def triggerBringup_summit_handler(params):
     # Calculate the new level of resources
     newResources = resources.copy()
     newResources['battery_percent'] = read_from_sensor()
-   # newResources['battery_charging'] = read_from_sensor('HDD Usage (SXLS0_180227AA)')[1]
     
     # Check if the amount of available resources is sufficient to launch
-    #Commenting for now as it gives an error with the return
     if newResources['battery_percent'] <= 30:
         # Emit outOfResource event
         exposed_thing.emit_event('outOfResource_summit', 'Low level of Battery Percentage')
@@ -181,6 +231,14 @@ async def triggerBringup_summit_handler(params):
         return {'result': mappingaction, 'message': f'Your {launchfileId} is in progress!'}
     elif launchfileId == 'savemap_summit':
         return {'result': saveaction, 'message': f'Your {launchfileId} is in progress!'}
+    elif launchfileId == 'startarmcam_summit':
+        return {'result': startarmcameraaction, 'message': f'Your {launchfileId} is in progress!'}
+    elif launchfileId == 'stoparmcam_summit':
+        return {'result': stoparmcameraaction, 'message': f'Your {launchfileId} is in progress!'}
+    elif launchfileId == 'startfrontcam_summit':
+        return {'result': startfrontcameraaction, 'message': f'Your {launchfileId} is in progress!'}
+    elif launchfileId == 'stopfrontcam_summit':
+        return {'result': stopfrontcameraaction, 'message': f'Your {launchfileId} is in progress!'}
 
     
 

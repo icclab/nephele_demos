@@ -28,7 +28,7 @@ spec:
       containers:
       - name: foxglove-zenoh-bridges-vo2-container       
         #image: robopaas/foxglove-zenoh-bridge-summit
-        image: robopaas/foxglove-zenoh-bridge-summit:090125
+        image: robopaas/foxglove-zenoh-bridge-summit:210125
         imagePullPolicy: Always
         resources:
           requests:

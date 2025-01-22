@@ -114,15 +114,15 @@
        queries_timeout: {
       //   //// default timeout that will apply to all query, except the ones specified below
       //   //// in 'transient_local_subscribers', 'services' and 'actions'
-         default: 300.0,
+         default: 3600.0,
       //   //// timeouts for TRANSIENT_LOCAL subscriber when querying publishers for historical publications
-         transient_local_subscribers: 100.0,
+         transient_local_subscribers: 3600.0,
       //   //// timeouts for Service clients calling a Service server
       //   services: ["add_two_ints=0.5", ".*=1.0"],
       //   //// timeouts for Action clients calling an Action server (send_goal, cancel_goal and get_result services)
          actions: {
-           send_goal: 1000.0,
-           cancel_goal: 100.0,
+           send_goal: 3600.0,
+           cancel_goal: 3600.0,
            get_result: [".*long_mission=3600", ".*short_action=3600.0"],
          }
        }

@@ -37,7 +37,7 @@ RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV CYCLONEDDS_URI=file:///root/ros/cyclonedds.xml
 RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list > /dev/null && \
-  sudo apt update && sudo bash -c "apt install -y zenoh-bridge-ros2dds=1.0.2 > /dev/null 2>1; echo $?"
+  sudo apt update && sudo bash -c "apt install -y zenoh-bridge-ros2dds=1.1.1 > /dev/null 2>1; echo $?"
 #COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
 ADD ./cyclonedds.xml /root/ros/cyclonedds.xml
 ADD ./run_rosbagsaver_tb2.sh /run_rosbagsaver_tb2.sh
