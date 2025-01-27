@@ -1,7 +1,7 @@
 {
     "title": "vo1",
     "id": "urn:dev:wot:vo1",
-    "description": "Descriptor for vo1 for tb2.",
+    "description": "Descriptor for vo1 for drone.",
     "securityDefinitions": {
         "nosec_sc": {
             "scheme": "nosec"
@@ -12,7 +12,7 @@
         "https://www.w3.org/2022/wot/td/v1.1"
     ],
     "properties": { 
-        "allAvailableResources_tb2": {  
+        "allAvailableResources_drone": {  
             "type": "object", 
             "description": "Current level of all available resources given as an integer percentage for each particular resource. The data is obtained from the machine's sensors but can be set manually in case the sensors are broken.", 
             "properties": { 
@@ -26,7 +26,7 @@
         "someStringProperty": {
             "type": "string"
         },
-        "possibleLaunchfiles_tb2": { 
+        "possibleLaunchfiles_drone": { 
             "type": "array", 
             "description": "The list of possible launchfiles. Doesn't depend on the available resources.", 
             "items": { 
@@ -35,7 +35,7 @@
         }
     },
     "actions": { 
-        "triggerBringup_tb2": { 
+        "triggerBringup_drone": { 
             "title": "Trigger ROS launchfiles", 
             "description": "Brings hw components up (corresponding ROS launch files are launched). Accepts launchfile id as input. Brings up all if no input is specified.", 
             "input": { 
@@ -60,7 +60,22 @@
                 } 
             } 
         },
-        "mapExport_tb2": { 
+        "myRosbagAction_drone": { 
+            "title": "Start/stop rosbag saver ", 
+            "description": "STore rosbag on local FS", 
+            "output": { 
+                "type": "object", 
+                "properties": { 
+                    "result": { 
+                        "type": "boolean" 
+                    }, 
+                    "message": { 
+                        "type": "string" 
+                    } 
+                } 
+            } 
+        },
+        "mapExport_drone": { 
             "title": "Export map data", 
             "description": "Get map data", 
             "output": { 
@@ -73,13 +88,13 @@
                 } 
             } 
         },
-        "mapStoreDB_tb2": { 
+        "mapStoreDB_drone": { 
             "title": "Store map on DB", 
             "description": "Get map data and store it to DB of the VO", 
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_tosave_tb2": { 
+                    "filename_tosave_drone": { 
                         "type": "string", 
                         "description": "which filename to save map in db" 
                     }
@@ -98,13 +113,13 @@
                 } 
             } 
         },
-        "mapReadDB_tb2": { 
+        "mapReadDB_drone": { 
             "title": "Read map from DB", 
             "description": "Get map from DB of the VO", 
             "input": { 
                 "type": "object", 
                 "properties": { 
-                    "filename_map_tb2": { 
+                    "filename_map_drone": { 
                         "type": "string", 
                         "description": "which filename to get from db" 
                     }
@@ -120,51 +135,26 @@
                 }
             } 
         },
-        "filenamesReadDB_tb2": { 
+        "filenamesReadDB_drone": { 
             "title": "Read map from DB", 
             "description": "Get map from DB of the VO", 
             "output": { 
                 "type": "object", 
                 "description": "Returns map in string format from DB on VO.", 
                 "properties": { 
-                    "filenames_db_tb2": { 
+                    "filenames_db_drone": { 
                         "type": "string", 
                         "description": "which filename to get from db" 
                     }
                 }
             } 
         },
-        "bagStoreVO_tb2": { 
-            "title": "Store rosbag on VO's FS", 
-            "description": "Get rosbag data and store it to FS of the VO", 
-            "input": { 
-                "type": "object", 
-                "properties": { 
-                    "bagname_tosave_tb2": { 
-                        "type": "string", 
-                        "description": "which filename to save rosbag on FS" 
-                    }
-                }
-            },
-            "output": { 
-                "type": "object", 
-                "description": "Returns rosbag in string format.", 
-                "properties": { 
-                    "result": { 
-                        "type": "boolean" 
-                    }, 
-                    "message": { 
-                        "type": "string" 
-                    } 
-                } 
-            } 
-        },
-        "currentValues_tb2": {
-            "description": "Returns current Values for battery status from tb2 through the Consumed Thing"
+        "currentValues_drone": {
+            "description": "Returns current Values for battery status from drone through the Consumed Thing"
         }
     }, 
     "events": { 
-        "outOfResource_tb2": { 
+        "outOfResource_drone": { 
             "description": "Out of resource event. Emitted when the available resource level is not sufficient to operate further (e.g., battery level).", 
             "data": { 
                 "type": "string" 

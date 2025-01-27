@@ -62,12 +62,12 @@ spec:
   ports:
   - port: 8080
     targetPort: 8080
-    nodePort: 30987
+    nodePort: 30887
     protocol: TCP
     name: http
   - port: 9090
     targetPort: 9090
-    nodePort: 30988
+    nodePort: 30888
     protocol: TCP
     name: catalogue-port
   selector:

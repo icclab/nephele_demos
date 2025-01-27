@@ -32,22 +32,24 @@ consumedVOs:
     url: "http://vo2:9090/vo2"
 proxy:
   propertiesMap:
-    allAvailableResources_tb2: vo1
+    allAvailableResources_drone: vo1
     allAvailableResources_summit: vo2
   actionsMap:
-    triggerBringup_tb2: vo1
-    mapExport_tb2: vo1
-    currentValues_tb2: vo1
-    mapStoreDB_tb2: vo1
-    mapReadDB_tb2: vo1
-    filenamesReadDB_tb2: vo1
-    bagStoreVO_tb2: vo1
-
+    triggerBringup_drone: vo1
+    mapExport_drone: vo1
+    currentValues_drone: vo1
+    mapStoreDB_drone: vo1
+    mapReadDB_drone: vo1
+    filenamesReadDB_drone: vo1
+    myRosbagAction_drone: vo1
     triggerBringup_summit: vo2
     mapExport_summit: vo2
     currentValues_summit: vo2
     mapStoreDB_summit: vo2
     mapReadDB_summit: vo2
     filenamesReadDB_summit: vo2
-    bagStoreVO_summit: vo2
+    myRosbagAction_summit: vo2
+    sample_liquid_summit: vo2
+    deploy_sensor_summit: vo2
+
 

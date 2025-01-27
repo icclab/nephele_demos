@@ -43,9 +43,9 @@ spec:
           - name: summit
             mountPath: /usr/share/nginx/html/summit
             subPath: summit
-          - name: tb2
-            mountPath: /usr/share/nginx/html/tb2
-            subPath: tb2
+          - name: drone
+            mountPath: /usr/share/nginx/html/drone
+            subPath: drone
         ports:
         - containerPort: 80
       volumes:
@@ -55,11 +55,10 @@ spec:
             items:
             - key: summit
               path: summit
-        - name: tb2
+        - name: drone
           configMap:
-            name: tb2
+            name: drone
             items:
-            - key: tb2
-              path: tb2
+            - key: drone
+              path: drone
   
-

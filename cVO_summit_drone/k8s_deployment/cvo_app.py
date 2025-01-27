@@ -12,14 +12,14 @@ import base64
 LOGGER.setLevel(logging.INFO)
 
 
-async def read_property_from_tb2():
+async def read_property_from_drone():
     # Initialize the property values
-    allAvailableResources_tb2 = await consumed_vos["vo1"].properties['allAvailableResources_tb2'].read()
-    possibleLaunchfiles_tb2 = await consumed_vos["vo1"].properties['possibleLaunchfiles_tb2'].read()
+    allAvailableResources_drone = await consumed_vos["vo1"].properties['allAvailableResources_drone'].read()
+    possibleLaunchfiles_drone = await consumed_vos["vo1"].properties['possibleLaunchfiles_drone'].read()
     
     # Initialize the property values
-    await exposed_thing.properties['allAvailableResources_tb2'].write(allAvailableResources_tb2)
-    await exposed_thing.properties['possibleLaunchfiles_tb2'].write(possibleLaunchfiles_tb2)
+    await exposed_thing.properties['allAvailableResources_drone'].write(allAvailableResources_drone)
+    await exposed_thing.properties['possibleLaunchfiles_drone'].write(possibleLaunchfiles_drone)
 
 async def read_property_from_summit():
     # Initialize the property values

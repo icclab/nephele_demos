@@ -12,7 +12,7 @@
         "https://www.w3.org/2022/wot/td/v1.1"
     ],
     "properties": { 
-        "allAvailableResources_summit": {  
+        "allAvailableResources_summit": { 
             "type": "object", 
             "description": "Current level of all available resources given as an integer percentage for each particular resource. The data is obtained from the machine's sensors but can be set manually in case the sensors are broken.", 
             "properties": { 
@@ -20,12 +20,17 @@
                     "type": "integer", 
                     "minimum": 0, 
                     "maximum": 100 
+                },
+                "deployed_sensors": { 
+                    "type": "integer", 
+                    "minimum": 0
+                },
+                "liquid_samples": { 
+                    "type": "integer", 
+                    "minimum": 0
                 }
            	} 
-        }, 
-        "someStringProperty": {
-            "type": "string"
-        },
+        },  
         "possibleLaunchfiles_summit": { 
             "type": "array", 
             "description": "The list of possible launchfiles. Doesn't depend on the available resources.", 
@@ -50,6 +55,71 @@
             "output": { 
                 "type": "object", 
                 "description": "Returns True/false and a message when all invoked promises are resolved (asynchronous).", 
+                "properties": { 
+                    "result": { 
+                        "type": "boolean" 
+                    }, 
+                    "message": { 
+                        "type": "string" 
+                    } 
+                } 
+            } 
+        },
+        "deploy_sensor_summit": { 
+            "title": "Trigger sensor deployment Behavior Tree on Summit-XL", 
+            "description": "Launch Behavior Tree. Accepts vector of x-y coordinates as input. Deploys sensors in the given coordinates.", 
+            "input": { 
+                "type": "object", 
+                "properties": { 
+                    "coordinates": { 
+                        "type": "array", 
+                        "description": "Defines x-y coordinates of sensors" 
+                    }
+                }
+            },
+            "output": { 
+                "type": "object", 
+                "description": "Returns True/false and a message when all invoked promises are resolved (asynchronous).", 
+                "properties": { 
+                    "result": { 
+                        "type": "boolean" 
+                    }, 
+                    "message": { 
+                        "type": "string" 
+                    } 
+                } 
+            } 
+        },
+        "sample_liquid_summit": { 
+            "title": "Trigger liquid sampling Behavior Tree on Summit-XL", 
+            "description": "Launch Behavior Tree. Accepts vector of x-y coordinates as input. Sample liquid in the given coordinates.", 
+            "input": { 
+                "type": "object", 
+                "properties": { 
+                    "coordinates": { 
+                        "type": "array", 
+                        "description": "Defines x-y coordinates of liquid to sample" 
+                    }
+                }
+            },
+            "output": { 
+                "type": "object", 
+                "description": "Returns True/false and a message when all invoked promises are resolved (asynchronous).", 
+                "properties": { 
+                    "result": { 
+                        "type": "boolean" 
+                    }, 
+                    "message": { 
+                        "type": "string" 
+                    } 
+                } 
+            } 
+        },
+        "myRosbagAction_summit": { 
+            "title": "Start/stop rosbag saver ", 
+            "description": "STore rosbag on local FS", 
+            "output": { 
+                "type": "object", 
                 "properties": { 
                     "result": { 
                         "type": "boolean" 
@@ -132,31 +202,6 @@
                         "description": "which filename to get from db" 
                     }
                 }
-            } 
-        },
-        "bagStoreVO_summit": { 
-            "title": "Store rosbag on VO's FS", 
-            "description": "Get rosbag data and store it to FS of the VO", 
-            "input": { 
-                "type": "object", 
-                "properties": { 
-                    "bagname_tosave_summit": { 
-                        "type": "string", 
-                        "description": "which filename to save rosbag on FS" 
-                    }
-                }
-            },
-            "output": { 
-                "type": "object", 
-                "description": "Returns rosbag in string format.", 
-                "properties": { 
-                    "result": { 
-                        "type": "boolean" 
-                    }, 
-                    "message": { 
-                        "type": "string" 
-                    } 
-                } 
             } 
         },
         "currentValues_summit": {

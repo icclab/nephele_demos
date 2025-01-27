@@ -1,7 +1,7 @@
 # ====================================
-# vo1 Descriptor
+# vo2 Descriptor
 # ====================================
-name: vo1
+name: vo2
 type: VO
 resourceType:
   specification: WoT
@@ -10,7 +10,7 @@ deploymentType: A
 catalogue: 9090 
 bindingNB:
   bindingModeNB: [H]
-  hostname: vo1
+  hostname: vo2
   ports:
     httpPort: 8080
 bindingSB:
@@ -29,15 +29,14 @@ databaseConfig:
 genericFunction: [vo_status, device_status]
 periodicFunction:
   check: 1000
-  read_property_from_tb2: 5000
+  read_property_from_drone: 5000
 consumedVOs:
-  tb2:
-    url: "http://ngnix-service-td/tb2"
+  drone:
+    url: "http://ngnix-service-td/drone"
 proxy:
   propertiesMap:
-    allAvailableResources_tb2: tb2
+    allAvailableResources_drone: drone
   actionsMap:
-    triggerBringup_tb2: tb2
-    mapExport_tb2: tb2
-    currentValues_tb2: tb2
-
+    triggerBringup_drone: drone
+    mapExport_drone: drone
+    currentValues_drone: drone

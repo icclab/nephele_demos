@@ -65,7 +65,7 @@ credentials_dict = {
 }
 http_client.set_security(security_scheme_dict, credentials_dict)
 wot = WoT(servient=Servient(clients=[http_client]))
-
+tb2
 
 @app.route('/start_sensor_deployment', methods=['POST'])
 def start_sensor_deployment():
@@ -225,7 +225,7 @@ async def read_map_db_summit():
     
     # Get the filename from the query parameters
     filename_map_summit = request.args.get('filename_map_summit')
-
+tb2
     #result = await consumed_thing.read_property("someStringProperty")
     result_summit = await consumed_thing_summit.invoke_action("mapReadDB_summit", {'filename_map_summit': filename_map_summit })
     if result_summit is None:

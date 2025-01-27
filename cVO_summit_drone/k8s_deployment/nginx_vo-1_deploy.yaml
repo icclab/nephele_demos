@@ -26,12 +26,12 @@ spec:
               path: config.yaml
             - key: td.json
               path: td.json        
-        - name: tb2
+        - name: drone
           configMap:
-            name: tb2
+            name: drone
             items:
-            - key: tb2
-              path: tb2
+            - key: drone
+              path: drone
       containers:
       - name: wotpy
         image: nepheleproject/vo-wot #robopaas/nephele-vo:test #
@@ -64,20 +64,50 @@ spec:
         image: robopaas/cors
         resources:
           requests:
+            memory: "256Mi"
             cpu: "1"
-            memory: 2048Mi
           limits:
+            memory: "512Mi"
             cpu: "1"
-            memory: 2048Mi 
         volumeMounts:
-          - name: tb2
-            mountPath: /usr/share/nginx/html/tb2
-            subPath: tb2
+          - name: drone
+            mountPath: /usr/share/nginx/html/drone
+            subPath: drone
           - name: shared-data
             mountPath: /usr/share/nginx/html
         ports:
         - containerPort: 80
+      - name: rosbagsaver-drone
+        image: robopaas/rosbagsaver:latest
+        imagePullPolicy:  Always #IfNotPresent 
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "1"
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        env:
+        - name: ROS_DOMAIN_ID
+          value: "0"  # Ensure the ROS 2 domain is properly configured if needed
+        command:
+         - /run_rosbagsaver_drone.sh
+        volumeMounts:
+          - name: shared-data
+            mountPath: /pod-data
 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rosbagsaver-service-drone
+spec:
+  selector:
+    app: rosbagsaver-drone
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80  # You can adjust this based on your use case
 ---
 apiVersion: v1
 kind: Service
@@ -90,12 +120,12 @@ spec:
   ports:
   - port: 8080
     targetPort: 8080
-    nodePort: 30995
+    nodePort: 30875
     protocol: TCP
     name: http
   - port: 9090
     targetPort: 9090
-    nodePort: 30996
+    nodePort: 30876
     protocol: TCP
     name: catalogue-port
   selector:

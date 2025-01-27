@@ -1,0 +1,56 @@
+{
+  plugins: {
+
+    ros2dds: {
+
+      namespace: "/drone",
+
+       ros_localhost_only: true,
+
+
+       allow: {
+         publishers: ["/zed/zed_node/rgb/image_rect_color", "/zed/zed_node/rgb/image_rect_color/compressed", /tf", "/tf_static", "/fmu/out/battery_status", "/zed/zed_node/rgb/camera_info", "/zed/zed_node/pose", "/zed/zed_node/odom", "/zed/zed_node/path_map", "/zed/zed_node/path_odom", "/zed/zed_node/imu/data", "/diagnostics"],
+         subscribers: [".*/cmd_vel"],
+         service_servers: [".*/.*_parameters"],
+         service_clients: [],
+         action_servers: [".*/rotate_absolute"],
+         action_clients: [],
+       },
+    
+    //  pub_max_frequencies: [".*/laser_scan=5", "/tf=10"],
+
+      //pub_priorities: ["/pose=2", "/rosout=7"],
+
+    
+       queries_timeout: {
+
+         default: 3600.0,
+         transient_local_subscribers: 3600.0,
+         actions: {
+           send_goal: 3600.0,
+           cancel_goal: 3600.0,
+           get_result: [".*=3600"],
+         }
+       }
+    },
+
+    rest: {
+         http_port: 8000,
+     },
+  },
+  mode: "client",
+
+  connect: {
+    timeout_ms: -1,
+    exit_on_failure: false,
+    endpoints: ["tcp/160.85.253.140:30447"] 
+  },
+  
+  timestamping: {
+    enabled: true,
+    drop_future_timestamp: false,
+  },
+   
+}
+  
+

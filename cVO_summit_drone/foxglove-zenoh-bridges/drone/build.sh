@@ -3,10 +3,10 @@
 ################################################################################
 # ZHAW INIT
 # Description:  Shell script to create the Base GPU Docker image
-# Authors:      Leonardo Militano
-# Date:         2024-03-23
+# Authors:      Mark Straub
+# Date:         2024-01-23
 ################################################################################
-export IMAGE_NAME=robopaas/flaskapp_summit_drone:latest
+export IMAGE_NAME=robopaas/foxglove-zenoh-bridge-drone
 
 # Get this script's path
 pushd `dirname $0` > /dev/null

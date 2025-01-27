@@ -84,8 +84,8 @@
         "poseEstimateThetaDeviation": 0.26179939
       },
       "imageMode": {
-        "imageTopic": "/summit/oak/rgb/image_raw",
-        "calibrationTopic": "/summit/oak/rgb/camera_info"
+        "imageTopic": "/summit/arm_camera/rgb/image_raw",
+        "calibrationTopic": "/summit/arm_camera/rgb/camera_info"
       },
       "foxglovePanelTitle": "Arm camera view"
     },

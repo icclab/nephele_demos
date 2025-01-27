@@ -1,0 +1,134 @@
+{
+  mode: "client",
+  connect:{ 
+  timeout_ms: -1,
+  exit_on_failure: false,
+  endpoints: ["tcp/160.85.253.140:30447"] 
+  },
+  timestamping: {
+    /// Whether data messages should be timestamped if not already.
+    /// Accepts a single boolean value or different values for router, peer and client.
+    enabled: true,
+    /// Whether data messages with timestamps in the future should be dropped or not.
+    /// If set to false (default), messages with timestamps in the future are retimestamped.
+    /// Timestamps are ignored if timestamping is disabled.
+    drop_future_timestamp: false,
+  },
+  plugins: {
+    ros2dds: {
+      namespace: "/summit",
+   //   ros_localhost_only: false,
+    //  deny: {
+    //   publishers: ["/drone/.*", "/summit/.*"],
+    //   subscribers: ["/drone/.*", "/summit/.*"],
+    //   service_servers: ["/drone/.*", "/summit/.*"],
+    //   service_clients: ["/drone/.*", "/summit/.*"],
+     //  action_servers: ["/drone/.*", "/summit/.*"],
+     //  action_clients: ["/drone/.*", "/summit/.*"],
+     // },
+      allow: {
+       publishers: [
+        // "/summit/.*"
+        "/diagnostics",
+        "/summit/front_rgbd_camera/color/camera_info",
+        "/summit/front_rgbd_camera/depth/camera_info",
+        "/summit/front_rgbd_camera/depth/points",
+        "/summit/front_rgbd_camera/color/image_raw",
+        "/summit/front_rgbd_camera/depth/image_raw",
+        "/summit/oak/rgb/image_rect", 
+        "/summit/oak/rgb/image_raw/compressed", 
+        "/summit/oak/rgb/camera_info", 
+        "/summit/oak/stereo/image_raw", 
+        "/summit/oak/stereo/camera_info",
+        "/summit/global_costmap/clearing_endpoints",
+        "/summit/global_costmap/costmap",
+        "/summit/global_costmap/costmap_raw",
+        "/summit/global_costmap/costmap_updates",
+        "/summit/global_costmap/global_costmap/transition_event",
+        "/summit/global_costmap/published_footprint",
+        "/summit/joint_states",
+        "/summit/local_costmap/clearing_endpoints",
+        "/summit/local_costmap/costmap",
+        "/summit/local_costmap/costmap_raw",
+        "/summit/local_costmap/costmap_updates",
+        "/summit/local_costmap/local_costmap/transition_event",
+        "/summit/local_costmap/published_footprint",
+        "/summit/map",
+        "/summit/merged_laser_scan",
+        "/summit/monitored_planning_scene",
+        "/summit/motion_plan_request",
+        "/summit/collision_object",
+        "/summit/robot_description",
+        "/summit/robot_description_semantic",
+        "/summit/robotnik_base_hw/battery",
+        "/summit/tf",
+        "/summit/tf_static"
+         ],
+       subscribers: ["/summit/.*"],
+       service_servers: ["/summit/.*"],
+       service_clients: ["/summit/.*"],
+       action_servers: ["/summit/.*"],
+       action_clients: ["/summit/.*"],
+      },
+      pub_max_frequencies: [       
+        "/diagnostics=0.5",
+        "/summit/front_rgbd_camera/color/camera_info=1",
+        "/summit/front_rgbd_camera/depth/camera_info=1",
+        "/summit/front_rgbd_camera/depth/points=0.5",
+        "/summit/front_rgbd_camera/color/image_raw=0.5",
+        "/summit/front_rgbd_camera/depth/image_raw=0.5",
+        "/summit/oak/rgb/image_rect=0.5", 
+        "/summit/oak/rgb/image_raw/compressed=0.5", 
+        "/summit/oak/rgb/camera_info=1", 
+        "/summit/oak/stereo/image_raw=0.5", 
+        "/summit/oak/stereo/camera_info=1",
+        "/summit/global_costmap/clearing_endpoints=1",
+        "/summit/global_costmap/costmap=1",
+        "/summit/global_costmap/costmap_raw=1",
+        "/summit/global_costmap/costmap_updates=1",
+        "/summit/global_costmap/global_costmap/transition_event=1",
+        "/summit/global_costmap/published_footprint=1",
+        "/summit/joint_states=5",
+        "/summit/local_costmap/clearing_endpoints=1",
+        "/summit/local_costmap/costmap=1",
+        "/summit/local_costmap/costmap_raw=1",
+        "/summit/local_costmap/costmap_updates=1",
+        "/summit/local_costmap/local_costmap/transition_event=1",
+        "/summit/local_costmap/published_footprint=1",
+        "/summit/map=1",
+        "/summit/merged_laser_scan=5",
+        "/summit/monitored_planning_scene=1",
+        "/summit/motion_plan_request=1",
+        "/summit/collision_object=1",
+        "/summit/robot_description=1",
+        "/summit/robot_description_semantic=1",
+        "/summit/robotnik_base_hw/battery=1",
+        "/summit/tf=5",
+        "/summit/tf_static=5"        
+         ],
+
+      pub_priorities: ["/summit/tf_static=1:express", "/summit/robot_description=1", "/summit/tf=1"],
+      //// queries_timeout: Timeouts configuration for various Zenoh queries.
+      ////                  Each field is optional. If not set, the 'default' timeout (5.0 seconds by default) applies to all queries.
+      ////                  Each value can be either a float in seconds that will apply as a timeout to all queries,
+      ////                  either a list of strings with format "<regex>=<float>" where:
+      ////                      - "regex" is a regular expression matching an interface name
+      ////                      - "float" is the timeout in seconds
+       queries_timeout: {
+      //   //// default timeout that will apply to all query, except the ones specified below
+      //   //// in 'transient_local_subscribers', 'services' and 'actions'
+         default: 300.0,
+      //   //// timeouts for TRANSIENT_LOCAL subscriber when querying publishers for historical publications
+         transient_local_subscribers: 300.0,
+      //   //// timeouts for Service clients calling a Service server
+         services: ["add_two_ints=0.5", ".*=30.0"],
+      //   //// timeouts for Action clients calling an Action server (send_goal, cancel_goal and get_result services)
+         actions: {
+           send_goal: 300.0,
+           cancel_goal: 300.0,
+           get_result: [".*=600.0"],
+         }
+      }
+    },
+  }
+}

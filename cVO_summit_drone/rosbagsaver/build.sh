@@ -3,10 +3,10 @@
 ################################################################################
 # ZHAW INIT
 # Description:  Shell script to create the Base GPU Docker image
-# Authors:      Mark Straub
-# Date:         2024-01-23
+# Authors:      Leonardo Militano
+# Date:         2024-03-23
 ################################################################################
-export IMAGE_NAME=robopaas/foxglove-zenoh-bridge-tb2
+export IMAGE_NAME=robopaas/rosbagsaver:latest
 
 # Get this script's path
 pushd `dirname $0` > /dev/null
@@ -15,8 +15,6 @@ popd > /dev/null
 
 # Build the docker image
 docker build  \
-=======
-docker build \
   --build-arg user=user\
   --build-arg uid=$UID\
   --build-arg home=/home/user \

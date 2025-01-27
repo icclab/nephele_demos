@@ -64,11 +64,11 @@ spec:
         image: robopaas/cors
         resources:
           requests:
+            memory: "256Mi"
             cpu: "1"
-            memory: 2048Mi
           limits:
+            memory: "512Mi"
             cpu: "1"
-            memory: 2048Mi 
         volumeMounts:
           - name: summit
             mountPath: /usr/share/nginx/html/summit
@@ -77,7 +77,37 @@ spec:
             mountPath: /usr/share/nginx/html
         ports:
         - containerPort: 80
+      - name: rosbagsaver-summit
+        image: robopaas/rosbagsaver:latest
+        imagePullPolicy:  Always #IfNotPresent 
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "1"
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        env:
+        - name: ROS_DOMAIN_ID
+          value: "0"  # Ensure the ROS 2 domain is properly configured if needed
+        command:
+         - /run_rosbagsaver_summit.sh
+        volumeMounts:
+          - name: shared-data
+            mountPath: /pod-data
 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rosbagsaver-service-summit
+spec:
+  selector:
+    app: rosbagsaver-summit
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80  # You can adjust this based on your use case
 ---
 apiVersion: v1
 kind: Service
@@ -90,12 +120,12 @@ spec:
   ports:
   - port: 8080
     targetPort: 8080
-    nodePort: 30895
+    nodePort: 30975
     protocol: TCP
     name: http
   - port: 9090
     targetPort: 9090
-    nodePort: 30896
+    nodePort: 30976
     protocol: TCP
     name: catalogue-port
   selector:

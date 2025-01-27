@@ -23,9 +23,9 @@ configMapGenerator:
 - name: summit
   files:
   - summit=summit
-- name: tb2
+- name: drone
   files:
-  - tb2=tb2
+  - drone=drone
 generatorOptions:
    disableNameSuffixHash: true
 resources:

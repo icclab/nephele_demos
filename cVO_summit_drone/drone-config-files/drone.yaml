@@ -1,7 +1,7 @@
 # ========================================
-# TB2 Descriptor
+# drone Descriptor
 # ========================================
-name: tb2
+name: drone
 type: VO
 resourceType:
   specification: WoT

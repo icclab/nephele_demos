@@ -15,39 +15,33 @@ TABLE_NAME = "string_data_table"
 
 
 
-async def someStringProperty_write_handler(value):
-    servient = exposed_thing.servient
-    sqlite_db = servient.sqlite_db
-    filename = value["filename"]
-    content = value["content"]
+import zenoh
+import json
+import time
 
-    columns = {
-        "filename": "TEXT",
-        "content": "TEXT"
-    }
-    sqlite_db.create_table_if_not_exists(TABLE_NAME, columns)
-    sqlite_db.insert_data(TABLE_NAME, (filename, content))
+config = zenoh.Config()
+config.insert_json5("mode", json.dumps("client"))
+router_url = "tcp/160.85.253.140:30447"
+config.insert_json5("connect/endpoints", json.dumps([router_url]))
+print("Opening Zenoh session...")
+zenoh_session = zenoh.open(config)
+zenoh.init_log_from_env_or("error")
 
-async def map_write_handler(value):
-    servient = exposed_thing.servient
-    sqlite_db = servient.sqlite_db
-    filename = value["filename"]
-    content = value["content"]
-
-    columns = {
-        "filename": "TEXT",
-        "content": "TEXT"
-    }
-    sqlite_db.create_table_if_not_exists(TABLE_NAME, columns)
-    sqlite_db.insert_data(TABLE_NAME, (filename, content))
-
-async def someStringProperty_read_handler():
-    servient = exposed_thing.servient
-    sqlite_db = servient.sqlite_db
-
-    return servient.sqlite_db.execute_query("SELECT content FROM string_data_table WHERE filename='filename2'")
-    #return servient.sqlite_db.fetch_all_rows(TABLE_NAME)
+async def myRosbagAction_summit_handler(params):
+    params = params['input'] if params['input'] else {}
     
+    data = params['data']
+    key = "process_trigger"
+    print(f"Declaring Publisher on '{key}'...")
+    pub = zenoh_session.declare_publisher(key)
+    payload = f"{data}"
+    LOGGER.info('Published topic is {}'.format(key))
+    LOGGER.info('Published message is {}'.format(payload))
+    pub.put(payload.encode('utf-8'))
+    time.sleep(1)
+    return {'message': f'{payload} rosbag storing trigger has been processed on the VO!'}
+
+
 async def filenamesReadDB_summit_handler(params):
     params = params['input'] if params['input'] else {}
     # Default values
@@ -122,6 +116,7 @@ async def bagStoreVO_summit_handler(params):
     return {'message': f'Your bag storing on VO is in progress!'}
 
 
+
 async def read_property_from_summit():
     # Initialize the property values
     allAvailableResources_summit = await consumed_vos["summit"].properties['allAvailableResources_summit'].read()
@@ -130,5 +125,4 @@ async def read_property_from_summit():
     # Initialize the property values
     await exposed_thing.properties['allAvailableResources_summit'].write(allAvailableResources_summit)
     await exposed_thing.properties['possibleLaunchfiles_summit'].write(possibleLaunchfiles_summit)
-
 
