@@ -3,19 +3,19 @@
 
     ros2dds: {
 
-      namespace: "/",
+      namespace: "/drone",
 
        ros_localhost_only: true,
 
 
-   //    allow: {
-   //      publishers: ["/zed/zed_node/rgb/image_rect_color", "/zed/zed_node/rgb/image_rect_color/compressed", /tf", "/tf_static", "/fmu/out/battery_status", "/zed/zed_node/rgb/camera_info", "/zed/zed_node/pose", "/zed/zed_node/odom", "/zed/zed_node/path_map", "/zed/zed_node/path_odom", "/zed/zed_node/imu/data", "/diagnostics"],
-   //      subscribers: [".*/cmd_vel"],
-   //      service_servers: [".*/.*_parameters"],
-   //      service_clients: [],
-   //      action_servers: [".*/rotate_absolute"],
-   //      action_clients: [],
-   //    },
+       allow: {
+         publishers: ["/zed/zed_node/rgb/image_rect_color", "/zed/zed_node/rgb/image_rect_color/compressed", /tf", "/tf_static", "/fmu/out/battery_status", "/zed/zed_node/rgb/camera_info", "/zed/zed_node/pose", "/zed/zed_node/odom", "/zed/zed_node/path_map", "/zed/zed_node/path_odom", "/zed/zed_node/imu/data", "/diagnostics"],
+         subscribers: [".*/cmd_vel"],
+         service_servers: [".*/.*_parameters"],
+         service_clients: [],
+         action_servers: [".*/rotate_absolute"],
+         action_clients: [],
+       },
     
     //  pub_max_frequencies: [".*/laser_scan=5", "/tf=10"],
 

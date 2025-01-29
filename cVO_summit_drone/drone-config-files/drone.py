@@ -93,7 +93,7 @@ def get_rosbag_as_string(bag_file_path):
         print("Error: Bagfile not found.")
         return None
 
-async def triggerBringup_zed_handler(params):
+async def triggerBringup_drone_handler(params):
     params = params['input'] if params['input'] else {}
 
     # Default values

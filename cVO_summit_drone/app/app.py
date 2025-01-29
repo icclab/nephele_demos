@@ -50,7 +50,6 @@ def index():
         data_db_drone=session.get('data_db_drone'),
         store_map_db_drone=session.get('store_map_db_drone'),
         map_from_db_drone=session.get('map_from_db_drone'),
-        store_bag_vo_drone=session.get('store_bag_vo_drone'),
         startstorezenoh_bag_vo_drone=session.get('startstorezenoh_bag_vo_drone'),
         stopstorezenoh_bag_vo_drone=session.get('stopstorezenoh_bag_vo_drone'),
         sensor_status=session.get('sensor_status'),
@@ -371,21 +370,6 @@ async def storemapdb_drone():
     return result_drone
 
 
-@app.route("/store_bag_vo_drone", methods=['GET'])
-def store_bag_vo_drone():
-    result_drone = asyncio.run(storebagvo_drone())
-   # return render_template('index.html', store_bag_vo=result_drone)
-    session['store_bag_vo_drone'] = result_drone
-    return index()
-
-async def storebagvo_drone():
-    consumed_thing_drone = await wot.consume_from_url("http://cvo:9090/cvo")
-    # Get the filename from the query parameters
-    bagname_tosave_drone = request.args.get('bagname_tosave_drone')
-    result_drone = await consumed_thing_drone.invoke_action("bagStoreVO_drone", {'bagname_tosave_drone': bagname_tosave_drone }) 
-    #result = await consumed_thing.invoke_action("mapStoreDB")
-    print(result_drone)
-    return result_drone
 
 
 @app.route("/read_map_from_db_drone", methods=['GET'])

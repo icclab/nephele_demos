@@ -23,9 +23,6 @@
                 }
            	} 
         }, 
-        "someStringProperty": {
-            "type": "string"
-        },
         "possibleLaunchfiles_drone": { 
             "type": "array", 
             "description": "The list of possible launchfiles. Doesn't depend on the available resources.", 

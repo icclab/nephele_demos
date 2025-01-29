@@ -1,7 +1,7 @@
 # ====================================
 # vo2 Descriptor
 # ====================================
-name: vo2
+name: vo1
 type: VO
 resourceType:
   specification: WoT
@@ -10,7 +10,7 @@ deploymentType: A
 catalogue: 9090 
 bindingNB:
   bindingModeNB: [H]
-  hostname: vo2
+  hostname: vo1
   ports:
     httpPort: 8080
 bindingSB:

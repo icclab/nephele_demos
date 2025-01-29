@@ -31,16 +31,14 @@ RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
 # Set the entrypoint to bash (for interactive use)
 #ENTRYPOINT ["/bin/bash", "-c", "source /opt/ros/humble/setup.bash && source /root/ros2_ws/install/setup.bash && ros2 run rosbagsaver my_rosbagsaver"]
 
-
-
-
-ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV CYCLONEDDS_URI=file:///root/ros/cyclonedds.xml
+ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+
 RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list > /dev/null && \
-  sudo apt update && sudo bash -c "apt install -y zenoh-bridge-ros2dds=1.1.1 > /dev/null 2>1; echo $?"
-#COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
+  sudo apt update && sudo bash -c "apt install -y zenoh-bridge-ros2dds=1.0.2 > /dev/null 2>1; echo $?"
+COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
 ADD ./cyclonedds.xml /root/ros/cyclonedds.xml
 ADD ./run_rosbagsaver_tb2.sh /run_rosbagsaver_tb2.sh
 ADD ./run_rosbagsaver_drone.sh /run_rosbagsaver_drone.sh
-COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
+#COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
 ADD ./run_rosbagsaver_summit.sh /run_rosbagsaver_summit.sh

@@ -236,7 +236,7 @@
                  <!-- Read Rosbag on VO's FS for Drone -->
                 <div class="mb-4">
                     <h3>View the rosbag on VO's FS</h3>
-                    <a href="https://foxglove-demo-vo2.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo1.robopaas.dev%2Fmy_rosbag/my_rosbag_0.mcap" class="btn btn-info">Rosbag stored on VO</a>
+                    <a href="https://foxglove-demo-vo2.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo2.robopaas.dev%2Fmy_rosbag/my_rosbag_0.mcap" class="btn btn-info">Rosbag stored on VO</a>
                 </div>
         </div>
 
@@ -251,7 +251,7 @@
                     <form action="/trigger_execution_drone" method="post" class="form-check">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="bringup_zed" name="launchfile_id_drone" value="bringup_zed">
-                            <label class="form-check-label" for="bringup_drone">Bringup</label>
+                            <label class="form-check-label" for="bringup_zed">Bringup</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="startmapping_drone" name="launchfile_id_drone" value="startmapping_drone">
@@ -260,14 +260,6 @@
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="savemap_drone" name="launchfile_id_drone" value="savemap_drone">
                             <label class="form-check-label" for="savemap_drone">Save Map</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="savebag_drone" name="launchfile_id_drone" value="savebag_drone">
-                            <label class="form-check-label" for="savebag_drone">Start rosbag</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="stopbag_drone" name="launchfile_id_drone" value="stopbag_drone">
-                            <label class="form-check-label" for="stopbag_drone">Stop rosbag</label>
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Trigger Execution</button>
                     </form>
@@ -399,7 +391,7 @@
                  <!-- Read Rosbag on VO's FS for Drone -->
                  <div class="mb-4">
                     <h3>View the rosbag on VO's FS</h3>
-                    <a href="https://foxglove-demo-vo1.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo1.robopaas.dev%2Frosbag.mcap" class="btn btn-info">Rosbag stored on VO</a>
+                    <a href="https://foxglove-demo-vo1.robopaas.dev/?ds=remote-file&ds.url=https%3A%2F%2Fngnix-vo1.robopaas.dev%2Fmy_rosbag/my_rosbag_0.mcap" class="btn btn-info">Rosbag stored on VO</a>
                 </div>
                 
             </div>
