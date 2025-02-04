@@ -4,6 +4,7 @@ from rclpy.node import Node
 
 from std_msgs.msg import Bool
 from std_msgs.msg import Float32
+from sensor_msgs.msg import NavSatFix
 #from diagnostic_msgs.msg import DiagnosticArray
 
 import subprocess
@@ -23,6 +24,8 @@ import json
 
 process_startfrontcamera = None
 process_startarmcamera = None
+process_startliquidpicking = None
+process_startsensordeploy = None
 
 def read_from_sensor():
     
@@ -46,8 +49,46 @@ def read_from_sensor():
     main()
 
     return battery_percent
+
+def read_from_gps_sensor():
     
+    altitude = None 
+    longitude = None 
+    latitude = None 
+
+    class GpsRead(Node):
+        def __init__(self):
+            super().__init__('gps_read')
+            self.subscription = self.create_subscription(NavSatFix, '/summit/fix', self.gps_callback, 10)
+
+        def gps_callback(self, msg):
+            nonlocal altitude
+            nonlocal latitude
+            nonlocal longitude
+            altitude = msg.altitude
+            latitude = msg.latitude
+            longitude = msg.longitude
+            self.get_logger().info(f"GPS: {latitude}, {longitude}, {altitude}")
+
+
+    def main():
+        rclpy.init()
+        gps_read = GpsRead()
+        rclpy.spin_once(gps_read, timeout_sec=1.0)
+        gps_read.destroy_node()
+        rclpy.shutdown()
+
+    main()
+
+    return altitude, latitude, longitude
+
+# Initialize Resources
+altitude, latitude, longitude = read_from_gps_sensor()
+
 allAvailableResources_init = {
+    'altitude': altitude,
+    'latitude': latitude,
+    'longitude': longitude,
     'battery_percent': read_from_sensor(),
     'deployed_sensors': 0,
     'liquid_samples': 0
@@ -243,8 +284,11 @@ async def triggerBringup_summit_handler(params):
     
 
 async def sample_liquid_summit_handler(params):
+        global process_startliquidpicking
+
         params = params.get('input', {}) or {}
         coordinates = params.get('coordinates')
+        
         global count_liquid_samples 
         count_liquid_samples += len(coordinates)
             # Ensure coordinates are in the correct format
@@ -267,14 +311,76 @@ async def sample_liquid_summit_handler(params):
         coordinates_str = f"\"{coordinates_str}\""  # Wrap it with double quotes around the entire string
         print(f"Formatted coordinates for ROS 2 command: {coordinates_str}")
 
-        # Source the ROS workspace and launch the ROS2 command
+        # Launch the ROS2 command
         command = [
             "bash", "-c",
             f"ros2 launch liquid_pickup liquid_pickup_launch_real.py coordinates:={coordinates_str}"
         ]
         print(f"Final command: {command}")
 
-        # Execute the command in a subprocess
+            # **Terminate existing process if running**
+        if process_startliquidpicking:
+            if process_startliquidpicking.poll() is None:
+                print("Terminating gracefully existing process...")
+                try:
+                    # Gracefully terminate the process
+                    process_startliquidpicking.send_signal(signal.SIGINT)
+                    process_startliquidpicking.wait(timeout=10)
+                    print("Process terminated gracefully.")
+                            # **Start a new subprocess and keep track of it**
+                    try:
+                        print("Starting new process...")
+                        process_startliquidpicking = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        return {
+                            'result': True,
+                            'message': f'Liquid sampling started at coordinates: {coordinates_str}!'
+                        }
+                    except subprocess.CalledProcessError as e:
+                        print(f"Failed to start process: {e}")
+                        return {'result': False, 'message': 'Failed to start process.'}    
+                except subprocess.TimeoutExpired:
+                    # Forcefully kill the process if it didn't terminate
+                    print("Process did not terminate in time. Killing it forcefully.")
+                    process_startliquidpicking.kill()
+                    process_startliquidpicking.wait()
+                    try:
+                        print("Starting new process...")
+                        process_startliquidpicking = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        return {
+                            'result': True,
+                            'message': f'Liquid sampling started at coordinates: {coordinates_str}!'
+                        }
+                    except subprocess.CalledProcessError as e:
+                        print(f"Failed to start process: {e}")
+                        return {'result': False, 'message': 'Failed to start process.'} 
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+            else:
+                try:
+                    print("Starting new process...")
+                    process_startliquidpicking = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    return {
+                        'result': True,
+                        'message': f'Liquid sampling started at coordinates: {coordinates_str}!'
+                    }
+                except Exception as e:
+                    print(f"Failed to start process: {e}")
+                    return {'result': False, 'message': 'Failed to start process.'}   
+        else:
+            try:
+                print("Starting new process...")
+                process_startliquidpicking = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                return {
+                    'result': True,
+                    'message': f'Liquid sampling started at coordinates: {coordinates_str}!'
+                }
+            except Exception as e:
+                print(f"Failed to start process: {e}")
+                return {'result': False, 'message': 'Failed to start process.'}           
+
+
+
+"""         # Execute the command in a subprocess
         try:
             subprocess.run(command, check=True)
             return {
@@ -284,11 +390,12 @@ async def sample_liquid_summit_handler(params):
         except subprocess.CalledProcessError as e:
             print(f"Command failed with return code {e.returncode}")
             print(f"Error message: {e}")
-            return {'result': False, 'message': 'An undefined error occurred.'}
+            return {'result': False, 'message': 'An undefined error occurred.'} """
 
 
 
 async def deploy_sensor_summit_handler(params):
+        global process_startsensordeploy
         params = params.get('input', {}) or {}
         coordinates = params.get('coordinates')
         global count_deployed_sensors
@@ -320,7 +427,66 @@ async def deploy_sensor_summit_handler(params):
         ]
         print(f"Final command: {command}")
 
-        # Execute the command in a subprocess
+                # **Terminate existing process if running**
+        if process_startsensordeploy:
+            if process_startsensordeploy.poll() is None:
+                print("Terminating gracefully existing process...")
+                try:
+                    # Gracefully terminate the process
+                    process_startsensordeploy.send_signal(signal.SIGINT)
+                    process_startsensordeploy.wait(timeout=10)
+                    print("Process terminated gracefully.")
+                            # **Start a new subprocess and keep track of it**
+                    try:
+                        process_startsensordeploy = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        return {
+                            'result': True,
+                            'message': f'Sensor deployment started at coordinates: {coordinates_str}!'
+                        }
+                    except Exception as e:
+                        print(f"Failed to start process: {e}")
+                        return {'result': False, 'message': 'Failed to start process.'}
+                except subprocess.TimeoutExpired:
+                    # Forcefully kill the process if it didn't terminate
+                    print("Process did not terminate in time. Killing it forcefully.")
+                    process_startsensordeploy.kill()
+                    process_startsensordeploy.wait()
+                    try:
+                        process_startsensordeploy = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        return {
+                            'result': True,
+                            'message': f'Sensor deployment started at coordinates: {coordinates_str}!'
+                        }
+                    except Exception as e:
+                        print(f"Failed to start process: {e}")
+                        return {'result': False, 'message': 'Failed to start process.'}
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+            else:
+                try:
+                    print("Starting new process...")
+                    process_startsensordeploy = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    return {
+                        'result': True,
+                        'message': f'Sensor deployment sampling started at coordinates: {coordinates_str}!'
+                    }
+                except Exception as e:
+                    print(f"Failed to start process: {e}")
+                    return {'result': False, 'message': 'Failed to start process.'}   
+        else:
+            try:
+                print("Starting new process...")
+                process_startsensordeploy = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                return {
+                    'result': True,
+                    'message': f'Sensor deployment started at coordinates: {coordinates_str}!'
+                }
+            except Exception as e:
+                print(f"Failed to start process: {e}")
+                return {'result': False, 'message': 'Failed to start process.'}   
+
+
+"""         # Execute the command in a subprocess
         try:
             subprocess.run(command, check=True)
             return {
@@ -330,7 +496,7 @@ async def deploy_sensor_summit_handler(params):
         except subprocess.CalledProcessError as e:
             print(f"Command failed with return code {e.returncode}")
             print(f"Error message: {e}")
-            return {'result': False, 'message': 'An undefined error occurred.'}
+            return {'result': False, 'message': 'An undefined error occurred.'} """
 
  
 async def mapExport_summit_handler(params):
@@ -341,7 +507,11 @@ async def mapExport_summit_handler(params):
 
     
 async def allAvailableResources_summit_read_handler():
+    altitude, latitude, longitude = read_from_gps_sensor()
     allAvailableResources_current = {
+    'altitude': altitude,
+    'latitude': latitude,
+    'longitude': longitude,
     'battery_percent': read_from_sensor(),
     'deployed_sensors': count_deployed_sensors,
     'liquid_samples': count_liquid_samples
@@ -352,9 +522,13 @@ async def allAvailableResources_summit_read_handler():
     return allAvailableResources_current
 
 async def currentValues_summit_handler(params):
+    altitude, latitude, longitude = read_from_gps_sensor()
     return {
         'result': True,
         'message': {
+    'altitude': altitude,
+    'latitude': latitude,
+    'longitude': longitude,
     'battery_percent': read_from_sensor(),
     'deployed_sensors': count_deployed_sensors,
     'liquid_samples': count_liquid_samples

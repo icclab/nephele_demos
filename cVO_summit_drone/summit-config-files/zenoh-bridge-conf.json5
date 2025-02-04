@@ -1,8 +1,8 @@
 {
   mode: "client",
   connect:{ 
-  timeout_ms: -1,
-  exit_on_failure: false,
+//  timeout_ms: -1,
+//  exit_on_failure: false,
   endpoints: ["tcp/160.85.253.140:30447"] 
   },
   timestamping: {
@@ -25,10 +25,20 @@
     //   service_clients: ["/drone/.*", "/summit/.*"],
      //  action_servers: ["/drone/.*", "/summit/.*"],
      //  action_clients: ["/drone/.*", "/summit/.*"],
+
+      //  publishers: [".*/rosout", ".*/.*parameter.*",
+         //  ".*/_internal/.*"],
+      //  subscribers: [".*/rosout", ".*/.*parameter.*",
+         //  ".*/_internal/.*"],
+      //  service_servers: [".*/.*parameter.*", ".*/_internal/.*"],
+      //  service_clients: [".*/.*parameter.*", ".*/_internal/.*"],
+      //  action_servers: [".*/_internal/.*"],
+      //  action_clients: [".*/_internal/.*"],
      // },
       allow: {
        publishers: [
         // "/summit/.*"
+        "/summit/fix",
         "/diagnostics",
         "/summit/front_rgbd_camera/color/camera_info",
         "/summit/front_rgbd_camera/depth/camera_info",
@@ -40,7 +50,7 @@
         "/summit/oak/rgb/camera_info", 
         "/summit/oak/stereo/image_raw", 
         "/summit/oak/stereo/camera_info",
-        "/summit/global_costmap/clearing_endpoints",
+	      "/summit/global_costmap/clearing_endpoints",
         "/summit/global_costmap/costmap",
         "/summit/global_costmap/costmap_raw",
         "/summit/global_costmap/costmap_updates",
@@ -70,41 +80,49 @@
        action_servers: ["/summit/.*"],
        action_clients: ["/summit/.*"],
       },
+   //   pub_max_frequencies: [
+//	  ".*=1",
+//        ".*/image_raw=5",
+//        ".*/camera_info=5",
+//        ".*/scan=10",
+//        ".*/imu=50",
+ //     ],
       pub_max_frequencies: [       
-        "/diagnostics=0.5",
-        "/summit/front_rgbd_camera/color/camera_info=1",
-        "/summit/front_rgbd_camera/depth/camera_info=1",
-        "/summit/front_rgbd_camera/depth/points=0.5",
-        "/summit/front_rgbd_camera/color/image_raw=0.5",
-        "/summit/front_rgbd_camera/depth/image_raw=0.5",
-        "/summit/oak/rgb/image_rect=0.5", 
-        "/summit/oak/rgb/image_raw/compressed=0.5", 
-        "/summit/oak/rgb/camera_info=1", 
-        "/summit/oak/stereo/image_raw=0.5", 
-        "/summit/oak/stereo/camera_info=1",
-        "/summit/global_costmap/clearing_endpoints=1",
-        "/summit/global_costmap/costmap=1",
-        "/summit/global_costmap/costmap_raw=1",
-        "/summit/global_costmap/costmap_updates=1",
-        "/summit/global_costmap/global_costmap/transition_event=1",
-        "/summit/global_costmap/published_footprint=1",
-        "/summit/joint_states=5",
-        "/summit/local_costmap/clearing_endpoints=1",
-        "/summit/local_costmap/costmap=1",
-        "/summit/local_costmap/costmap_raw=1",
-        "/summit/local_costmap/costmap_updates=1",
-        "/summit/local_costmap/local_costmap/transition_event=1",
-        "/summit/local_costmap/published_footprint=1",
+        "/diagnostics=0.1",
+	      "/summit/fix=0.1",
+        "/summit/front_rgbd_camera/color/camera_info=0.1",
+        "/summit/front_rgbd_camera/depth/camera_info=0.1",
+        "/summit/front_rgbd_camera/depth/points=0.1",
+        "/summit/front_rgbd_camera/color/image_raw=0.1",
+        "/summit/front_rgbd_camera/depth/image_raw=0.1",
+        "/summit/oak/rgb/image_rect=0.1", 
+        "/summit/oak/rgb/image_raw/compressed=0.1", 
+        "/summit/oak/rgb/camera_info=0.1", 
+        "/summit/oak/stereo/image_raw=0.1", 
+        "/summit/oak/stereo/camera_info=0.1",
+        "/summit/global_costmap/clearing_endpoints=0.5",
+        "/summit/global_costmap/costmap=0.5",
+        "/summit/global_costmap/costmap_raw=0.5",
+        "/summit/global_costmap/costmap_updates=0.5",
+        "/summit/global_costmap/global_costmap/transition_event=0.5",
+        "/summit/global_costmap/published_footprint=0.5",
+        "/summit/joint_states=1",
+        "/summit/local_costmap/clearing_endpoints=0.5",
+        "/summit/local_costmap/costmap=0.5",
+        "/summit/local_costmap/costmap_raw=0.5",
+        "/summit/local_costmap/costmap_updates=0.5",
+        "/summit/local_costmap/local_costmap/transition_event=0.5",
+        "/summit/local_costmap/published_footprint=0.5",
         "/summit/map=1",
-        "/summit/merged_laser_scan=5",
+        "/summit/merged_laser_scan=0.5",
         "/summit/monitored_planning_scene=1",
         "/summit/motion_plan_request=1",
-        "/summit/collision_object=1",
+        "/summit/collision_object=0.5",
         "/summit/robot_description=1",
         "/summit/robot_description_semantic=1",
-        "/summit/robotnik_base_hw/battery=1",
-        "/summit/tf=5",
-        "/summit/tf_static=5"        
+        "/summit/robotnik_base_hw/battery=0.1",
+        "/summit/tf=1",
+        "/summit/tf_static=1"        
          ],
 
       pub_priorities: ["/summit/tf_static=1:express", "/summit/robot_description=1", "/summit/tf=1"],
@@ -117,18 +135,19 @@
        queries_timeout: {
       //   //// default timeout that will apply to all query, except the ones specified below
       //   //// in 'transient_local_subscribers', 'services' and 'actions'
-         default: 300.0,
+         default: 3600.0,
       //   //// timeouts for TRANSIENT_LOCAL subscriber when querying publishers for historical publications
-         transient_local_subscribers: 300.0,
+         transient_local_subscribers: 3600.0,
       //   //// timeouts for Service clients calling a Service server
          services: ["add_two_ints=0.5", ".*=30.0"],
       //   //// timeouts for Action clients calling an Action server (send_goal, cancel_goal and get_result services)
          actions: {
-           send_goal: 300.0,
-           cancel_goal: 300.0,
-           get_result: [".*=600.0"],
+           send_goal: 3600.0,
+           cancel_goal: 3600.0,
+           get_result: [".*=3600.0"],
          }
       }
     },
+  //  rest: { http_port: 8000 }
   }
 }

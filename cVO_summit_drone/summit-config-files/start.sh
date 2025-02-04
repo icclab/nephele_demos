@@ -69,6 +69,12 @@ screen -S summit -p moveit -X exec docker exec -it ros2 bash -c "export ROS_DIST
 sleep 1s
 
 
+#In the ros2 container we will also start the GPS receiver
+screen -S summit -X screen -t gps
+screen -S summit -p gps -X exec docker exec -it ros2 bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////home/summit/nephele/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; ros2 launch icclab_summit_xl ublox_gps_node_zedf9p-launch.py"
+sleep 1s
+
+
 #Attach to screen
 #screen -r summit
 

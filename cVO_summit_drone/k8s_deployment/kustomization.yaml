@@ -37,3 +37,4 @@ resources:
 - nginx_vo-1_deploy.yaml
 - nginx_td.yaml
 - cvo_deploy.yaml
+- liquid_llm.yaml

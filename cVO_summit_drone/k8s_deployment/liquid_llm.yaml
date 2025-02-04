@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: liquid-llm
+  labels:
+    app: liquid-llm
+spec:
+  selector:
+    matchLabels:
+      app: liquid-llm
+  template:
+    metadata:
+      labels:
+        app: liquid-llm
+    spec:
+      containers:
+      - name: liquid-llm
+        image: robopaas/liquid_llm:latest
+        imagePullPolicy:  Always 
+        command:
+         - /run_llm.sh
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: liquid-llm-service
+spec:
+  selector:
+    app: liquid-llm
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80  
+    
