@@ -34,7 +34,6 @@ RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" |
 sudo apt update && sudo bash -c "apt install -y zenoh-bridge-ros2dds=1.0.2 > /dev/null 2>1; echo $?"
 COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
 ADD ./cyclonedds.xml /home/ros/cyclonedds.xml
-ADD ./run_llm.sh /run_llm.sh
 
 # create catkin ws and clone projects
 RUN mkdir -p /root/ros2_ws/src && /bin/bash -c "source /opt/ros/humble/setup.bash" 
@@ -54,6 +53,8 @@ RUN /bin/bash -c "source /opt/ros/humble/setup.bash &&  cd /root/ros2_ws && colc
 # Source ROS 2 and the workspace setup files
 RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
     echo "source /root/ros2_ws/install/setup.bash" >> ~/.bashrc
+
+ADD ./run_llm.sh /run_llm.sh
 
 # Set entrypoint to ensure ROS 2 is sourced
 ENTRYPOINT ["/bin/bash", "-c", "source /opt/ros/humble/setup.bash && exec bash"]
