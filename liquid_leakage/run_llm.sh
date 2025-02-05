@@ -17,7 +17,8 @@ sleep 1
 zenoh-bridge-ros2dds -c /zenoh-bridge-conf.json5 &
 ZENOH_PID=$!
 
-wait $ROSBAGSAVER_PID
+wait $LLMSERVICE_PID
+wait $LLMCLIENT_PID
 wait $ZENOH_PID
 
 

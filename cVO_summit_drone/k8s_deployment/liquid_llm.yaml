@@ -13,6 +13,7 @@ spec:
       labels:
         app: liquid-llm
     spec:
+      runtimeClassName: "nvidia"
       containers:
       - name: liquid-llm
         image: robopaas/liquid_llm:latest
