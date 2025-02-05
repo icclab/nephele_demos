@@ -1,5 +1,5 @@
 
-FROM robopaas/rosdocked-humble-k8s:cuda12.2.0 
+FROM robopaas/rap-humble:cuda12.2.0_20240624 
 USER root
 # Set non-interactive mode
 ENV DEBIAN_FRONTEND=noninteractive
@@ -15,12 +15,14 @@ RUN pip install torch torchvision torchaudio
 RUN pip install opencv-python 
 RUN pip install -U huggingface_hub 
 ENV PATH="/home/ros/.local/bin:$PATH"
+RUN mkdir pretrained && cd pretrained
 RUN huggingface-cli download --resume-download --local-dir-use-symlinks False OpenGVLab/InternVL2-8B --local-dir InternVL2-8B 
 RUN pip install einops wheel timm 
 RUN pip install flash_attn decord transformers accelerate sentencepiece 
 RUN pip install empy==3.3.4 
-RUN pip install catkin_pkg lark scikit-image 
-RUN pip install numpy==1.26.4 
+RUN pip install catkin_pkg lark 
+RUN python3 -m pip install -U scikit-image 
+RUN pip install numpy==1.26.4 jinja2
 
 
 
@@ -33,9 +35,6 @@ sudo apt update && sudo bash -c "apt install -y zenoh-bridge-ros2dds=1.0.2 > /de
 COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
 ADD ./cyclonedds.xml /home/ros/cyclonedds.xml
 ADD ./run_llm.sh /run_llm.sh
-
-
-
 
 # create catkin ws and clone projects
 RUN mkdir -p /root/ros2_ws/src && /bin/bash -c "source /opt/ros/humble/setup.bash" 

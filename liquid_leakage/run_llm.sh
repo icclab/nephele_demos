@@ -8,6 +8,12 @@ LLMSERVICE_PID=$!
 
 sleep 1
 
+
+python3 /root/ros2_ws/src/LLM_service/leakage/scripts/ros2client.py  &
+LLMCLIENT_PID=$!
+
+sleep 1
+
 zenoh-bridge-ros2dds -c /zenoh-bridge-conf.json5 &
 ZENOH_PID=$!
 
