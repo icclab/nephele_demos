@@ -18,6 +18,13 @@ spec:
       - name: liquid-llm
         image: robopaas/liquid_llm:latest
         imagePullPolicy:  Always 
+        resources:
+          requests:
+            cpu: "7"
+            memory: 15Gi
+          limits:
+            cpu: "7"
+            memory: 15Gi   
         command:
          - /run_llm.sh
 
