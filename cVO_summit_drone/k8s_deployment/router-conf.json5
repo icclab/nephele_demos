@@ -1,0 +1,17 @@
+{
+  /// The node's mode (router, peer or client)
+  "mode": "router",
+  "listen": {
+  "endpoints": ["tcp/0.0.0.0:7447", "quic/0.0.0.0:7448", "tls/0.0.0.0:7449"]
+ // "endpoints": ["quic/0.0.0.0:7448"]
+  },
+  "transport": {
+    "link": {
+      "tls": {
+        "listen_private_key": "/key.pem",
+        "listen_certificate": "/cert.pem",
+        "verify_name_on_connect": false,
+      }
+    }
+  }
+}

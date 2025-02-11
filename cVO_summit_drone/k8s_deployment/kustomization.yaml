@@ -1,8 +1,18 @@
 configMapGenerator:
-- name: foxglove-demo-vo1
+#- name: foxglove-demo-vo1
+#  files:
+#  - default-layout.json=default-layout-1.json 
+#- name: foxglove-demo-vo2
+#  files:
+#  - default-layout.json=default-layout-3.json 
+- name: tls-zenoh
   files:
-  - default-layout.json=default-layout-1.json 
-- name: foxglove-demo-vo2
+  - key.pem=key.pem
+  - cert.pem=cert.pem
+- name: zenoh-router-config
+  files:
+  - router-conf.json5=router-conf.json5 
+- name: foxglove-demo-vo
   files:
   - default-layout.json=default-layout-3.json 
 - name: vo1-scripts
@@ -31,8 +41,9 @@ generatorOptions:
 resources:
 - zenoh-router.yaml
 - flask-app.yaml
-- foxglove-zenoh_vo1.yaml
-- foxglove-zenoh_vo2.yaml
+#- foxglove-zenoh_vo1.yaml
+#- foxglove-zenoh_vo2.yaml
+- foxglove-zenoh_vo.yaml
 - nginx_vo-2_deploy.yaml
 - nginx_vo-1_deploy.yaml
 - nginx_td.yaml

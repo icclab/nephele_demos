@@ -1,51 +1,5 @@
 {
   "configById": {
-    "Image!13f98bj": {
-      "cameraState": {
-        "distance": 20,
-        "perspective": true,
-        "phi": 60,
-        "target": [
-          0,
-          0,
-          0
-        ],
-        "targetOffset": [
-          0,
-          0,
-          0
-        ],
-        "targetOrientation": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "thetaOffset": 45,
-        "fovy": 45,
-        "near": 0.5,
-        "far": 5000
-      },
-      "followMode": "follow-pose",
-      "scene": {},
-      "transforms": {},
-      "topics": {},
-      "layers": {},
-      "publish": {
-        "type": "point",
-        "poseTopic": "/move_base_simple/goal",
-        "pointTopic": "/clicked_point",
-        "poseEstimateTopic": "/initialpose",
-        "poseEstimateXDeviation": 0.5,
-        "poseEstimateYDeviation": 0.5,
-        "poseEstimateThetaDeviation": 0.26179939
-      },
-      "imageMode": {
-        "imageTopic": "/summit/oak/rgb/image_raw",
-        "calibrationTopic": "/summit/oak/rgb/camera_info"
-      },
-      "foxglovePanelTitle": "Arm camera view"
-    },
     "3D!2ah3t15": {
       "cameraState": {
         "perspective": true,
@@ -192,18 +146,18 @@
         }
       },
       "topics": {
-        "/summit/map": {
+        "/summit/summit/map": {
           "visible": true
         },
-        "/summit/global_costmap/costmap": {
+        "/summit/summit/global_costmap/costmap": {
           "visible": true,
           "colorMode": "costmap"
         },
-        "/summit/local_costmap/costmap": {
+        "/summit/summit/local_costmap/costmap": {
           "visible": true,
           "colorMode": "costmap"
         },
-        "/summit/front_laser/scan": {
+        "/summit/summit/merged_laser/scan": {
           "visible": true,
           "colorField": "intensity",
           "colorMode": "flat",
@@ -211,7 +165,7 @@
           "flatColor": "#dbd300ff",
           "pointSize": 6
         },
-        "/summit/robot_description": {
+        "/summit/summit/robot_description": {
           "visible": true,
           "fallbackColor": "#080000",
           "displayMode": "collision"
@@ -228,7 +182,7 @@
           "url": "",
           "filePath": "",
           "parameter": "",
-          "topic": "/summit/robot_description",
+          "topic": "/summit/summit/robot_description",
           "framePrefix": "",
           "displayMode": "auto",
           "fallbackColor": "#0f0d0d",
@@ -237,15 +191,15 @@
       },
       "publish": {
         "type": "pose",
-        "poseTopic": "/summit/goal_pose",
-        "pointTopic": "/summit/clicked_point",
-        "poseEstimateTopic": "/summit/initialpose",
+        "poseTopic": "/summit/summit/goal_pose",
+        "pointTopic": "/summit/summit/clicked_point",
+        "poseEstimateTopic": "/summit/summit/initialpose",
         "poseEstimateXDeviation": 0.5,
         "poseEstimateYDeviation": 0.5,
         "poseEstimateThetaDeviation": 0.26179939
       },
       "imageMode": {},
-      "foxglovePanelTitle": "Map"
+      "foxglovePanelTitle": "Summit Map"
     },
     "Image!3dov617": {
       "cameraState": {
@@ -280,21 +234,67 @@
       "layers": {},
       "publish": {
         "type": "point",
-        "poseTopic": "/move_base_simple/goal",
-        "pointTopic": "/clicked_point",
+        "poseTopic": "/summit/move_base_simple/goal",
+        "pointTopic": "/summit/clicked_point",
+        "poseEstimateTopic": "/summit/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {
+        "imageTopic": "/summit/summit/front_rgbd_camera/color/image_raw",
+        "calibrationTopic": "/summit/summit/front_rgbd_camera/color/camera_info"
+      },
+      "foxglovePanelTitle": "Summit Front Camera"
+    },
+    "Image!13f98bj": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "topics": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/summit/move_base_simple/goal",
+        "pointTopic": "/summit/clicked_point",
         "poseEstimateTopic": "/initialpose",
         "poseEstimateXDeviation": 0.5,
         "poseEstimateYDeviation": 0.5,
         "poseEstimateThetaDeviation": 0.26179939
       },
       "imageMode": {
-        "imageTopic": "/summit/front_rgbd_camera/color/image_raw",
-        "calibrationTopic": "/summit/front_rgbd_camera/color/camera_info"
+        "imageTopic": "/summit/summit/oak/rgb/image_raw",
+        "calibrationTopic": "/summit/summit/oak/rgb/camera_info"
       },
-      "foxglovePanelTitle": "Front camera view"
+      "foxglovePanelTitle": "Summit Arm Camera"
     },
     "Teleop!4km4ztc": {
-      "topic": "/summit/cmd_vel_smoothed",
+      "topic": "/summit/summit/cmd_vel_smoothed",
       "publishRate": 1,
       "upButton": {
         "field": "linear-x",
@@ -311,10 +311,11 @@
       "rightButton": {
         "field": "angular-z",
         "value": "-0.1"
-      }
+      },
+      "foxglovePanelTitle": "Teleop Summit"
     },
     "Gauge!2e1xhma": {
-      "path": "/cmd_vel.linear.x",
+      "path": "/summit/summit/cmd_vel_smoothed.linear.x",
       "minValue": -1,
       "maxValue": 1,
       "colorMap": "red-yellow-green",
@@ -323,7 +324,8 @@
         "#0000ff",
         "#ff00ff"
       ],
-      "reverse": false
+      "reverse": false,
+      "foxglovePanelTitle": "Summit Velocity"
     },
     "Plot!2li8006": {
       "paths": [
@@ -354,8 +356,11 @@
       "minLevel": 0,
       "pinnedIds": [],
       "hardwareIdFilter": "",
-      "topicToRender": "/diagnostics",
+      "topicToRender": "/summit/diagnostics",
       "sortByLevel": true
+    },
+    "map!1wfxcr0": {
+      "foxglovePanelTitle": "Drone Map"
     },
     "Image!m6tx5s": {
       "cameraState": {
@@ -390,93 +395,55 @@
       "layers": {},
       "publish": {
         "type": "point",
-        "poseTopic": "/move_base_simple/goal",
-        "pointTopic": "/clicked_point",
-        "poseEstimateTopic": "/initialpose",
+        "poseTopic": "/summit/move_base_simple/goal",
+        "pointTopic": "/summit/clicked_point",
+        "poseEstimateTopic": "/summit/initialpose",
         "poseEstimateXDeviation": 0.5,
         "poseEstimateYDeviation": 0.5,
         "poseEstimateThetaDeviation": 0.26179939
       },
       "imageMode": {
-        "imageTopic": "/summit/front_rgbd_camera/color/image_raw",
-        "calibrationTopic": "/summit/front_rgbd_camera/color/camera_info"
-      }
-    },
-    "Image!40zo2g9": {
-      "cameraState": {
-        "distance": 20,
-        "perspective": true,
-        "phi": 60,
-        "target": [
-          0,
-          0,
-          0
-        ],
-        "targetOffset": [
-          0,
-          0,
-          0
-        ],
-        "targetOrientation": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "thetaOffset": 45,
-        "fovy": 45,
-        "near": 0.5,
-        "far": 5000
+        "imageTopic": "/drone/zed/zed_node/rgb/image_rect_color/compressed",
+        "calibrationTopic": "/drone/zed/zed_node/rgb/camera_info"
       },
-      "followMode": "follow-pose",
-      "scene": {},
-      "transforms": {},
-      "topics": {},
-      "layers": {},
-      "publish": {
-        "type": "point",
-        "poseTopic": "/move_base_simple/goal",
-        "pointTopic": "/clicked_point",
-        "poseEstimateTopic": "/initialpose",
-        "poseEstimateXDeviation": 0.5,
-        "poseEstimateYDeviation": 0.5,
-        "poseEstimateThetaDeviation": 0.26179939
-      },
-      "imageMode": {
-        "imageTopic": "/summit/front_rgbd_camera/color/image_raw",
-        "calibrationTopic": "/summit/front_rgbd_camera/color/camera_info"
-      }
+      "foxglovePanelTitle": "Drone camera"
     },
+    "TopicGraph!fi746g": {},
     "DiagnosticSummary!1rfhwmr": {
       "minLevel": 0,
       "pinnedIds": [],
       "hardwareIdFilter": "",
-      "topicToRender": "/diagnostics",
+      "topicToRender": "/summit/summit/diagnostics",
       "sortByLevel": true
+    },
+    "RosOut!107x8m2": {
+      "searchTerms": [],
+      "minLogLevel": 1,
+      "nameFilter": {}
     },
     "Tab!1iwj6dm": {
       "activeTabIdx": 2,
       "tabs": [
         {
-          "title": "Visual_summit",
+          "title": "Visual Summit",
           "layout": {
-            "first": {
-              "first": "Image!13f98bj",
-              "second": "3D!2ah3t15",
-              "direction": "column",
-              "splitPercentage": 50.13774104683195
-            },
+            "first": "3D!2ah3t15",
             "second": {
-              "first": "Image!3dov617",
+              "first": {
+                "first": "Image!3dov617",
+                "second": "Image!13f98bj",
+                "direction": "column"
+              },
               "second": "Teleop!4km4ztc",
-              "direction": "column"
+              "direction": "column",
+              "splitPercentage": 68.51851851851852
             },
             "direction": "row",
-            "splitPercentage": 53.15686622845976
+            "splitPercentage": 46.610420542474905
           }
         },
         {
-          "title": "diagnostic_summit",
+          "title": "diagnostic Summit",
           "layout": {
             "first": {
               "first": {
@@ -500,16 +467,24 @@
           }
         },
         {
-          "title": "visual_drone",
+          "title": "Visual drone",
           "layout": {
-            "first": "Image!m6tx5s",
-            "second": "Image!40zo2g9",
-            "direction": "column"
+            "first": "map!1wfxcr0",
+            "second": "Image!m6tx5s",
+            "direction": "row"
           }
         },
         {
-          "title": "diagnostic_drone",
-          "layout": "DiagnosticSummary!1rfhwmr"
+          "title": "diagnostic drone",
+          "layout": {
+            "first": "TopicGraph!fi746g",
+            "second": {
+              "first": "DiagnosticSummary!1rfhwmr",
+              "second": "RosOut!107x8m2",
+              "direction": "row"
+            },
+            "direction": "column"
+          }
         }
       ]
     }

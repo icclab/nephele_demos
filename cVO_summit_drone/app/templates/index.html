@@ -25,16 +25,23 @@
         <!-- Shared Section for Both Robots (e.g., Shared Map) -->
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="text-center">Shared Resources</h2>
+           <!--     <h2 class="text-center">Shared Resources</h2>
+                 Foxglove Dashboard Link for Drone -->
+                               
                 
-                <!-- Shared Map -->
                 <div class="mb-4 text-center">
+                    <h3>Link to Foxglove Dashboard</h3>
+                    <a href="https://foxglove-demo-vo.robopaas.dev/?ds=foxglove-websocket&ds.url=wss%3A%2F%2Fbridges-vo.robopaas.dev&rand={{ timestamp }}" class="btn btn-info">Foxglove Dashboard</a>
+                </div>
+
+                <!-- Shared Map -->
+           <!--     <div class="mb-4 text-center">
                     <h3>Shared Map</h3>
                     <img src="{{ shared_map_url }}" alt="Shared Map" class="img-fluid">
                     <form action="/shared_map_export" method="get" class="mt-2">
                         <button type="submit" class="btn btn-secondary">Export Shared Map</button>
                     </form>
-                </div>
+                </div> -->
             </div>
         </div> 
 
@@ -85,12 +92,6 @@
                 </div>
                 
                 
-
-                <!-- Foxglove Dashboard Link for Summit-Xl -->
-                <div class="mb-4">
-                    <h3>Link to Summit Foxglove Dashboard</h3>
-                    <a href="https://foxglove-demo-vo2.robopaas.dev/?ds=foxglove-websocket&ds.url=wss%3A%2F%2Fbridges-vo2.robopaas.dev&rand={{ timestamp }}" class="btn btn-info">Foxglove Dashboard</a>
-                </div>
 
                 <!-- Environment Map for Summit-Xl -->
                 <div class="mb-4">
@@ -268,11 +269,8 @@
                     {% endif %}
                 </div>
 
-                <!-- Foxglove Dashboard Link for Drone -->
-                <div class="mb-4">
-                    <h3>Link to Drone Foxglove Dashboard</h3>
-                    <a href="https://foxglove-demo-vo1.robopaas.dev/?ds=foxglove-websocket&ds.url=wss%3A%2F%2Fbridges-vo1.robopaas.dev&rand={{ timestamp }}" class="btn btn-info">Foxglove Dashboard</a>
-                </div>
+
+
 
                 <!-- Environment Map for Drone -->
                 <div class="mb-4">

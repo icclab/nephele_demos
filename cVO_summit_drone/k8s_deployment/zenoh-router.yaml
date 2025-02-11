@@ -39,7 +39,15 @@ spec:
   - name: zenoh-api
     protocol: TCP
     port: 8000
-    nodePort: 30450    
+    nodePort: 30450  
+  - name: zenoh-quic
+    protocol: UDP
+    port: 7448    
+    nodePort: 30452 #$NODE_PORT  
+  - name: zenoh-tls
+    protocol: TCP
+    port: 7449    
+    nodePort: 30449 #$NODE_PORT  
   selector:
     name: zenoh
 ---
@@ -58,6 +66,21 @@ spec:
       labels:
         name: zenoh
     spec:
+      volumes:
+        - name: tls-zenoh-config
+          configMap:
+            name: tls-zenoh
+            items:
+            - key: key.pem
+              path: key.pem
+            - key: cert.pem
+              path: cert.pem
+        - name: router-zenoh-config
+          configMap:
+            name: zenoh-router-config
+            items:
+            - key: router-conf.json5
+              path: router-conf.json5
       # runtimeClassName: "nvidia"
       containers:
       - name: zenoh
@@ -72,10 +95,28 @@ spec:
         - containerPort: 8000
           protocol: TCP
           name: zenoh-api
+        - containerPort: 7448
+          protocol: UDP
+          name: zenoh-quic
+        - containerPort: 7449
+          protocol: TCP
+          name: zenoh-tls
         resources:
           requests:
             cpu: "2"
             memory: 5Gi
+        volumeMounts:
+        - name: tls-zenoh-config
+          mountPath: /key.pem
+          subPath: key.pem
+        - name: tls-zenoh-config
+          mountPath: /cert.pem
+          subPath: cert.pem
+        - name: router-zenoh-config
+          mountPath: /router-conf.json5
+          subPath: router-conf.json5
         args:
+        - "-c router-conf.json5"
+        #- "-l tcp/0.0.0.0:7447"
         - "--cfg=connect/timeout_ms:1000"
         - "--cfg=connect/exit_on_failure:false"
