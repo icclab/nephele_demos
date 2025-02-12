@@ -22,7 +22,7 @@ sleep 1s
 
 #In another window we have the ros2 container without starting the robot base but the zenoh bridge
 screen -S summit -X screen -t ros2
-screen -S summit -p ros2 -X exec docker run --rm -it --privileged --network=host --ipc=host --pid=host --name ros2 --env UID=$(id -u) --env GID=$(id -g)  -v /dev/:/dev/ -v /home/summit:/home/summit -v /dev/lidar_front:/dev/lidar_front -v /dev/lidar_rear:/dev/lidar_rear -v /dev/astra_s:/dev/astra_s -v /dev/ttyUSB_gripper:/dev/ttyUSB_gripper robopaas/rosdocked-humble-nephele-summit:latest bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////home/summit/nephele/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; zenoh-bridge-ros2dds -c /home/summit/nephele/zenoh-bridge-conf.json5"
+screen -S summit -p ros2 -X exec docker run --rm -it --privileged --network=host --ipc=host --pid=host --name ros2 --env UID=$(id -u) --env GID=$(id -g)  -v /dev/:/dev/ -v /home/summit:/home/summit -v /dev/lidar_front:/dev/lidar_front -v /dev/lidar_rear:/dev/lidar_rear -v /dev/astra_s:/dev/astra_s -v /dev/ttyUSB_gripper:/dev/ttyUSB_gripper robopaas/rosdocked-humble-nephele-summit:latest bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////home/summit/nephele/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; zenoh-bridge-ros2dds -c /home/summit/nephele/zenoh-bridge-conf-filtered.json5"
 # wait for container to start
 sleep 1s
 

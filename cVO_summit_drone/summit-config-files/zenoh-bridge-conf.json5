@@ -1,9 +1,20 @@
 {
   mode: "client",
   connect:{ 
-//  timeout_ms: -1,
-//  exit_on_failure: false,
-  endpoints: ["tcp/160.85.253.140:30447"] 
+  timeout_ms: -1,
+  exit_on_failure: false,
+  endpoints: ["quic/160.85.253.140:30452"] 
+ // endpoints: ["tcp/160.85.253.140:30447"] 
+  //endpoints: ["tls/160.85.253.140:30449"] 
+  },
+  "transport": {
+    "link": {
+      "tls": {
+        "root_ca_certificate": "/home/ros/minica.pem",
+	"verify_name_on_connect": false,
+
+      }
+    }
   },
   timestamping: {
     /// Whether data messages should be timestamped if not already.
@@ -16,7 +27,7 @@
   },
   plugins: {
     ros2dds: {
-      namespace: "/summit",
+      namespace: "/",
    //   ros_localhost_only: false,
     //  deny: {
     //   publishers: ["/drone/.*", "/summit/.*"],
@@ -50,7 +61,7 @@
         "/summit/oak/rgb/camera_info", 
         "/summit/oak/stereo/image_raw", 
         "/summit/oak/stereo/camera_info",
-	      "/summit/global_costmap/clearing_endpoints",
+	     "/summit/global_costmap/clearing_endpoints",
         "/summit/global_costmap/costmap",
         "/summit/global_costmap/costmap_raw",
         "/summit/global_costmap/costmap_updates",
@@ -89,7 +100,7 @@
  //     ],
       pub_max_frequencies: [       
         "/diagnostics=0.1",
-	      "/summit/fix=0.1",
+	"/summit/fix=0.1",
         "/summit/front_rgbd_camera/color/camera_info=0.1",
         "/summit/front_rgbd_camera/depth/camera_info=0.1",
         "/summit/front_rgbd_camera/depth/points=0.1",
@@ -151,3 +162,4 @@
   //  rest: { http_port: 8000 }
   }
 }
+

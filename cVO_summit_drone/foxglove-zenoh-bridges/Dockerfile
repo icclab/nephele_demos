@@ -48,6 +48,7 @@ ENV CYCLONEDDS_URI=file:///home/ros/cyclonedds.xml
 COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
 
 ADD ./cyclonedds.xml /home/ros/cyclonedds.xml
+ADD ./minica.pem /home/ros/minica.pem
 ADD ./run_bridge.sh /run_bridge.sh
 
 # Source ROS

@@ -38,6 +38,7 @@ RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" |
   sudo apt update && sudo bash -c "apt install -y zenoh-bridge-ros2dds=1.0.2 > /dev/null 2>1; echo $?"
 COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5
 ADD ./cyclonedds.xml /root/ros/cyclonedds.xml
+ADD ./minica.pem /root/ros/minica.pem
 ADD ./run_rosbagsaver_tb2.sh /run_rosbagsaver_tb2.sh
 ADD ./run_rosbagsaver_drone.sh /run_rosbagsaver_drone.sh
 #COPY zenoh-bridge-conf.json5 /zenoh-bridge-conf.json5

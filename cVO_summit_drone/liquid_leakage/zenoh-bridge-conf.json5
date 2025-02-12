@@ -8,6 +8,15 @@
     //// All settings are optional and are unset by default - uncomment the ones you want to set
     ////
     ros2dds: {
+      ////
+      //// id: An identifier for this bridge, which must be unique in the system.
+      ///      The bridge will use this identifier in it's administration space: `@ros2/<id>/**`.
+      ///      This identifier will also appears in the logs of all other bridges on discovery events.
+      ///      By default a random UUID
+      ////
+     // id: "control1",
+
+      ////
       //// nodename: A ROS node name to be used by this bridge.
       ////            Default: "zenoh_bridge_ros2dds"
       ////
@@ -51,28 +60,28 @@
       ////               Use 'deny' to allow all except the specified interfaces. If an interface type is set to an empty list
       ////               or is not specified at all, it means that ALL such interface are allowed.
       // allow: {
-         publishers: [],
-         subscribers: ["/tf", "tf_static", "zed/zed_node/odom"],
-         service_servers: [".*/.*_parameters"],
-         service_clients: [],
-         action_servers: [".*/rotate_absolute"],
-         action_clients: [],
-       },
-      deny: {
-         publishers: ["/rosout", "/parameter_events"],
-         subscribers: ["/rosout"],
-         service_servers: [".*/set_parameters", ".*/_internal/.*"],
-         service_clients: [".*/set_parameters", ".*/_internal/.*"],
-         action_servers: [".*/_internal/.*"],
-         action_clients: [".*/_internal/.*"],
-      },
+      //   publishers: [".*/laser_scan", "/tf", ".*/pose"],
+      //   subscribers: [".*/cmd_vel"],
+      //   service_servers: [".*/.*_parameters"],
+      //   service_clients: [],
+      //   action_servers: [".*/rotate_absolute"],
+      //   action_clients: [],
+      // },
+    //  deny: {
+    //     publishers: ["/rosout", "/parameter_events"],
+    //     subscribers: ["/rosout"],
+    //     service_servers: [".*/set_parameters", ".*/_internal/.*"],
+    //     service_clients: [".*/set_parameters", ".*/_internal/.*"],
+    //     action_servers: [".*/_internal/.*"],
+    //     action_clients: [".*/_internal/.*"],
+    //  },
       ////
       //// pub_max_frequencies: Specify a list of maximum frequency of publications routing over zenoh for a set of Publishers.
       ////                      The strings must have the format "<regex>=<float>":
       ////                      - "regex" is a regular expression matching a Publisher interface name
       ////                      - "float" is the maximum frequency in Hertz;
       ////                        if publication rate is higher, downsampling will occur when routing.
-      pub_max_frequencies: [".*/laser_scan=5", "/tf=10"],
+    //  pub_max_frequencies: [".*/laser_scan=5", "/tf=10"],
 
       ////
       //// pub_priorities: Specify a list of priorities of publications routing over zenoh for a set of Publishers.
@@ -83,7 +92,7 @@
       ////                 - "integer" is a priority value in the range [1-7]. Highest priority is 1, lowest is 7 and default is 5.
       ////                   (see Zenoh Priority definition here: https://docs.rs/zenoh/latest/zenoh/publication/enum.Priority.html)
       ////
-      pub_priorities: ["/pose=2", "/rosout=7"],
+      //pub_priorities: ["/pose=2", "/rosout=7"],
 
       ////
       //// reliable_routes_blocking: When true, the publications from a RELIABLE DDS Writer will be
@@ -102,33 +111,33 @@
       ////                  either a list of strings with format "<regex>=<float>" where:
       ////                      - "regex" is a regular expression matching an interface name
       ////                      - "float" is the timeout in seconds
-      // queries_timeout: {
+       queries_timeout: {
       //   //// default timeout that will apply to all query, except the ones specified below
       //   //// in 'transient_local_subscribers', 'services' and 'actions'
-      //   default: 5.0,
+         default: 3600.0,
       //   //// timeouts for TRANSIENT_LOCAL subscriber when querying publishers for historical publications
-      //   transient_local_subscribers: 1.0,
+         transient_local_subscribers: 3600.0,
       //   //// timeouts for Service clients calling a Service server
       //   services: ["add_two_ints=0.5", ".*=1.0"],
       //   //// timeouts for Action clients calling an Action server (send_goal, cancel_goal and get_result services)
-      //   actions: {
-      //     send_goal: 1.0,
-      //     cancel_goal: 1.0,
-      //     get_result: [".*long_mission=3600", ".*short_action=10.0"],
-      //   }
-      // }
+         actions: {
+           send_goal: 3600.0,
+           cancel_goal: 3600.0,
+           get_result: [".*long_mission=3600", ".*short_action=3600.0"],
+         }
+       }
     },
 
     ////
     //// REST API configuration (active only if this part is defined)
     ////
-    rest: {
+  //  rest: {
     //   ////
     //   //// The HTTP port number (for all network interfaces).
     //   //// You can bind on a specific interface setting a "<local_ip>:<port>" string.
     //   ////
-         http_port: 8000,
-     },
+   //      http_port: 8000,
+  //   },
   },
 
   ////
@@ -146,10 +155,21 @@
   //// Which endpoints to connect to. E.g. tcp/localhost:7447.
   //// By configuring the endpoints, it is possible to tell zenoh which remote router or other zenoh-bridge-ros2dds to connect to at startup.
   ////
-  connect: {
-    endpoints: [
-       "tcp/160.85.253.140:30447"
-    ]
+  connect:{ 
+  timeout_ms: -1,
+  exit_on_failure: false,
+  endpoints: ["quic/160.85.253.140:30452"] 
+ // endpoints: ["tcp/160.85.253.140:30447"] 
+  //endpoints: ["tls/160.85.253.140:30449"] 
+  },
+  "transport": {
+    "link": {
+      "tls": {
+        "root_ca_certificate": "/home/ros/minica.pem",
+	"verify_name_on_connect": false,
+
+      }
+    }
   },
 }
   ////
@@ -200,5 +220,6 @@
   //    autoconnect: { router: "", peer: "router|peer" },
   //  },
   //},
+
 
 

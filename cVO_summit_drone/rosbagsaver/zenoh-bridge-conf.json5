@@ -156,10 +156,23 @@
   //// By configuring the endpoints, it is possible to tell zenoh which remote router or other zenoh-bridge-ros2dds to connect to at startup.
   ////
   connect: {
-    endpoints: [
-       "tcp/160.85.253.140:30447"
-    ]
+    timeout_ms: -1,
+    exit_on_failure: false,
+    endpoints: ["quic/160.85.253.140:30452"] 
+    // endpoints: ["tcp/160.85.253.140:30447"] 
+    //endpoints: ["tls/160.85.253.140:30449"] 
   },
+  "transport": {
+    "link": {
+      "tls": {
+        "root_ca_certificate": "/home/root/minica.pem",
+	      "verify_name_on_connect": false,
+
+      }
+    }
+  },
+
+
 }
   ////
   //// Which endpoints to listen on.
