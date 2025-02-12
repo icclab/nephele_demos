@@ -41,6 +41,10 @@ RUN mkdir -p /root/ros2_ws/src && /bin/bash -c "source /opt/ros/humble/setup.bas
 # Set the working directory
 WORKDIR /root/ros2_ws/src
 
+# Source ROS 2 and the workspace setup files
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
+    echo "source /root/ros2_ws/install/setup.bash" >> ~/.bashrc
+
 RUN sudo git clone https://github.com/icclab/LLM_service.git
 
 RUN rosdep update && rosdep install --from-paths /root/ros2_ws/src --ignore-src -r -y
@@ -50,9 +54,7 @@ RUN rosdep update && rosdep install --from-paths /root/ros2_ws/src --ignore-src 
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash &&  cd /root/ros2_ws && colcon build --symlink-install"
 
 
-# Source ROS 2 and the workspace setup files
-RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
-    echo "source /root/ros2_ws/install/setup.bash" >> ~/.bashrc
+
 
 ADD ./run_llm.sh /run_llm.sh
 ADD ./minica.pem /home/ros/minica.pem

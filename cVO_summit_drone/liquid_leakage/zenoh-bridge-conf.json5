@@ -59,14 +59,15 @@
       ////               or is not specified at all, it means that NO such interface is allowed.
       ////               Use 'deny' to allow all except the specified interfaces. If an interface type is set to an empty list
       ////               or is not specified at all, it means that ALL such interface are allowed.
-      // allow: {
+      allow: {
+        subscribers: ["/summit/summit/front_rgbd_camera/color/image_raw"],
       //   publishers: [".*/laser_scan", "/tf", ".*/pose"],
       //   subscribers: [".*/cmd_vel"],
       //   service_servers: [".*/.*_parameters"],
       //   service_clients: [],
       //   action_servers: [".*/rotate_absolute"],
       //   action_clients: [],
-      // },
+      },
     //  deny: {
     //     publishers: ["/rosout", "/parameter_events"],
     //     subscribers: ["/rosout"],
