@@ -1,0 +1,8 @@
+apiVersion: v2
+name: cvo
+description: A Helm chart for deploying the CVO application
+version: 1.0.0
+appVersion: "latest"
+dependencies:
+  - name: nginx-vo1  # The name of the chart you're depending on
+  - name: nginx-vo2

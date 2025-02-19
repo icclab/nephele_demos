@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vo1
+  labels:
+    app: vo1
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: {{ .Values.service.vo1.nodePort.http }}
+      protocol: TCP
+      name: http
+    - port: 9090
+      targetPort: 9090
+      nodePort: {{ .Values.service.vo1.nodePort.cataloguePort }}
+      protocol: TCP
+      name: catalogue-port
+  selector:
+    app: nginx-vo1
+

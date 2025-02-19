@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.volumes.scripts.configMapName }}
+  labels:
+    {{- include "cvo.labels" . | nindent 4 }}
+data:
+  app.py: |
+{{ .Files.Get "files/app.py" | indent 4 }}
+  config.yaml: |
+{{ .Files.Get "files/config.yaml" | indent 4 }}
+  td.json: |
+{{ .Files.Get "files/td.json" | indent 4 }}
+
+

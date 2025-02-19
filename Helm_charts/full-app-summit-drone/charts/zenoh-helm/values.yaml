@@ -1,0 +1,44 @@
+fullnameOverride: zenoh-helm
+
+# Deployment Settings
+replicaCount: 1
+
+image:
+  repository: eclipse/zenoh
+  tag: 1.0.2
+  pullPolicy: IfNotPresent
+
+ports:
+  - name: zenoh-protocol
+    protocol: TCP
+    port: 7447
+    nodePort: 30447
+  - name: zenoh-api
+    protocol: TCP
+    port: 8000
+    nodePort: 30450
+  - name: zenoh-quic
+    protocol: UDP
+    port: 7448
+    nodePort: 30452
+  - name: zenoh-tls
+    protocol: TCP
+    port: 7449
+    nodePort: 30449
+
+# Resources
+resources:
+  requests:
+    cpu: "2"
+    memory: 5Gi
+
+
+volumes:
+  tlsConfigMap: tls-zenoh
+  routerConfigMap: zenoh-router-config
+
+
+args:
+  - "--cfg=listen/timeout_ms:1000"
+  - "--cfg=listen/exit_on_failure:false"
+  - "-c router-conf.json5"
