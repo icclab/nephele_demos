@@ -46,14 +46,13 @@ RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
     echo "source /root/ros2_ws/install/setup.bash" >> ~/.bashrc
 
 RUN sudo git clone https://github.com/icclab/LLM_service.git
-
+ENV GIT_LFS_SKIP_SMUDGE=1 
+RUN git clone -b humble-devel https://github.com/Alpaca-zip/ultralytics_ros.git 
 RUN rosdep update && rosdep install --from-paths /root/ros2_ws/src --ignore-src -r -y
-
+RUN python3 -m pip install -r ultralytics_ros/requirements.txt 
 
  # Build the workspace
-RUN /bin/bash -c "source /opt/ros/humble/setup.bash &&  cd /root/ros2_ws && colcon build --symlink-install"
-
-
+RUN /bin/bash -c "source /opt/ros/humble/setup.bash &&  cd /root/ros2_ws && colcon build --symlink-install && source install/setup.bash "
 
 
 ADD ./run_llm.sh /run_llm.sh

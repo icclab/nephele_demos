@@ -27,7 +27,7 @@
   },
   plugins: {
     ros2dds: {
-      namespace: "/",
+      namespace: "/summit",
    //   ros_localhost_only: false,
     //  deny: {
     //   publishers: ["/drone/.*", "/summit/.*"],
@@ -49,7 +49,14 @@
       allow: {
        publishers: [
         // "/summit/.*"
-        "/summit/fix",
+        "/summit/odom",
+        "/summit/map_rtab",
+        "/summit/cloud_map",
+        "/summit/octomap_grid",
+        "/summit/local_costmap/published_footprint",
+        "/summit/mapPath",
+	"/summit/octomap_obstacles",
+	"/summit/fix",
         "/diagnostics",
         "/summit/front_rgbd_camera/color/camera_info",
         "/summit/front_rgbd_camera/depth/camera_info",
@@ -61,7 +68,7 @@
         "/summit/oak/rgb/camera_info", 
         "/summit/oak/stereo/image_raw", 
         "/summit/oak/stereo/camera_info",
-	     "/summit/global_costmap/clearing_endpoints",
+	"/summit/global_costmap/clearing_endpoints",
         "/summit/global_costmap/costmap",
         "/summit/global_costmap/costmap_raw",
         "/summit/global_costmap/costmap_updates",
@@ -100,6 +107,13 @@
  //     ],
       pub_max_frequencies: [       
         "/diagnostics=0.1",
+        "/summit/odom=1",
+        "/summit/map_rtab=0.5",
+        "/summit/cloud_map=0.1",
+        "/summit/octomap_grid=0.1",
+        "/summit/local_costmap/published_footprint=0.1",
+        "/summit/mapPath=0.1",
+        "/summit/octomap_obstacles=0.1",
 	"/summit/fix=0.1",
         "/summit/front_rgbd_camera/color/camera_info=0.1",
         "/summit/front_rgbd_camera/depth/camera_info=0.1",
@@ -162,4 +176,3 @@
   //  rest: { http_port: 8000 }
   }
 }
-

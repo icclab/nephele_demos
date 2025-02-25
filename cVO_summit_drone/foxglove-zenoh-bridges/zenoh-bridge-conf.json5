@@ -43,7 +43,7 @@
        service_servers: ["/summit/.*", "/drone/.*"],
        service_clients: ["/summit/.*", "/drone/.*"],
        action_servers: ["/summit/.*", "/drone/.*"],
-       action_clients: ["/summit/.*"], "/drone/.*",
+       action_clients: ["/summit/.*", "/drone/.*"],
       },
 //      pub_max_frequencies: [
 //        ".*/image_raw=5",
