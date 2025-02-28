@@ -41,8 +41,6 @@ generatorOptions:
 resources:
 - zenoh-router.yaml
 - flask-app.yaml
-#- foxglove-zenoh_vo1.yaml
-#- foxglove-zenoh_vo2.yaml
 - foxglove-zenoh_vo.yaml
 - nginx_vo-2_deploy.yaml
 - nginx_vo-1_deploy.yaml

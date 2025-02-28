@@ -17,7 +17,7 @@ spec:
       containers:
       - name: liquid-llm
         image: robopaas/liquid_llm:latest
-        imagePullPolicy:  Always 
+        imagePullPolicy:  IfNotPresent #Always 
         resources:
           requests:
             cpu: "7"
@@ -26,7 +26,7 @@ spec:
             cpu: "7"
             memory: 15Gi   
         command:
-         - /run_llm.sh
+         - /run_detection_summit.sh
 
 ---
 apiVersion: v1
