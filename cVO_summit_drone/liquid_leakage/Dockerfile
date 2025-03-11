@@ -58,5 +58,7 @@ RUN /bin/bash -c "source /opt/ros/humble/setup.bash &&  cd /root/ros2_ws && colc
 ADD ./run_llm.sh /run_llm.sh
 ADD ./minica.pem /home/ros/minica.pem
 
+ADD ./run_detection_summit.sh /run_detection_summit.sh
+
 # Set entrypoint to ensure ROS 2 is sourced
 ENTRYPOINT ["/bin/bash", "-c", "source /opt/ros/humble/setup.bash && exec bash"]
