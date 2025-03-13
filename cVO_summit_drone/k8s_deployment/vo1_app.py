@@ -21,6 +21,7 @@ import time
 
 config = zenoh.Config()
 config.insert_json5("mode", json.dumps("client"))
+#router_url = "quic/160.85.253.140:30452"
 router_url = "tcp/160.85.253.140:30447"
 config.insert_json5("connect/endpoints", json.dumps([router_url]))
 print("Opening Zenoh session...")
@@ -90,7 +91,7 @@ async def mapStoreDB_drone_handler(params):
     return {'message': f'Your map storing on db is in progress!'}
 
 
-async def bagStoreVO_drone_handler(params):
+""" async def bagStoreVO_drone_handler(params):
     params = params['input'] if params['input'] else {}
      # Default values
     bagname_tosave_drone = 'rosbag.mcap'
@@ -113,7 +114,7 @@ async def bagStoreVO_drone_handler(params):
             file.write(rosbag_raw_data)
     
     
-    return {'message': f'Your bag storing on VO is in progress!'}
+    return {'message': f'Your bag storing on VO is in progress!'} """
 
 
 

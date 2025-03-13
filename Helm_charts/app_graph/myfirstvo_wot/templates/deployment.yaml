@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+     app: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      imagePullSecrets:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: nepheleproject/custom-vo:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: scripts
+              mountPath: /app.py
+              subPath: app.py
+            - name: scripts
+              mountPath: /config.yaml
+              subPath: config.yaml
+            - name: scripts
+              mountPath: /td.json
+              subPath: td.json
+          ports:
+          - containerPort: {{ .Values.voDescriptorOverwrite.catalogue }}
+          {{- if .Values.voDescriptorOverwrite.bindingNB.ports.httpPort }}
+          - containerPort: {{ .Values.voDescriptorOverwrite.bindingNB.ports.httpPort }}
+          {{- end }}
+          {{- if .Values.voDescriptorOverwrite.bindingNB.ports.coapPort }}
+          - containerPort: {{ .Values.voDescriptorOverwrite.bindingNB.ports.coapPort }}
+          {{- end }}
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: {{ .Values.voDescriptorOverwrite.catalogue }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.voChartOverwrite.resources | nindent 12 }}
+        {{- if .Values.voChartOverwrite.OIDC4VP.enabled }}
+        - name: holder
+          image: nepheleproject/demo-oidc4vp:kotlinv1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8085
+          env:
+          - name: logs
+            value: "false"
+          - name: blockchain_rest
+            value: {{ .Values.voChartOverwrite.OIDC4VP.blockchainRestUrl }}
+          - name: issuer_host
+            value: {{ .Values.voChartOverwrite.OIDC4VP.issuerHost }}
+          command: ["/app/bin/waltid-ssikit"]
+          args: ["holder"]
+        {{- if .Values.voChartOverwrite.OIDC4VP.proxyEnabled }}
+        - name: verifier
+          image: nepheleproject/demo-oidc4vp:kotlinv1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8090
+          env:
+          - name: logs
+            value: "false"
+          - name: xacml
+            value: "true"
+          - name: xacml_domain
+            value: vowot
+          - name: xacml_pdp
+            value: {{ .Values.voChartOverwrite.OIDC4VP.xacmlPdp }}
+          - name: blockchain_rest
+            value: {{ .Values.voChartOverwrite.OIDC4VP.blockchainRestUrl }}
+          command: ["/app/bin/waltid-ssikit"]
+          args: ["verifier"]
+        - name: proxy
+          image: nepheleproject/demo-pep-proxy:pythonv1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: {{ .Values.voChartOverwrite.OIDC4VP.proxyHttpPort }}
+          - containerPort: {{ .Values.voChartOverwrite.OIDC4VP.proxyCataloguePort }}
+          env:
+          - name: pep_protocol
+            value: http
+          - name: target_port
+            value: {{ .Values.voDescriptorOverwrite.bindingNB.ports.httpPort }}
+          - name: target2_port
+            value: {{ .Values.voDescriptorOverwrite.catalogue }}
+          - name: target2_thingdescription
+            value: /{{ .Chart.Name }}
+          - name: PEP_ENDPOINT
+            value: http://vo1:{{ .Values.voDescriptorOverwrite.bindingNB.ports.httpPort }},http://vo1:{{ .Values.voDescriptorOverwrite.catalogue }}
+        {{- end }}
+        {{- end }}
+      volumes:
+        - name: scripts
+          configMap:
+            name: {{ .Chart.Name }}-scripts
+            items:
+              - key: app.py
+                path: app.py
+              - key: config.yaml
+                path: config.yaml
+              - key: td.json
+                path: td.json
+

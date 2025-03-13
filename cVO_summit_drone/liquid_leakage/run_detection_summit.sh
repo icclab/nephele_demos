@@ -11,7 +11,7 @@ IMAGEPOSE_PID=$!
 sleep 1s 
 
 
-ros2 launch ultralytics_ros tracker.launch.xml debug:=true &
+ros2 launch ultralytics_ros tracker.launch.xml debug:=false &
 ULTRALYTICS_PID=$!
 sleep 1s 
 

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress-vo2
+  labels:
+    name: nginx-ingress-vo2
+spec:
+  rules:
+    - host: {{ .Values.ingress.nginxHost }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ngnix-service-summit
+                port:
+                  number: 80
+
+
+

@@ -1,0 +1,7 @@
+apiVersion: v2
+name: vo1
+description: A Helm chart for deploying a VO1.
+type: application
+version: 1.0.0
+appVersion: "latest"
+

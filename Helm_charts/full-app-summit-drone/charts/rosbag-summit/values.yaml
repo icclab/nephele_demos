@@ -1,0 +1,32 @@
+fullnameOverride: rosbag-summit
+replicaCount: 1
+
+image:
+  corsNginx:
+    repository: robopaas/cors-summit
+  rosbagSaver:
+    repository: robopaas/rosbagsaver
+    pullPolicy: Always
+
+service:
+  nginx:
+    nodePort: 30827
+
+ingress:
+  nginxHost: ngnix-vo2.robopaas.dev
+
+
+env:
+  ROS_DOMAIN_ID: "0"
+  
+  
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "1"
+  limits:
+    memory: "512Mi"
+    cpu: "1"   
+
+
+

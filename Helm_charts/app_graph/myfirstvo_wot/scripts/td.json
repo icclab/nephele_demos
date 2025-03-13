@@ -1,0 +1,15 @@
+{
+    "title": "{{ .Chart.Name }}",
+    "id": "some:unique:id",
+    "description": "{{ .Chart.Description }}",
+    "securityDefinitions": {
+        "no_sc": {
+            "scheme": "nosec"
+        }
+    },
+    "security": "no_sc",
+    "@context": [
+        "https://www.w3.org/2022/wot/td/v1.1"
+    ]
+}
+

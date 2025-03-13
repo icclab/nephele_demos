@@ -42,8 +42,10 @@ resources:
 - zenoh-router.yaml
 - flask-app.yaml
 - foxglove-zenoh_vo.yaml
-- nginx_vo-2_deploy.yaml
-- nginx_vo-1_deploy.yaml
 - nginx_td.yaml
+- vo1_deploy.yaml
+- vo2_deploy.yaml
+- rosbag_nginx_drone_deploy.yaml
+- rosbag_nginx_summit_deploy.yaml
 - cvo_deploy.yaml
 - liquid_llm.yaml

@@ -20,13 +20,26 @@ nginx-td:
   fullnameOverride: nginx-td
   replicaCount: 1
 
-nginx-vo1:
-  fullnameOverride: nginx-vo1
+vo1:
+  fullnameOverride: vo1
   replicaCount: 1
   
-nginx-vo2:
-  fullnameOverride: nginx-vo2
+vo2:
+  fullnameOverride: vo2
   replicaCount: 1
+ 
+rosbag-drone:
+  fullnameOverride: rosbag-drone
+  replicaCount: 1
+  
+rosbag-summit:
+  fullnameOverride: rosbag-summit
+  replicaCount: 1
+
+liquid-llm:
+  fullnameOverride: liquid-llm
+  replicaCount: 1
+
 
 zenoh-helm:
   fullnameOverride: zenoh-helm

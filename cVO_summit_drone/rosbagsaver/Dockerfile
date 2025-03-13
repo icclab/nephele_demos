@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone the repository into the workspace
-RUN git clone https://github.com/miltzhaw/rosbagsaver.git src/rosbagsaver
+RUN git clone https://github.com/icclab/rosbagsaver.git src/rosbagsaver
 
 # Install Python dependencies for the ROS 2 packages (if any)
 RUN pip3 install -r src/rosbagsaver/requirements.txt || echo "No requirements.txt found"

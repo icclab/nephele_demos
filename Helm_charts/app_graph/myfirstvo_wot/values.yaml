@@ -1,0 +1,59 @@
+voDescriptorOverwrite:
+  catalogue: 9091
+  bindingNB:
+    sdn:
+      enabled: true
+    tsn:
+      enabled: true
+    ports:
+      httpPort: 8081
+      httpProxyPort: 8080
+  databaseConfig:
+    timeseriesDB:
+      influxDB: disabled
+
+voChartOverwrite:
+  OIDC4VP:
+    enabled: false
+    proxyEnabled: false
+    xacmlPdp: ""
+    blockchainRestUrl: ""
+    issuerHost: ""
+    proxyHttpPort: 8080
+    proxyCataloguePort: 9090
+  influxdb:
+    resources:
+      limits:
+        cpu: "500m"
+  tsn:
+    resources:
+      limits:
+        cpu: "500m"
+  sdn:
+    resources:
+      limits:
+        cpu: "500m"
+
+  serviceAccount:
+    create: false
+    annotations: {}
+    name: "vo"
+  ingress:
+    enabled: false
+  resources:
+    limits:
+      cpu: "500m"
+
+  autoscaling:
+    enabled: false
+  serviceImportClusters: []
+  clustersAffinity: []
+
+  service:
+    type: NodePort
+    catalogue:
+      nodePort: 30000
+    http:
+      nodePort: 30001
+
+

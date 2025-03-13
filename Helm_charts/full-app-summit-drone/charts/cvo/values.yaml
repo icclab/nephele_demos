@@ -1,34 +1,29 @@
 fullnameOverride: cvo
 replicaCount: 1
-appName: cvo
+
 image:
   repository: nepheleproject/vo-wot
   pullPolicy: Always
   tag: latest
 
 service:
-  type: NodePort
-  ports:
-    - name: http
-      port: 8080
-      targetPort: 8080
-      nodePort: 30887
-      protocol: TCP
-    - name: catalogue-port
-      port: 9090
-      targetPort: 9090
-      nodePort: 30888
-      protocol: TCP
-
-readinessProbe:
-  httpGet:
-    path: /
-    port: 9090
-  initialDelaySeconds: 10
-  periodSeconds: 10
+  cvo:
+    nodePort: 
+      http: 30887
+      cataloguePort: 30888
 
 env:
   HOSTNAME: cvo
+  ROS_DOMAIN_ID: "0"
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "1"
+  limits:
+    memory: "512Mi"
+    cpu: "1"   
+
 
 volumes:
   scripts:
@@ -40,4 +35,3 @@ volumes:
         path: config.yaml
       - key: td.json
         path: td.json
-

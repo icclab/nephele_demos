@@ -1,0 +1,349 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "voDescriptorOverwrite": {
+      "type": "object",
+      "properties": {
+        "catalogue": {
+          "type": "integer",
+          "description": "Catalogue port (port of an HTTP server) of the Thing from where it can be consumed"
+        },
+        "bindingNB": {
+          "type": "object",
+          "properties": {
+            "sdn": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "description": "If true, SDN is enabled for NorthBound communication"
+                }
+              },
+              "required": ["enabled"],
+              "additionalProperties": false,
+              "description": "SDN related configuration for NorthBound binding"
+            },
+            "tsn": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "description": "If true, TSN is enabled for NorthBound communication"
+                }
+              },
+              "required": ["enabled"],
+              "additionalProperties": false,
+              "description": "TSN related configuration for NorthBound binding"
+            },
+            "ports": {
+              "type": "object",
+              "properties": {
+                "httpPort": {
+                  "type": "integer",
+                  "description": "HTTP port for NorthBound communication"
+                },
+                "httpProxyPort": {
+                  "type": "integer",
+                  "description": "HTTP proxy port for NorthBound communication"
+                }
+              },
+              "required": ["httpPort", "httpProxyPort"],
+              "additionalProperties": false,
+              "description": "Ports configuration for NorthBound binding"
+            }
+          },
+          "required": ["sdn", "tsn", "ports"],
+          "additionalProperties": false,
+          "description": "NorthBound binding configuration"
+        },
+        "databaseConfig": {
+          "type": "object",
+          "properties": {
+            "timeseriesDB": {
+              "type": "object",
+              "properties": {
+                "influxDB": {
+                  "type": "string",
+                  "enum": ["enabled", "disabled"],
+                  "description": "Flag that enables or disables the InfluxDB connection"
+                }
+              },
+              "required": ["influxDB"],
+              "additionalProperties": false,
+              "description": "Timeseries database configuration"
+            }
+          },
+          "required": ["timeseriesDB"],
+          "additionalProperties": false,
+          "description": "Database configuration"
+        }
+      },
+      "required": ["catalogue", "bindingNB", "databaseConfig"],
+      "additionalProperties": false,
+      "description": "Overwritten descriptor configuration for the Virtual Object"
+    },
+    "voChartOverwrite": {
+      "type": "object",
+      "properties": {
+        "OIDC4VP": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "If true, OIDC4VP (OpenID Connect for Verifiable Presentations) is enabled"
+            },
+            "proxyEnabled": {
+              "type": "boolean",
+              "description": "If true, the proxy is enabled for OIDC4VP"
+            },
+            "xacmlPdp": {
+              "type": "string",
+              "description": "XACML Policy Decision Point URL (empty if not used)"
+            },
+            "blockchainRestUrl": {
+              "type": "string",
+              "description": "Blockchain REST URL (empty if not used)"
+            },
+            "issuerHost": {
+              "type": "string",
+              "description": "Issuer host for the OIDC4VP"
+            },
+            "proxyHttpPort": {
+              "type": "integer",
+              "description": "Proxy HTTP port for OIDC4VP"
+            },
+            "proxyCataloguePort": {
+              "type": "integer",
+              "description": "Proxy catalogue port for OIDC4VP"
+            }
+          },
+          "required": ["enabled", "proxyEnabled", "proxyHttpPort", "proxyCataloguePort"],
+          "additionalProperties": false,
+          "description": "OIDC4VP related configuration"
+        },
+        "influxdb": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "type": "object",
+              "properties": {
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU resource limit (e.g., '500m')"
+                    }
+                  },
+                  "required": ["cpu"],
+                  "additionalProperties": false,
+                  "description": "Resource limits for InfluxDB"
+                }
+              },
+              "required": ["limits"],
+              "additionalProperties": false,
+              "description": "InfluxDB related configuration"
+            }
+          },
+          "required": ["resources"],
+          "additionalProperties": false,
+          "description": "InfluxDB resources configuration"
+        },
+        "tsn": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "type": "object",
+              "properties": {
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU resource limit for TSN"
+                    }
+                  },
+                  "required": ["cpu"],
+                  "additionalProperties": false,
+                  "description": "Resource limits for TSN"
+                }
+              },
+              "required": ["limits"],
+              "additionalProperties": false,
+              "description": "TSN resources configuration"
+            }
+          },
+          "required": ["resources"],
+          "additionalProperties": false,
+          "description": "TSN related configuration"
+        },
+        "sdn": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "type": "object",
+              "properties": {
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU resource limit for SDN"
+                    }
+                  },
+                  "required": ["cpu"],
+                  "additionalProperties": false,
+                  "description": "Resource limits for SDN"
+                }
+              },
+              "required": ["limits"],
+              "additionalProperties": false,
+              "description": "SDN resources configuration"
+            }
+          },
+          "required": ["resources"],
+          "additionalProperties": false,
+          "description": "SDN related configuration"
+        },
+        "serviceAccount": {
+          "type": "object",
+          "properties": {
+            "create": {
+              "type": "boolean",
+              "description": "If true, create the service account"
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "description": "Annotations for the service account"
+              },
+              "description": "Annotations to add to the service account"
+            },
+            "name": {
+              "type": "string",
+              "description": "Name of the service account"
+            }
+          },
+          "required": ["create", "name"],
+          "additionalProperties": false,
+          "description": "Service account configuration"
+        },
+        "ingress": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "If true, ingress is enabled"
+            }
+          },
+          "required": ["enabled"],
+          "additionalProperties": false,
+          "description": "Ingress configuration"
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "description": "CPU resource limit"
+                }
+              },
+              "required": ["cpu"],
+              "additionalProperties": false,
+              "description": "Resource limits"
+            }
+          },
+          "required": ["limits"],
+          "additionalProperties": false,
+          "description": "Resource configuration"
+        },
+        "autoscaling": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "If true, autoscaling is enabled"
+            }
+          },
+          "required": ["enabled"],
+          "additionalProperties": false,
+          "description": "Autoscaling configuration"
+        },
+        "serviceImportClusters": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "List of clusters for service import"
+          },
+          "description": "Clusters where the service will be imported"
+        },
+        "clustersAffinity": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Affinity rules for clusters"
+          },
+          "description": "Affinity rules for clusters"
+        },
+        "service": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["NodePort"],
+              "description": "Type of the service (e.g., NodePort)"
+            },
+            "catalogue": {
+              "type": "object",
+              "properties": {
+                "nodePort": {
+                  "type": "integer",
+                  "description": "Node port for the catalogue service"
+                }
+              },
+              "required": ["nodePort"],
+              "additionalProperties": false,
+              "description": "Catalogue service configuration"
+            },
+            "http": {
+              "type": "object",
+              "properties": {
+                "nodePort": {
+                  "type": "integer",
+                  "description": "Node port for the HTTP service"
+                }
+              },
+              "required": ["nodePort"],
+              "additionalProperties": false,
+              "description": "HTTP service configuration"
+            }
+          },
+          "required": ["type", "catalogue", "http"],
+          "additionalProperties": false,
+          "description": "Service configuration"
+        }
+      },
+      "required": [
+        "OIDC4VP",
+        "influxdb",
+        "tsn",
+        "sdn",
+        "serviceAccount",
+        "ingress",
+        "resources",
+        "autoscaling",
+        "serviceImportClusters",
+        "clustersAffinity",
+        "service"
+      ],
+      "additionalProperties": false,
+      "description": "Chart overwrite configuration for the Virtual Object"
+    }
+  },
+  "additionalProperties": false
+}

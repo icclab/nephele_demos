@@ -1,0 +1,38 @@
+fullnameOverride: cvo
+replicaCount: 1
+
+image:
+  repository: nepheleproject/vo-wot
+  pullPolicy: Always
+  tag: latest
+
+
+service:
+  cvo:
+    nodePort: 
+      http: 30887
+      cataloguePort: 30888
+
+env:
+  HOSTNAME: cvo
+  ROS_DOMAIN_ID: "0"
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "1"
+  limits:
+    memory: "512Mi"
+    cpu: "1"   
+
+
+volumes:
+  scripts:
+    configMapName: cvo-scripts
+    items:
+      - key: app.py
+        path: app.py
+      - key: config.yaml
+        path: config.yaml
+      - key: td.json
+        path: td.json

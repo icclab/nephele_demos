@@ -158,8 +158,8 @@
   connect: {
     timeout_ms: -1,
     exit_on_failure: false,
-    endpoints: ["quic/160.85.253.140:30452"] 
-    // endpoints: ["tcp/160.85.253.140:30447"] 
+    //endpoints: ["quic/160.85.253.140:30452"] 
+    endpoints: ["tcp/160.85.253.140:30447"] 
     //endpoints: ["tls/160.85.253.140:30449"] 
   },
   "transport": {

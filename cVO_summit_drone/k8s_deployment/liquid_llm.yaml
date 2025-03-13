@@ -17,7 +17,7 @@ spec:
       containers:
       - name: liquid-llm
         image: robopaas/liquid_llm:latest
-        imagePullPolicy:  IfNotPresent #Always 
+        imagePullPolicy:  Always 
         resources:
           requests:
             cpu: "7"

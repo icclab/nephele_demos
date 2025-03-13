@@ -4,7 +4,7 @@ replicaCount: 1
 image:
   repository: robopaas/flaskapp_summit_drone
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   name: my-service-flaskapp

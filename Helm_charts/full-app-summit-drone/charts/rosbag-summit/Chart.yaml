@@ -1,0 +1,7 @@
+apiVersion: v2
+name: rosbag-summit
+description: A Helm chart for deploying an NGINX server and rosbagsaver service for the summit.
+type: application
+version: 1.0.0
+appVersion: "latest"
+

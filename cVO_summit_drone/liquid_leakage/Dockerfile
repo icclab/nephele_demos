@@ -55,7 +55,7 @@ RUN python3 -m pip install -r ultralytics_ros/requirements.txt
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash &&  cd /root/ros2_ws && colcon build --symlink-install && source install/setup.bash "
 
 
-ADD ./run_llm.sh /run_llm.sh
+#ADD ./run_llm.sh /run_llm.sh
 ADD ./minica.pem /home/ros/minica.pem
 
 ADD ./run_detection_summit.sh /run_detection_summit.sh
