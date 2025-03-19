@@ -29,6 +29,7 @@ spec:
       containers: 
       - name: flaskapp-container 
         image: robopaas/flaskapp_summit_drone:demo 
+        imagePullPolicy: Always
         ports: 
         - containerPort: 5000 
 

@@ -98,42 +98,41 @@ spec:
   selector:
     name: foxglove-zenoh-bridges-vo
   type: ClusterIP
+
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
   name: foxglove-zenoh-bridges-vo-ingress
   labels:
     name: foxglove-zenoh-bridges-vo
 spec:
-  rules:
-  - host: bridges-vo.nephele-project.ch
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: foxglove-zenoh-bridges-vo
-            port:
-              number: 8765
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`bridges-vo.nephele-project.ch`) 
+      kind: Rule
+      services:
+        - name: foxglove-zenoh-bridges-vo
+          port: 8765
+  tls:
+    secretName: letsencrypt-cert-production
+
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
   name: foxglove-ingress-vo
   labels:
     name: foxglove-zenoh-bridges-vo
 spec:
-  rules:
-  - host: foxglove-demo-vo.nephele-project.ch
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: foxglove-zenoh-bridges-vo
-            port:
-              number: 8080
----
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`foxglove-demo-vo.nephele-project.ch`) 
+      kind: Rule
+      services:
+        - name: foxglove-zenoh-bridges-vo
+          port: 8080
+  tls:
+    secretName: letsencrypt-cert-production

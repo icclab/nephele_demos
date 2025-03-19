@@ -65,26 +65,21 @@ spec:
     port: 80
     targetPort: 80
 
-
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
   name: nginx-ingress-vo2
   labels:
     name: nginx-ingress-vo2
 spec:
-  rules:
-  - host: ngnix-vo2.nephele-project.ch
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: ngnix-service-summit
-            port:
-              number: 80
-
-
-
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`ngnix-vo2.nephele-project.ch`) 
+      kind: Rule
+      services:
+        - name: ngnix-service-summit
+          port: 80
+  tls:
+    secretName: letsencrypt-cert-production

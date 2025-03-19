@@ -121,7 +121,7 @@
                 <div class="mb-4">
                     <h3>Start Sensor Deployment</h3>
                     <form action="/start_sensor_deployment" method="post">
-                        {% for i in range(9) %}
+                        {% for i in range(3) %}
                         <div class="mb-2">
                             <label>Coordinate {{ i+1 }}:</label>
                             <input type="text" name="coord_x_{{ i }}" placeholder="X{{ i+1 }}">

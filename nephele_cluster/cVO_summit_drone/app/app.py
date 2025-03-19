@@ -70,7 +70,7 @@ wot = WoT(servient=Servient(clients=[http_client]))
 @app.route('/start_sensor_deployment', methods=['POST'])
 def start_sensor_deployment():
     coordinates = []
-    for i in range(9):
+    for i in range(3):
         x = request.form.get(f'coord_x_{i}')
         y = request.form.get(f'coord_y_{i}')
         if x and y:
