@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rosbag-nginx-summit
+  labels:
+    app: rosbag-nginx-summit
+spec:
+  selector:
+    matchLabels:
+      app: rosbag-nginx-summit
+  template:
+    metadata:
+      labels:
+        app: rosbag-nginx-summit
+    spec:
+      volumes:
+        - name: shared-data
+          emptyDir: {}     
+      containers:
+      - name: cors-nginx
+        image: robopaas/cors-summit
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "1"
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        volumeMounts:
+          - name: shared-data
+            mountPath: /usr/share/nginx/html
+        ports:
+        - containerPort: 80
+      - name: rosbagsaver-summit
+        image: robopaas/rosbagsaver:demo
+        imagePullPolicy:  Always #IfNotPresent 
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "1"
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        env:
+        - name: ROS_DOMAIN_ID
+          value: "0"  # Ensure the ROS 2 domain is properly configured if needed
+        command:
+         - /run_rosbagsaver_summit.sh
+        volumeMounts:
+          - name: shared-data
+            mountPath: /pod-data
+
+    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngnix-service-summit
+spec:
+  selector:
+    app: rosbag-nginx-summit
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress-vo2
+  labels:
+    name: nginx-ingress-vo2
+spec:
+  rules:
+  - host: ngnix-vo2.nephele-project.ch
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ngnix-service-summit
+            port:
+              number: 80
+
+
+

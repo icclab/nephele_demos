@@ -1,0 +1,54 @@
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: my-service-flaskapp 
+spec: 
+  selector: 
+    app: myflaskapp 
+  ports: 
+  - port: 5000
+    targetPort: 5000 
+
+--- 
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: flaskapp 
+  labels: 
+        app: myflaskapp 
+spec: 
+  replicas: 1 
+  selector: 
+    matchLabels: 
+      app: myflaskapp 
+  template: 
+    metadata: 
+      labels: 
+        app: myflaskapp
+    spec: 
+      containers: 
+      - name: flaskapp-container 
+        image: robopaas/flaskapp_summit_drone:demo 
+        ports: 
+        - containerPort: 5000 
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: flaskapp-secure
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`uc1.nephele-project.ch`) 
+      kind: Rule
+      services:
+        - name: my-service-flaskapp 
+          port: 5000
+  tls:
+    secretName: letsencrypt-cert-production
+
+
+
+

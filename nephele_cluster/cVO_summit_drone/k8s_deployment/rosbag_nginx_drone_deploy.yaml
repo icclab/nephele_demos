@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rosbag-nginx-drone
+  labels:
+    app: rosbag-nginx-drone
+spec:
+  selector:
+    matchLabels:
+      app: rosbag-nginx-drone
+  template:
+    metadata:
+      labels:
+        app: rosbag-nginx-drone
+    spec:
+      volumes:
+        - name: shared-data
+          emptyDir: {}     
+      containers:
+      - name: cors-nginx
+        image: robopaas/cors-drone
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "1"
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        volumeMounts:
+          - name: shared-data
+            mountPath: /usr/share/nginx/html
+        ports:
+        - containerPort: 80
+      - name: rosbagsaver-drone
+        image: robopaas/rosbagsaver:demo
+        imagePullPolicy:  Always #IfNotPresent 
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "1"
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        env:
+        - name: ROS_DOMAIN_ID
+          value: "0"  # Ensure the ROS 2 domain is properly configured if needed
+        command:
+         - /run_rosbagsaver_drone.sh
+        volumeMounts:
+          - name: shared-data
+            mountPath: /pod-data
+
+    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngnix-service-drone
+spec:
+  selector:
+    app: rosbag-nginx-drone
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress-vo1
+  labels:
+    name: nginx-ingress-vo1
+spec:
+  rules:
+  - host: ngnix-vo1.nephele-project.ch
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ngnix-service-drone
+            port:
+              number: 80
+
+
+

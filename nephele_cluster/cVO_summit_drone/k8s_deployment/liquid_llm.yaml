@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: liquid-llm
+  labels:
+    app: liquid-llm
+spec:
+  selector:
+    matchLabels:
+      app: liquid-llm
+  template:
+    metadata:
+      labels:
+        app: liquid-llm
+    spec:
+      runtimeClassName: "nvidia"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: nvidia-a30
+                  operator: Exists
+      tolerations:
+        - key: just-gpu-workload
+          operator: Exists
+          effect: NoSchedule
+      containers:
+      - name: liquid-llm
+        image: robopaas/liquid_llm:demo
+        imagePullPolicy:  Always 
+        resources:
+          requests:
+            cpu: "7"
+            memory: 15Gi
+          limits:
+            cpu: "7"
+            memory: 15Gi   
+        command:
+         - /run_detection_summit.sh
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: liquid-llm-service
+spec:
+  selector:
+    app: liquid-llm
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80  
+    

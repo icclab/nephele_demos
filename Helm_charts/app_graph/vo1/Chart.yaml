@@ -1,6 +1,6 @@
 apiVersion: v2
 appVersion: "0.1.0"
-description: This is my first artifact
+description: A Helm chart for deploying a VO1
 name:  vo1
 type: application
 version: "0.1.0"
