@@ -47,7 +47,7 @@ screen -S summit -p front_camera -X exec docker exec -it ros2 bash -c "export RO
 ome/summit/nephele-demo/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; ros2 launch icclab_summit_xl astra_mini.launch.py"
 sleep 1s
 
-#In the same container we will also start the vo-wot environment
+#In the same container we will also start the vo:-wot environment
 screen -S summit -X screen -t vo-wot
 screen -S summit -p vo-wot -X exec docker exec -it ros2 bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////home/su
 mmit/nephele-demo/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; vo-wot -t summit-td.json -f summit.yaml summit.py"

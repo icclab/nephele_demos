@@ -145,7 +145,7 @@ async def triggerBringup_summit_handler(params):
         print("Battery status unknown, start summit_bringup!")
         process_bringup = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'summit_xl_real.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # Allow some time for the launch file to start
-        time.sleep(10)  
+        time.sleep(5)  
 
 
         # Check if the process is still running
@@ -161,7 +161,7 @@ async def triggerBringup_summit_handler(params):
         # If battery percentage is more than 50, allow to start the mapping launch file
         print("Battery sufficient, start summit mapping!")
         process_mapping = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'summit_xl_nav2.launch.py', 'use_sim_time:=false', 'slam:=True', 'params_file:=/home/ros/colcon_ws/install/icclab_summit_xl/share/icclab_summit_xl/config/nav2_params_real.yaml'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        time.sleep(10) 
+        time.sleep(5) 
 
 
         if process_mapping.poll() is None:
@@ -174,7 +174,7 @@ async def triggerBringup_summit_handler(params):
     if launchfileId == 'savemap_summit': #and mappingaction == True:
         print("Mapping finished, save the map!")
         process_savemapping = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'map_save.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        time.sleep(10) 
+        time.sleep(5) 
        
         print("Map saved successfully.")
         saveaction = True
@@ -182,7 +182,7 @@ async def triggerBringup_summit_handler(params):
     
     if launchfileId == 'startarmcam_summit':
         process_startarmcamera = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'oak.camera.launch.py', 'namespace:=summit'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        time.sleep(10) 
+        time.sleep(5) 
 
         if process_startarmcamera.poll() is None:
             print("Arm camera started successfully.")
@@ -216,7 +216,7 @@ async def triggerBringup_summit_handler(params):
 
     if launchfileId == 'startfrontcam_summit':
         process_startfrontcamera = subprocess.Popen(['ros2', 'launch', 'icclab_summit_xl', 'astra_mini.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        time.sleep(10) 
+        time.sleep(5) 
 
         if process_startfrontcamera.poll() is None:
             print("Front camera started successfully.")

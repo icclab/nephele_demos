@@ -76,7 +76,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`ngnix-vo2.nephele-project.ch`) 
+    - match: Host(`nginx-vo2.nephele-project.ch`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: ngnix-service-summit

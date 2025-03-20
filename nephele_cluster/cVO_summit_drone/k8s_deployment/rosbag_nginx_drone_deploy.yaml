@@ -77,7 +77,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`ngnix-vo1.nephele-project.ch`) 
+    - match: Host(`nginx-vo1.nephele-project.ch`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: ngnix-service-drone
