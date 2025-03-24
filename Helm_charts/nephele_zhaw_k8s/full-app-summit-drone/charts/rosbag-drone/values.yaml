@@ -1,0 +1,37 @@
+fullnameOverride: rosbag-drone
+replicaCount: 1
+
+image:
+  corsNginx:
+    repository: robopaas/cors-drone
+  rosbagSaver:
+    repository: robopaas/rosbagsaver:demo
+    pullPolicy: Always
+
+service:
+  nginx:
+    nodePort: 30827
+    name: ngnix-service-drone
+    port: 80
+
+traefik:
+  ingressName: nginx-ingress-vo1
+  enabled: true
+  host: nginx-vo1.nephele-project.ch
+  entrypoints: websecure
+  tls: true
+  tlsSecret: letsencrypt-cert-production
+  
+env:
+  ROS_DOMAIN_ID: "0"
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "1"
+  limits:
+    memory: "512Mi"
+    cpu: "1"   
+
+
+

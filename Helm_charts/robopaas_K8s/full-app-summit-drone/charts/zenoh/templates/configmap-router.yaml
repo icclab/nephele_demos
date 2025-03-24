@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.volumes.tlsConfigMap }}
+data:
+  key.pem: |
+{{ .Files.Get "files/key.pem" | indent 4 }}
+  cert.pem: |
+{{ .Files.Get "files/cert.pem" | indent 4 }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.volumes.routerConfigMap }}
+data:
+  router-conf.json5: |
+{{ .Files.Get "files/router-conf.json5" | indent 4 }}
+

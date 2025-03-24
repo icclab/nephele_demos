@@ -1,0 +1,35 @@
+apiVersion: v2
+name: full-app-summit-drone
+version: 1.0.0
+
+dependencies:
+  - name: zenoh
+    version: "1.0.0"
+    repository: "file://./charts/zenoh"
+  - name: nginx-td
+    version: "1.0.0"
+    repository: "file://./charts/nginx-td"
+  - name: vo1
+    version: "1.0.0"
+    repository: "file://./charts/vo1"
+  - name: vo2
+    version: "1.0.0"
+    repository: "file://./charts/vo2"
+  - name: flask-gui
+    version: "1.0.0"
+    repository: "file://./charts/flask-gui"
+  - name: fxg-zenoh-bridges
+    version: "1.0.0"
+    repository: "file://./charts/fxg-zenoh-bridges"
+  - name: rosbag-summit
+    version: "1.0.0"
+    repository: "file://./charts/rosbag-summit"
+  - name: rosbag-drone
+    version: "1.0.0"
+    repository: "file://./charts/rosbag-drone"
+  - name: liquid-llm
+    version: "1.0.0"
+    repository: "file://./charts/liquid-llm"
+  - name: cvo
+    version: "1.0.0"
+    repository: "file://./charts/cvo"

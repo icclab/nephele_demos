@@ -1,0 +1,28 @@
+fullnameOverride: vo2
+replicaCount: 1
+
+image:
+  wotpy: 
+    repository: nepheleproject/vo-wot
+    pullPolicy: Always
+
+service:
+  vo2:
+    nodePort: 
+      http: 30975
+      cataloguePort: 30976
+
+env:
+  HOSTNAME: vo2
+  ROS_DOMAIN_ID: "0"
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "1"
+  limits:
+    memory: "512Mi"
+    cpu: "1"   
+
+
+

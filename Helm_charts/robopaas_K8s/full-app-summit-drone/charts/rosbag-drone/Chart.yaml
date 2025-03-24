@@ -1,0 +1,7 @@
+apiVersion: v2
+name: rosbag-drone
+description: A Helm chart for deploying an NGINX server and rosbagsaver service for the drone.
+type: application
+version: 1.0.0
+appVersion: "latest"
+

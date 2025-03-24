@@ -1,0 +1,42 @@
+fullnameOverride: liquid-llm
+
+# Deployment Settings
+replicaCount: 1
+
+image:
+  repository: robopaas/liquid_llm
+  tag: demo
+  pullPolicy: Always
+
+resources:
+  requests:
+    cpu: "7"
+    memory: "15Gi"
+  limits:
+    cpu: "7"
+    memory: "15Gi"
+
+service:
+  name: liquid-llm-service
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+runtimeClassName: nvidia
+
+command:
+  - /run_detection_summit.sh
+  
+  
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: nvidia-a30
+              operator: Exists
+
+tolerations:
+  - key: just-gpu-workload
+    operator: Exists
+    effect: NoSchedule

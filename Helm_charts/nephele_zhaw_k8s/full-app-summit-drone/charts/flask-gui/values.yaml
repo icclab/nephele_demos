@@ -1,0 +1,33 @@
+fullnameOverride: flask-gui
+replicaCount: 1
+
+image:
+  repository: robopaas/flaskapp_summit_drone
+  tag: demo
+  pullPolicy: Always
+
+service:
+  name: my-service-flaskapp
+  type: ClusterIP
+  port: 5000
+
+traefik:
+  enabled: true
+  host: uc1.nephele-project.ch
+  entrypoints: websecure
+  tls: true
+  tlsSecret: letsencrypt-cert-production
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "250m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+
+
+
+
+
+

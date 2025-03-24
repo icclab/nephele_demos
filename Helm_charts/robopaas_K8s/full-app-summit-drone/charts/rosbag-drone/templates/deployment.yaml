@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.fullnameOverride | default .Chart.Name }}-deployment
+  labels:
+    app: rosbag-nginx-drone
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: rosbag-nginx-drone
+  template:
+    metadata:
+      labels:
+        app: rosbag-nginx-drone
+    spec:
+      volumes:
+        - name: shared-data
+          emptyDir: {}
+      containers:
+        - name: cors-nginx-drone
+          image: {{ .Values.image.corsNginx.repository }}
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
+          volumeMounts:
+            - name: shared-data
+              mountPath: /usr/share/nginx/html
+          ports:
+            - containerPort: 80
+
+        - name: rosbagsaver-drone
+          image: {{ .Values.image.rosbagSaver.repository }}
+          imagePullPolicy: {{ .Values.image.rosbagSaver.pullPolicy }}
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
+          env:
+            - name: ROS_DOMAIN_ID
+              value: "{{ .Values.env.ROS_DOMAIN_ID }}"
+          command:
+            - /run_rosbagsaver_drone.sh
+          volumeMounts:
+            - name: shared-data
+              mountPath: /pod-data
+

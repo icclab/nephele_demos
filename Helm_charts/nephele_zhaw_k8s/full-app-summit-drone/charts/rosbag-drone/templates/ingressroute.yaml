@@ -1,0 +1,18 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.traefik.ingressName }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  entryPoints:
+    - {{ .Values.traefik.entrypoints }}
+  routes:
+    - match: Host(`{{ .Values.traefik.host }}`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: {{ .Values.service.nginx.name }}
+          port: {{ .Values.service.nginx.port }}
+  tls:
+    secretName: {{ .Values.traefik.tlsSecret }}
+
