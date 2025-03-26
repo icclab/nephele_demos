@@ -131,6 +131,7 @@ async def triggerBringup_drone_handler(params):
     batterypercent = battery_info if battery_info is not None else None
     print(f'Battery Percentage: {batterypercent}%')
     bringupaction = None
+    stopzedaction = None
     mappingaction = None
     saveaction = None
     savebagaction = None
@@ -138,7 +139,7 @@ async def triggerBringup_drone_handler(params):
     
     if launchfileId == 'bringup_zed':
         print("Start Zed camera!")
-        process_bringup = subprocess.Popen(['ros2', 'launch', 'zed_wrapper', 'zed_camera.launch.py', 'camera_model:=zed2i'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process_bringup = subprocess.Popen(['ros2', 'launch', 'zed_wrapper', 'zed_camera.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # Allow some time for the launch file to start
         time.sleep(20)  
 
@@ -149,6 +150,29 @@ async def triggerBringup_drone_handler(params):
         else:
             print("Failed to start the launch file.")
             bringupaction = False
+
+    if launchfileId == 'stopzed_drone':
+        if process_startarmcamera:
+            # Ensure that the process exists and is running
+            if process_bringup.poll() is None:
+                try:
+                    # Gracefully terminate the process
+                    process_bringup.send_signal(signal.SIGINT)
+                    process_bringup.wait(timeout=30)
+                    print("Process terminated gracefully.")
+                except subprocess.TimeoutExpired:
+                    # Forcefully kill the process if it didn't terminate
+                    print("Process did not terminate in time. Killing it forcefully.")
+                    process_bringup.kill()
+                    process_bringup.wait()
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+                stopzedaction = True
+            print("Arm camera stopped.")
+        else:
+            print("No arm camera process running.")
+            stopzedaction = False
+        process_bringup = None  # Reset the process variable
 
     if launchfileId == 'startmapping_drone':
         # If battery percentage is more than 50, allow to start the mapping launch file
@@ -203,10 +227,10 @@ async def triggerBringup_drone_handler(params):
     # newResources['local_data'] = local_data
         
     # Check if the amount of available resources is sufficient to launch
-    if newResources['battery_percent'] <= 30:
-        # Emit outOfResource event
-        exposed_thing.emit_event('outOfResource_drone', 'Low level of Battery Percentage')
-        return {'result': False, 'message': 'battery is not sufficient'}
+    # if newResources['battery_percent'] <= 30:
+    #     # Emit outOfResource event
+    #     exposed_thing.emit_event('outOfResource_drone', 'Low level of Battery Percentage')
+    #     return {'result': False, 'message': 'battery is not sufficient'}
     
     # Now store the new level of allAvailableResources_drone 
     await exposed_thing.properties['allAvailableResources_drone'].write(newResources)

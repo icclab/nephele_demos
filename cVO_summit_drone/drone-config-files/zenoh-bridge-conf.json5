@@ -1,78 +1,85 @@
 {
   plugins: {
-
+    
     ros2dds: {
+       namespace: "/drone",
 
-      namespace: "/drone",
+      ////
+      //// domain: The DDS Domain ID. By default set to 0, or to "$ROS_DOMAIN_ID" is this environment variable is defined.
+      ////
+      // domain: 0,
 
-       ros_localhost_only: true,
-
+      ////
+      //// ros_automatic_discovery_range: controls how far ROS nodes will try to discover each other.
+      ////                                Valid options are:
+      ////                                * "SUBNET" is the default, and for DDS based middleware it means it will discover any node reachable via multicast.
+      ////                                * "LOCALHOST" means a node will only try to discover other nodes on the same machine.
+      ////                                * "OFF" means the node won’t discover any other nodes, even on the same machine.
+      ////                                * "SYSTEM_DEFAULT" means “don’t change any discovery settings”.
+      ////
+      ////                                Note that this is only available with ROS 2 Iron and later version
+      ////                                For more information: https://docs.ros.org/en/rolling/Tutorials/Advanced/Improved-Dynamic-Discovery.html
+      ////
+      // ros_automatic_discovery_range: "SUBNET",
 
        allow: {
-         publishers: ["camera", "/zed/zed_node/rgb/image_rect_color/compressed", /tf", "/tf_static", "/fmu/out/battery_status", "/zed/zed_node/rgb/camera_info", "/zed/zed_node/pose", "/zed/zed_node/odom", "/zed/zed_node/path_map", "/zed/zed_node/path_odom", "/zed/zed_node/imu/data", "/diagnostics", "/mavros/global_position/global", "/mavros/global_position/local", "/mavros/local_position/pose", "/mavros/local_position/odom"
-         //"/fmu/out/vehicle_gps_position", "/fmu/out/vehicle_local_position"
+         publishers: ["/diagnostics", "/tf", "/tf_static", "/zed/zed_node/odom", "/zed/zed_node/path_map", "/zed/zed_node/path_odom", "/zed/zed_node/imu/data", "/zed/zed_node/rgb/image_rect_color/compressed", "/zed/zed_node/rgb/camera_info", "/zed/zed_node/depth/camera_info", "/zed/zed_node/depth/depth_registered", "/zed/zed_node/stereo/image_rect_color", "/mavros/local_position/pose", "/mavros/local_position/odom", "/mavros/global_position/global", "/mavros/global_position/local", "/occupancy_grid_scan", "/bonxai_point_cloud_centers"
+         // , "/camera"
          ],
-         //subscribers: [".*/cmd_vel"],
+         subscribers: ["/leakage_gps", "/leakage_local"],
          service_servers: [".*/.*_parameters"],
          service_clients: [],
          action_servers: [".*/rotate_absolute"],
          action_clients: [],
        },
-    
-      pub_max_frequencies: ["/tf=10"],
+       
+       pub_max_frequencies: [
+    "/diagnostics=0.1", "/tf=1", "/tf_static=1", "/zed/zed_node/odom=1", 
+    "/zed/zed_node/path_map=1", "/zed/zed_node/path_odom=1", 
+    "/zed/zed_node/imu/data=1", "/zed/zed_node/rgb/image_rect_color/compressed=0.1", 
+    "/zed/zed_node/rgb/camera_info=0.1", "/zed/zed_node/depth/camera_info=0.1", 
+    "/zed/zed_node/depth/depth_registered=0.1", "/zed/zed_node/stereo/image_rect_color=0.1", 
+    "/mavros/local_position/pose=1", "/mavros/local_position/odom=1", 
+    "/mavros/global_position/global=1", "/mavros/global_position/local=1", 
+    "/occupancy_grid_scan=1", "/bonxai_point_cloud_centers=1"
+      ]
+      ////
+      //// queries_timeout: Timeouts configuration for various Zenoh queries.
+      ////                  Each field is optional. If not set, the 'default' timeout (5.0 seconds by default) applies to all queries.
+      ////                  Each value can be either a float in seconds that will apply as a timeout to all queries,
+      ////                  either a list of strings with format "<regex>=<float>" where:
+      ////                      - "regex" is a regular expression matching an interface name
+      ////                      - "float" is the timeout in seconds
+      // queries_timeout: {
+      //   //// default timeout that will apply to all query, except the ones specified below
+      //   //// in 'transient_local_subscribers', 'services' and 'actions'
+      //   default: 5.0,
+      //   //// timeouts for TRANSIENT_LOCAL subscriber when querying publishers for historical publications
+      //   transient_local_subscribers: 1.0,
+      //   //// timeouts for Service clients calling a Service server
+      //   services: ["add_two_ints=0.5", ".*=1.0"],
+      //   //// timeouts for Action clients calling an Action server (send_goal, cancel_goal and get_result services)
+      //   actions: {
+      //     send_goal: 1.0,
+      //     cancel_goal: 1.0,
+      //     get_result: [".*long_mission=3600", ".*short_action=10.0"],
+      //   }
+      // },
 
-      //pub_priorities: ["/pose=2", "/rosout=7"],
 
-    
-       queries_timeout: {
-
-         default: 3600.0,
-         transient_local_subscribers: 3600.0,
-         actions: {
-           send_goal: 3600.0,
-           cancel_goal: 3600.0,
-           get_result: [".*=3600"],
-         }
-       }
     },
-
-    rest: {
-         http_port: 8000,
-     },
+    // rest: {
+    //   http_port: 8000,
+    // },
   },
+ 
   mode: "client",
 
   connect: {
     timeout_ms: -1,
     exit_on_failure: false,
-    endpoints: ["quic/160.85.253.140:30452"] 
-    // endpoints: ["tcp/160.85.253.140:30447"] 
-    //endpoints: ["tls/160.85.253.140:30449"] 
+    endpoints: [
+       "tcp/160.85.253.140:30447"
+    ]
   },
-  "transport": {
-    "link": {
-      "tls": {
-        "root_ca_certificate": "/home/ros/minica.pem",
-	      "verify_name_on_connect": false,
-
-      }
-    }
-  },
-  
-  timestamping: {
-    enabled: true,
-    drop_future_timestamp: false,
-  },
-   
-   
 }
-  
-
-
-
-
-
-
-
-  
-
