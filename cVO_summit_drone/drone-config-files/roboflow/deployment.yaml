@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: roboflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: roboflow
+  template:
+    metadata:
+      name: roboflow
+      labels:
+        name: roboflow
+    spec:
+      runtimeClassName: "nvidia"
+      containers:
+        - name: inference-server
+          image: roboflow/roboflow-inference-server-gpu:latest
+          ports:
+            - containerPort: 9001
+          resources:
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+            requests:
+              cpu: "1"
+              memory: "4Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboflow
+  labels:
+    app: roboflow
+spec:
+  selector:
+    name: roboflow
+  ports:
+    - protocol: TCP
+      port: 9001
+      nodePort: 30334
+  type: NodePort

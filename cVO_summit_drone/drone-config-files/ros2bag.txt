@@ -1,0 +1,7 @@
+ros2 bag record /tf /tf_static /zed/zed_node/pose /zed/zed_node/odom /zed/zed_node/imu/data /camera /zed/zed_node/rgb/camera_info /mavros/battery /mavros/global_position/global /mavros/global_position/local /mavros/local_position/odom
+
+
+ros2 bag record /camera /diagnostics /fmu/out/battery_status /fmu/out/vehicle_gps_position /fmu/out/vehicle_local_position /tf /tf_static /zed/zed_node/imu/data /zed/zed_node/odom /zed/zed_node/path_map /zed/zed_node/path_odom /zed/zed_node/pose /zed/zed_node/rgb/camera_info
+
+
+ros2 bag record /camera /diagnostics /mavros/battery /mavros/state /mavros/global_position/global /mavros/global_position/local /mavros/local_position/pose /tf /tf_static /zed/zed_node/imu/data /zed/zed_node/odom /zed/zed_node/path_map /zed/zed_node/path_odom /zed/zed_node/pose /zed/zed_node/rgb/camera_info /camera /occupancy_grid_scan /cloud_in_downsampled

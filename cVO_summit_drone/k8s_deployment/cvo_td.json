@@ -263,6 +263,32 @@
                 } 
             } 
         },
+        "gpsExport_drone": { 
+            "title": "Export gps data", 
+            "description": "Get gps data", 
+            "output": { 
+                "type": "object", 
+                "description": "Returns gps in array format.", 
+                "properties": { 
+                    "gpstoArray": { 
+                        "type": "array"
+                    }
+                } 
+            } 
+        },
+        "localPositionExport_drone": { 
+            "title": "Export localPosition data", 
+            "description": "Get localPosition data", 
+            "output": { 
+                "type": "object", 
+                "description": "Returns localPosition in array format.", 
+                "properties": { 
+                    "localtoArray": { 
+                        "type": "array"
+                    }
+                } 
+            } 
+        },
         "mapStoreDB_drone": { 
             "title": "Store map on DB", 
             "description": "Get map data and store it to DB of the VO", 

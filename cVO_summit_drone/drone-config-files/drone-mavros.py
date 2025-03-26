@@ -4,7 +4,7 @@ from rclpy.node import Node
 
 from std_msgs.msg import Bool
 from std_msgs.msg import Float32
-from px4_msgs.msg import BatteryStatus
+from sensor_msgs.msg import BatteryState
 from geometry_msgs.msg import Point
 from visualization_msgs.msg import Marker, MarkerArray
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
@@ -12,6 +12,7 @@ from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 import subprocess
 import time
 import base64
+import json
 
 logging.basicConfig()
 LOGGER = logging.getLogger()
@@ -31,7 +32,7 @@ def read_from_sensor():
             
             qos_profile = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, durability=DurabilityPolicy.VOLATILE, depth=10)
 
-            self.subscription = self.create_subscription(BatteryStatus, '/fmu/out/battery_status', self.battery_callback, qos_profile)
+            self.subscription = self.create_subscription(BatteryState, '/mavros/battery', self.battery_callback, qos_profile)
             self.gps_subscription = self.create_subscription(Point, '/leakage_gps', self.gps_callback, 10)
             self.localPostion_subscription = self.create_subscription(Point, '/leakage_local', self.local_callback, 10)
             self.marker_drone_publisher = self.create_publisher(MarkerArray, '/drone_pose_marker', 10)
@@ -39,12 +40,12 @@ def read_from_sensor():
 
         def battery_callback(self, msg):
             nonlocal battery_percent
-            if msg.voltage_v < 13.6:
+            if msg.voltage < 13.6:
                 battery_percent = 0
-            elif msg.voltage_v == 16.8: 
+            elif msg.voltage == 16.8: 
                 battery_percent = 100
             else: 
-                battery_percent = ((msg.voltage_v - 13.6) / (16.8 - 13.6)) * 100
+                battery_percent = ((msg.voltage - 13.6) / (16.8 - 13.6)) * 100
 
         def gps_callback(self, msg):
             nonlocal gps_data
@@ -73,7 +74,7 @@ def read_from_sensor():
                 marker.color.a = 1.0
                 marker.color.r = 0.0
                 marker.color.g = 0.0
-                marker.color.b = 1.0
+                marker.color.b = 1.0    # Blue for the leakage drone local position
 
                 marker_array.markers.append(marker)
 
@@ -88,12 +89,14 @@ def read_from_sensor():
 
     main()
 
-    return battery_percent
+    return battery_percent, gps_data, local_data
     
+battery_percent, gps_data, local_data = read_from_sensor()
+
 allAvailableResources_init = {
-    'battery_percent': read_from_sensor(),
-    'gps_data': read_from_sensor(),
-    'local_data': read_from_sensor()
+    'battery_percent': battery_percent,
+    'gps_data': gps_data,
+    'local_data': local_data
 }
 
 possibleLaunchfiles_drone_init = ['startmapping_drone', 'bringup_zed', 'savemap_drone', 'savebag_drone', 'stopbag_drone']
@@ -139,7 +142,7 @@ async def triggerBringup_drone_handler(params):
     launchfileId = params.get('launchfileId', launchfileId)
 
     # Check if there is resources
-    battery_info = read_from_sensor()
+    battery_info, gps_data, local_data = read_from_sensor()
     batterypercent = battery_info if battery_info is not None else None
     print(f'Battery Percentage: {batterypercent}%')
     bringupaction = None
@@ -209,12 +212,11 @@ async def triggerBringup_drone_handler(params):
 
     # Calculate the new level of resources
     newResources = resources.copy()
-    newResources['battery_percent'] = read_from_sensor()
-    newResources['gps_data'] = read_from_sensor()
-    newResources['local_data'] = read_from_sensor()
-    
-   # newResources['battery_charging'] = read_from_sensor('HDD Usage (SXLS0_180227AA)')[1]
-    
+    battery_info, gps_data, local_data = read_from_sensor()
+    newResources['battery_percent'] = battery_info
+    # newResources['gps_data'] = gps_data
+    # newResources['local_data'] = local_data
+        
     # Check if the amount of available resources is sufficient to launch
     if newResources['battery_percent'] <= 30:
         # Emit outOfResource event
@@ -249,34 +251,40 @@ async def bagExport_drone_handler(params):
     bag_string = get_rosbag_as_string(bag_file_path)
     return bag_string
     
-# async def gpsExport_drone_handler(params):
-#     params = params['input'] if params['input'] else {}
-#     map_file_path = '/home/ros/my_map.pgm'
-#     map_string = get_map_as_string(map_file_path)
-#     return map_string
+async def gpsExport_drone_handler(params):
+    params = params.get('input', {}) if params else {}
+    battery_percent, gps_data, local_data = read_from_sensor()
+    gps_export_list = [{"lat": p.x, "lon": p.y, "alt": p.z} for p in gps_data]
+    gps_export_string = json.dumps(gps_export_list)
+    return gps_export_string
 
-# async def localPositionExport_drone_handler(params):
-#     params = params['input'] if params['input'] else {}
-#     map_file_path = '/home/ros/my_map.pgm'
-#     map_string = get_map_as_string(map_file_path)
-#     return map_string
+async def localExport_drone_handler(params):
+    params = params.get('input', {}) if params else {}
+    battery_percent, gps_data, local_data = read_from_sensor()
+    local_export_list = [{"x": p.x, "y": p.y, "z": p.z} for p in local_data]
+    local_export_string = json.dumps(local_export_list)
+    return local_export_string
 
 async def allAvailableResources_drone_read_handler():
+    battery_percent, gps_data, local_data = read_from_sensor()
+
     allAvailableResources_current = {
-    'battery_percent': read_from_sensor(),
-    'gps_data': read_from_sensor(),
-    'local_data': read_from_sensor()
+    'battery_percent': battery_percent,
+    'gps_data': gps_data,
+    'local_data': local_data
     }
 
     return allAvailableResources_current
 
 async def currentValues_drone_handler(params):
+    battery_percent, gps_data, local_data = read_from_sensor()
+
     return {
         'result': True,
         'message': {
-            'battery_percent': read_from_sensor(),
-            'gps_data': read_from_sensor(),
-            'local_data': read_from_sensor()
+            'battery_percent': battery_percent,
+            'gps_data': gps_data,
+            'local_data': local_data
         }
     }
 

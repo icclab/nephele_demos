@@ -5,6 +5,13 @@ from launch_ros.descriptions import ComposableNode
 
 def generate_launch_description():
     """Generate launch description with multiple components."""
+    static_tf_publisher = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        arguments=["0.1", "0.0", "-0.05", "-0.3827", "0", "0", "0.9239", "base_link", "zed_camera_link"],
+        output="screen"
+    )
+    
     container = ComposableNodeContainer(
             name='filter_container',
             namespace='',
@@ -35,7 +42,7 @@ def generate_launch_description():
     )
 
 
-    return LaunchDescription([container, 
+    return LaunchDescription([container, static_tf_publisher,
         Node(
             package='pc2_to_grid',
             executable='pc2transform',

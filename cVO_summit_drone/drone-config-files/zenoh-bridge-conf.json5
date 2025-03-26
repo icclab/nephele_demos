@@ -9,15 +9,17 @@
 
 
        allow: {
-         publishers: ["/zed/zed_node/rgb/image_rect_color", "/zed/zed_node/rgb/image_rect_color/compressed", /tf", "/tf_static", "/fmu/out/battery_status", "/zed/zed_node/rgb/camera_info", "/zed/zed_node/pose", "/zed/zed_node/odom", "/zed/zed_node/path_map", "/zed/zed_node/path_odom", "/zed/zed_node/imu/data", "/diagnostics"],
-         subscribers: [".*/cmd_vel"],
+         publishers: ["camera", "/zed/zed_node/rgb/image_rect_color/compressed", /tf", "/tf_static", "/fmu/out/battery_status", "/zed/zed_node/rgb/camera_info", "/zed/zed_node/pose", "/zed/zed_node/odom", "/zed/zed_node/path_map", "/zed/zed_node/path_odom", "/zed/zed_node/imu/data", "/diagnostics", "/mavros/global_position/global", "/mavros/global_position/local", "/mavros/local_position/pose", "/mavros/local_position/odom"
+         //"/fmu/out/vehicle_gps_position", "/fmu/out/vehicle_local_position"
+         ],
+         //subscribers: [".*/cmd_vel"],
          service_servers: [".*/.*_parameters"],
          service_clients: [],
          action_servers: [".*/rotate_absolute"],
          action_clients: [],
        },
     
-    //  pub_max_frequencies: [".*/laser_scan=5", "/tf=10"],
+      pub_max_frequencies: ["/tf=10"],
 
       //pub_priorities: ["/pose=2", "/rosout=7"],
 

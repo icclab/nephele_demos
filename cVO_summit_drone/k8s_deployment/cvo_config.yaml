@@ -37,6 +37,8 @@ proxy:
   actionsMap:
     triggerBringup_drone: vo1
     mapExport_drone: vo1
+    gpsExport_drone: vo1
+    localPositionExport_drone: vo1
     currentValues_drone: vo1
     mapStoreDB_drone: vo1
     mapReadDB_drone: vo1
