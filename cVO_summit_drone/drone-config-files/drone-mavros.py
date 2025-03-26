@@ -33,10 +33,8 @@ def read_from_sensor():
             qos_profile = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, durability=DurabilityPolicy.VOLATILE, depth=10)
 
             self.subscription = self.create_subscription(BatteryState, '/mavros/battery', self.battery_callback, qos_profile)
-            self.gps_subscription = self.create_subscription(Point, '/leakage_gps', self.gps_callback, 10)
-            self.localPostion_subscription = self.create_subscription(Point, '/leakage_local', self.local_callback, 10)
-            self.marker_drone_publisher = self.create_publisher(MarkerArray, '/drone_pose_marker', 10)
-            self.timer = self.create_timer(1.0, self.publish_markers)
+            self.gps_subscription = self.create_subscription(MarkerArray, '/gps_marker', self.gps_callback, 10)
+            self.localPostion_subscription = self.create_subscription(MarkerArray, '/local_marker', self.local_callback, 10)
 
         def battery_callback(self, msg):
             nonlocal battery_percent
@@ -49,36 +47,23 @@ def read_from_sensor():
 
         def gps_callback(self, msg):
             nonlocal gps_data
-            gps_data.append(msg)
+            for marker in msg.markers:
+                point = Point(
+                    x=marker.pose.position.x,
+                    y=marker.pose.position.y,
+                    z=marker.pose.position.z
+                )
+                gps_data.append(point)
 
         def local_callback(self, msg):
             nonlocal local_data
-            local_data.append(msg)
-
-        def publish_markers(self):
-            marker_array = MarkerArray()
-            for i, point in enumerate(local_data):
-                marker = Marker()
-                marker.header.frame_id = "map"
-                marker.header.stamp = self.get_clock().now().to_msg()
-                marker.ns = "drone_poses"
-                marker.id = i
-                marker.type = Marker.CUBE
-                marker.action = Marker.ADD
-                marker.pose.position.x = point.x
-                marker.pose.position.y = point.y
-                marker.pose.position.z = point.z
-                marker.scale.x = 0.1
-                marker.scale.y = 0.1
-                marker.scale.z = 0.1
-                marker.color.a = 1.0
-                marker.color.r = 0.0
-                marker.color.g = 0.0
-                marker.color.b = 1.0    # Blue for the leakage drone local position
-
-                marker_array.markers.append(marker)
-
-            self.marker_publisher.publish(marker_array)
+            for marker in msg.markers:
+                point = Point(
+                    x=marker.pose.position.x,
+                    y=marker.pose.position.y,
+                    z=marker.pose.position.z
+                )
+                local_data.append(point)
 
     def main():
         rclpy.init()
