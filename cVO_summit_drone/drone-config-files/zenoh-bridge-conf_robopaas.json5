@@ -52,7 +52,7 @@
       ////                      - "float" is the timeout in seconds
       // queries_timeout: {
       //   //// default timeout that will apply to all query, except the ones specified below
-    //   //// in 'transient_local_subscribers', 'services' and 'actions'
+      //   //// in 'transient_local_subscribers', 'services' and 'actions'
       //   default: 5.0,
       //   //// timeouts for TRANSIENT_LOCAL subscriber when querying publishers for historical publications
       //   transient_local_subscribers: 1.0,
@@ -78,17 +78,8 @@
   connect: {
     timeout_ms: -1,
     exit_on_failure: false,
-      endpoints: ["quic/160.85.253.56:30452"] 
- // endpoints: ["tcp/160.85.253.56:30447"] 
-  //endpoints: ["tls/160.85.253.56:30449"] 
-  },
-  "transport": {
-    "link": {
-      "tls": {
-        "root_ca_certificate": "/home/orin/nephele_demos/cVO_summit_drone/drone-config-files/minica.pem",
-	"verify_name_on_connect": false,
-
-      }
-    }
+    endpoints: [
+       "tcp/160.85.253.140:30447"
+    ]
   },
 }

@@ -21,6 +21,8 @@ LOGGER.setLevel(logging.INFO)
 import os
 import signal
 
+process_bringup = None
+
 def read_from_sensor():  
     battery_percent = None 
     gps_data = []
@@ -84,7 +86,7 @@ allAvailableResources_init = {
     'local_data': local_data
 }
 
-possibleLaunchfiles_drone_init = ['startmapping_drone', 'bringup_zed', 'savemap_drone', 'savebag_drone', 'stopbag_drone']
+possibleLaunchfiles_drone_init = ['startmapping_drone', 'bringup_zed', 'stopzed_drone', '3dmap_drone', 'savemap_drone', 'savebag_drone', 'stopbag_drone']
 mapdataExportTF_init = [True, False]
 
 def get_map_as_string(map_file_path):
@@ -136,6 +138,7 @@ async def triggerBringup_drone_handler(params):
     saveaction = None
     savebagaction = None
     stopbagaction = None
+    global process_bringup  
     
     if launchfileId == 'bringup_zed':
         print("Start Zed camera!")
@@ -152,7 +155,7 @@ async def triggerBringup_drone_handler(params):
             bringupaction = False
 
     if launchfileId == 'stopzed_drone':
-        if process_startarmcamera:
+        if process_bringup:
             # Ensure that the process exists and is running
             if process_bringup.poll() is None:
                 try:
@@ -168,9 +171,9 @@ async def triggerBringup_drone_handler(params):
                 except Exception as e:
                     print(f"An error occurred: {e}")
                 stopzedaction = True
-            print("Arm camera stopped.")
+            print("zed camera stopped.")
         else:
-            print("No arm camera process running.")
+            print("No zed camera process running.")
             stopzedaction = False
         process_bringup = None  # Reset the process variable
 
@@ -178,7 +181,18 @@ async def triggerBringup_drone_handler(params):
         # If battery percentage is more than 50, allow to start the mapping launch file
         # print("Battery sufficient, start drone mapping!")
         process_mapping = subprocess.Popen(['ros2', 'launch', 'pc2_to_grid', 'pc2_transformed_to_grid_launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        time.sleep(10) 
+        time.sleep(5) 
+
+        if process_mapping.poll() is None:
+            print("Mapping started successfully.")
+            mappingaction = True
+        else:
+            print("Failed to start mapping.")
+            mappingaction = False
+    
+    if launchfileId == '3dmap_drone':
+        process_mapping = subprocess.Popen(['ros2', 'launch', 'bonxai_ros', 'bonxai_mapping.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        time.sleep(5) 
 
         if process_mapping.poll() is None:
             print("Mapping started successfully.")
@@ -190,7 +204,7 @@ async def triggerBringup_drone_handler(params):
     if launchfileId == 'savemap_drone': #and mappingaction == True:
         print("Mapping finished, save the map!")
         process_savemapping = subprocess.Popen(['ros2', 'launch', 'pc2_to_grid', 'map_saver_launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        time.sleep(20) 
+        time.sleep(5) 
        
         print("Map saved successfully.")
         saveaction = True
@@ -199,7 +213,7 @@ async def triggerBringup_drone_handler(params):
         print("Starting recording rosbag!")
         global process_bagrecording
         process_bagrecording = subprocess.Popen(['exec ros2 bag record -s mcap -o my_bag -d 20 -b 50000 -a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
-        time.sleep(20) 
+        time.sleep(5) 
        
         print("Bag recording started.")
         savebagaction = True
@@ -209,7 +223,7 @@ async def triggerBringup_drone_handler(params):
         if process_bagrecording.poll() is None:
             process_bagrecording.terminate()
             process_bagrecording.wait()
-            time.sleep(20)
+            time.sleep(5)
         #print(process_bagrecording)
         #process_bagrecording.terminate()#kill()
         #os.killpg(process_bagrecording, signal.SIGTERM)
@@ -247,16 +261,18 @@ async def triggerBringup_drone_handler(params):
         return {'result': savebagaction, 'message': f'Your {launchfileId} is in progress!'}
     elif launchfileId == 'stopbag_drone':
          return {'result': stopbagaction, 'message': f'Your {launchfileId} is in progress!'}
+    elif launchfileId == 'stopzed_drone':
+        return {'result': stopzedaction, 'message': f'Your {launchfileId} is in progress!'}
     
 async def mapExport_drone_handler(params):
     params = params['input'] if params['input'] else {}
-    map_file_path = '/home/ros/my_map.pgm'
+    map_file_path = '/home/orin/my_map.pgm'
     map_string = get_map_as_string(map_file_path)
     return map_string
 
 async def bagExport_drone_handler(params):
     params = params['input'] if params['input'] else {}
-    bag_file_path = '/home/ros/my_bag/my_bag_0.mcap'
+    bag_file_path = '/home/orin/my_bag/my_bag_0.mcap'
     bag_string = get_rosbag_as_string(bag_file_path)
     return bag_string
     
