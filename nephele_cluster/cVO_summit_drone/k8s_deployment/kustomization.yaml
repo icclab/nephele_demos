@@ -39,7 +39,7 @@ configMapGenerator:
 generatorOptions:
    disableNameSuffixHash: true
 resources:
-- zenoh-router.yaml
+#- zenoh-router.yaml
 - flask-app.yaml
 - foxglove-zenoh_vo.yaml
 - nginx_td.yaml

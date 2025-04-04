@@ -4,12 +4,15 @@ from rclpy.node import Node
 
 from std_msgs.msg import Bool
 from std_msgs.msg import Float32
-from px4_msgs.msg import BatteryStatus
+from sensor_msgs.msg import BatteryState
+from geometry_msgs.msg import Point
+from visualization_msgs.msg import Marker, MarkerArray
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 
 import subprocess
 import time
 import base64
+import json
 
 logging.basicConfig()
 LOGGER = logging.getLogger()
@@ -18,13 +21,10 @@ LOGGER.setLevel(logging.INFO)
 import os
 import signal
 
-def read_from_sensor():
-    # if sensorType != 'kobuki: Battery':
-    #     print(f"Sensor type '{sensorType}' is not supported.")
-    #     return None
-    
+def read_from_sensor():  
     battery_percent = None 
-    # battery_charging = None
+    gps_data = []
+    local_data = []
 
     class BatteryRead(Node):
         def __init__(self):
@@ -32,18 +32,38 @@ def read_from_sensor():
             
             qos_profile = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, durability=DurabilityPolicy.VOLATILE, depth=10)
 
-            self.subscription = self.create_subscription(BatteryStatus, '/fmu/out/battery_status', self.battery_callback, qos_profile)
-            # self.subscription = self.create_subscription(BatteryStatus, '/fmu/out/battery_status', self.battery_callback, 10)
+            self.subscription = self.create_subscription(BatteryState, '/mavros/battery', self.battery_callback, qos_profile)
+            self.gps_subscription = self.create_subscription(MarkerArray, '/gps_marker', self.gps_callback, 10)
+            self.localPostion_subscription = self.create_subscription(MarkerArray, '/local_marker', self.local_callback, 10)
 
         def battery_callback(self, msg):
             nonlocal battery_percent
-            # nonlocal battery_charging
-            if msg.voltage_v < 13.6:
+            if msg.voltage < 13.6:
                 battery_percent = 0
-            elif msg.voltage_v == 16.8: 
+            elif msg.voltage == 16.8: 
                 battery_percent = 100
             else: 
-                battery_percent = ((msg.voltage_v - 13.6) / (16.8 - 13.6)) * 100
+                battery_percent = ((msg.voltage - 13.6) / (16.8 - 13.6)) * 100
+
+        def gps_callback(self, msg):
+            nonlocal gps_data
+            for marker in msg.markers:
+                point = Point(
+                    x=marker.pose.position.x,
+                    y=marker.pose.position.y,
+                    z=marker.pose.position.z
+                )
+                gps_data.append(point)
+
+        def local_callback(self, msg):
+            nonlocal local_data
+            for marker in msg.markers:
+                point = Point(
+                    x=marker.pose.position.x,
+                    y=marker.pose.position.y,
+                    z=marker.pose.position.z
+                )
+                local_data.append(point)
 
     def main():
         rclpy.init()
@@ -54,13 +74,17 @@ def read_from_sensor():
 
     main()
 
-    return battery_percent
+    return battery_percent, gps_data, local_data
     
+battery_percent, gps_data, local_data = read_from_sensor()
+
 allAvailableResources_init = {
-    'battery_percent': read_from_sensor()
+    'battery_percent': battery_percent,
+    'gps_data': gps_data,
+    'local_data': local_data
 }
 
-possibleLaunchfiles_drone_init = ['startmapping_drone', 'bringup_zed', 'savemap_drone', 'savebag_drone', 'stopbag_drone']
+possibleLaunchfiles_drone_init = ['startmapping_drone', 'bringup_zed', 'savemap_drone', 'savebag_drone', 'stopbag_drone', 'stopzed_drone']
 mapdataExportTF_init = [True, False]
 
 def get_map_as_string(map_file_path):
@@ -103,28 +127,21 @@ async def triggerBringup_drone_handler(params):
     launchfileId = params.get('launchfileId', launchfileId)
 
     # Check if there is resources
-    #battery_info = read_from_sensor('HDD Usage (SXLS0_180227AA)')
-    battery_info = read_from_sensor()
-    #batterypercent = battery_info[0] if battery_info is not None else None
+    battery_info, gps_data, local_data = read_from_sensor()
     batterypercent = battery_info if battery_info is not None else None
-    #batterycharging = battery_info[1] if battery_info is not None else None
     print(f'Battery Percentage: {batterypercent}%')
-    #print(f'Battery is charging: {batterycharging}')
     bringupaction = None
+    stopzedaction = None
     mappingaction = None
     saveaction = None
     savebagaction = None
     stopbagaction = None
-    #process_bagrecording = None
     
-
-    #if launchfileId == 'bringup' and batterypercent is None :
     if launchfileId == 'bringup_zed':
-        # If battery percentage is None, start the drone launch file
         print("Start Zed camera!")
-        process_bringup = subprocess.Popen(['ros2', 'launch', 'zed_wrapper', 'zed_camera.launch.py', 'camera_model:=zed2i'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process_bringup = subprocess.Popen(['ros2', 'launch', 'zed_wrapper', 'zed_camera.launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # Allow some time for the launch file to start
-        time.sleep(20)  
+        time.sleep(5)  
 
         # Check if the process is still running
         if process_bringup.poll() is None:
@@ -134,15 +151,34 @@ async def triggerBringup_drone_handler(params):
             print("Failed to start the launch file.")
             bringupaction = False
 
-   # if launchfileId == 'startmapping' and batterypercent >= 30:
+    if launchfileId == 'stopzed_drone':
+        if process_bringup:
+            # Ensure that the process exists and is running
+            if process_bringup.poll() is None:
+                try:
+                    # Gracefully terminate the process
+                    process_bringup.send_signal(signal.SIGINT)
+                    process_bringup.wait(timeout=30)
+                    print("Process terminated gracefully.")
+                except subprocess.TimeoutExpired:
+                    # Forcefully kill the process if it didn't terminate
+                    print("Process did not terminate in time. Killing it forcefully.")
+                    process_bringup.kill()
+                    process_bringup.wait()
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+                stopzedaction = True
+            print("Arm camera stopped.")
+        else:
+            print("No arm camera process running.")
+            stopzedaction = False
+        process_bringup = None  # Reset the process variable
+
     if launchfileId == 'startmapping_drone':
         # If battery percentage is more than 50, allow to start the mapping launch file
         # print("Battery sufficient, start drone mapping!")
-        #process_mapping = subprocess.Popen(['ros2', 'launch', 'slam_toolbox', 'online_async_launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-       # process_mapping = subprocess.Popen(['ros2', 'launch', 'drone_xl_navigation', 'nav2_bringup_launch.py', 'use_sim_time:=false', 'slam:=True'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         process_mapping = subprocess.Popen(['ros2', 'launch', 'pc2_to_grid', 'pc2_transformed_to_grid_launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         time.sleep(10) 
-
 
         if process_mapping.poll() is None:
             print("Mapping started successfully.")
@@ -180,31 +216,21 @@ async def triggerBringup_drone_handler(params):
         print("Bag recording stopped.")
         stopbagaction = True
 
-            
-        
-
-
-       # if process_savemapping.poll() is None:
-       #     print("Map saved successfully.")
-       #     saveaction = True
-       # else:
-       #     print("Failed to save map.")
-       #     saveaction = False
-    
-
     # Read the current level of allAvailableResources_drone
     resources = await exposed_thing.read_property('allAvailableResources_drone')
 
     # Calculate the new level of resources
     newResources = resources.copy()
-    newResources['battery_percent'] = read_from_sensor()
-   # newResources['battery_charging'] = read_from_sensor('HDD Usage (SXLS0_180227AA)')[1]
-    
+    battery_info, gps_data, local_data = read_from_sensor()
+    newResources['battery_percent'] = battery_info
+    # newResources['gps_data'] = gps_data
+    # newResources['local_data'] = local_data
+        
     # Check if the amount of available resources is sufficient to launch
-    if newResources['battery_percent'] <= 30:
-        # Emit outOfResource event
-        exposed_thing.emit_event('outOfResource_drone', 'Low level of Battery Percentage')
-        return {'result': False, 'message': 'battery is not sufficient'}
+    # if newResources['battery_percent'] <= 30:
+    #     # Emit outOfResource event
+    #     exposed_thing.emit_event('outOfResource_drone', 'Low level of Battery Percentage')
+    #     return {'result': False, 'message': 'battery is not sufficient'}
     
     # Now store the new level of allAvailableResources_drone 
     await exposed_thing.properties['allAvailableResources_drone'].write(newResources)
@@ -224,33 +250,50 @@ async def triggerBringup_drone_handler(params):
     
 async def mapExport_drone_handler(params):
     params = params['input'] if params['input'] else {}
-    map_file_path = '/home/ros/my_map.pgm'
+    map_file_path = '/home/orin/my_map.pgm'
     map_string = get_map_as_string(map_file_path)
     return map_string
 
 async def bagExport_drone_handler(params):
     params = params['input'] if params['input'] else {}
-    bag_file_path = '/home/ros/my_bag/my_bag_0.mcap'
+    bag_file_path = '/home/orin/my_bag/my_bag_0.mcap'
     bag_string = get_rosbag_as_string(bag_file_path)
     return bag_string
     
+async def gpsExport_drone_handler(params):
+    params = params.get('input', {}) if params else {}
+    battery_percent, gps_data, local_data = read_from_sensor()
+    gps_export_list = [{"lat": p.x, "lon": p.y, "alt": p.z} for p in gps_data]
+    gps_export_string = json.dumps(gps_export_list)
+    return gps_export_string
+
+async def localExport_drone_handler(params):
+    params = params.get('input', {}) if params else {}
+    battery_percent, gps_data, local_data = read_from_sensor()
+    local_export_list = [{"x": p.x, "y": p.y, "z": p.z} for p in local_data]
+    local_export_string = json.dumps(local_export_list)
+    return local_export_string
+
 async def allAvailableResources_drone_read_handler():
+    battery_percent, gps_data, local_data = read_from_sensor()
+
     allAvailableResources_current = {
-    'battery_percent': read_from_sensor()
- #   'battery_percent': read_from_sensor('HDD Usage (SXLS0_180227AA)')[0],
- #   'battery_charging': read_from_sensor('HDD Usage (SXLS0_180227AA)')[1],
+    'battery_percent': battery_percent,
+    'gps_data': gps_data,
+    'local_data': local_data
     }
 
     return allAvailableResources_current
 
 async def currentValues_drone_handler(params):
+    battery_percent, gps_data, local_data = read_from_sensor()
+
     return {
         'result': True,
         'message': {
-    'battery_percent': read_from_sensor()
- #   'battery_percent': read_from_sensor('HDD Usage (SXLS0_180227AA)')[0],
- #   'battery_charging': read_from_sensor('HDD Usage (SXLS0_180227AA)')[1],
+            'battery_percent': battery_percent,
+            'gps_data': gps_data,
+            'local_data': local_data
         }
     }
-
 

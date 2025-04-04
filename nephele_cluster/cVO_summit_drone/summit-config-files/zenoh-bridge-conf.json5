@@ -4,8 +4,8 @@
   timeout_ms: -1,
   exit_on_failure: false,
   endpoints: ["quic/160.85.253.56:30452"] 
- // endpoints: ["tcp/160.85.253.56:30447"] 
-  //endpoints: ["tls/160.85.253.56:30449"] 
+ // endpoints: ["tcp/160.85.253.140:30447"] 
+  //endpoints: ["tls/160.85.253.140:30449"] 
   },
   "transport": {
     "link": {
@@ -50,6 +50,7 @@
        publishers: [
         // "/summit/.*"
         "/summit/odom",
+        "/summit/visualization_marker",
         "/summit/map_rtab",
         "/summit/cloud_map",
         "/summit/octomap_grid",
@@ -90,7 +91,9 @@
         "/summit/robot_description_semantic",
         "/summit/robotnik_base_hw/battery",
         "/summit/tf",
-        "/summit/tf_static"
+        "/summit/tf_static",
+        "/summit/speed_scaling_state_broadcaster/speed_scaling",
+	"/summit/mavros/imu/data"
          ],
        subscribers: ["/summit/.*"],
        service_servers: ["/summit/.*"],
@@ -108,6 +111,7 @@
       pub_max_frequencies: [       
         "/diagnostics=0.1",
         "/summit/odom=1",
+        "/summit/visualization_marker=0.5",
         "/summit/map_rtab=0.5",
         "/summit/cloud_map=0.1",
         "/summit/octomap_grid=0.1",
@@ -131,7 +135,7 @@
         "/summit/global_costmap/costmap_updates=0.5",
         "/summit/global_costmap/global_costmap/transition_event=0.5",
         "/summit/global_costmap/published_footprint=0.5",
-        "/summit/joint_states=1",
+        "/summit/joint_states=10",
         "/summit/local_costmap/clearing_endpoints=0.5",
         "/summit/local_costmap/costmap=0.5",
         "/summit/local_costmap/costmap_raw=0.5",
@@ -143,11 +147,13 @@
         "/summit/monitored_planning_scene=1",
         "/summit/motion_plan_request=1",
         "/summit/collision_object=0.5",
-        "/summit/robot_description=1",
+        "/summit/robot_description=10",
         "/summit/robot_description_semantic=1",
         "/summit/robotnik_base_hw/battery=0.1",
         "/summit/tf=1",
-        "/summit/tf_static=1"        
+        "/summit/tf_static=1",
+        "/summit/speed_scaling_state_broadcaster/speed_scaling=1",
+        "/summit/mavros/imu/data=1"
          ],
 
       pub_priorities: ["/summit/tf_static=1:express", "/summit/robot_description=1", "/summit/tf=1"],

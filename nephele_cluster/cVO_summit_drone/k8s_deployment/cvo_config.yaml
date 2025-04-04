@@ -51,5 +51,6 @@ proxy:
     myRosbagAction_summit: vo2
     sample_liquid_summit: vo2
     deploy_sensor_summit: vo2
+    people_detect_summit: vo2
 
 

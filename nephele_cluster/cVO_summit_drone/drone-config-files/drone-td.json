@@ -20,6 +20,12 @@
                     "type": "integer", 
                     "minimum": 0, 
                     "maximum": 100 
+                },
+                "gps_data": { 
+                    "type": "array"
+                },
+                "local_data": { 
+                    "type": "array"
                 }
            	} 
         }, 
@@ -66,6 +72,32 @@
                 "properties": { 
                     "maptoString": { 
                         "type": "string" 
+                    }
+                } 
+            } 
+        },
+        "gpsExport_drone": { 
+            "title": "Export gps data", 
+            "description": "Get gps data", 
+            "output": { 
+                "type": "object", 
+                "description": "Returns gps in array format.", 
+                "properties": { 
+                    "gpstoArray": { 
+                        "type": "array"
+                    }
+                } 
+            } 
+        },
+        "localPositionExport_drone": { 
+            "title": "Export localPosition data", 
+            "description": "Get localPosition data", 
+            "output": { 
+                "type": "object", 
+                "description": "Returns localPosition in array format.", 
+                "properties": { 
+                    "localtoArray": { 
+                        "type": "array"
                     }
                 } 
             } 

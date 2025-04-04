@@ -26,6 +26,7 @@ process_startfrontcamera = None
 process_startarmcamera = None
 process_startliquidpicking = None
 process_startsensordeploy = None
+process_startpeopledetect = None
 
 def read_from_sensor():
     
@@ -498,6 +499,80 @@ async def deploy_sensor_summit_handler(params):
             print(f"Error message: {e}")
             return {'result': False, 'message': 'An undefined error occurred.'} """
 
+
+  
+
+async def people_detect_summit_handler(params):
+        global process_startpeopledetect
+
+        params = params.get('input', {}) or {}
+        
+
+        # Launch the ROS2 command
+        command = [
+            "bash", "-c",
+            f"ros2 launch liquid_pickup people_detect.launch.py"
+        ]
+
+            # **Terminate existing process if running**
+        if process_startpeopledetect:
+            if process_startpeopledetect.poll() is None:
+                print("Terminating gracefully existing process...")
+                try:
+                    # Gracefully terminate the process
+                    process_startpeopledetect.send_signal(signal.SIGINT)
+                    process_startpeopledetect.wait(timeout=10)
+                    print("Process terminated gracefully.")
+                            # **Start a new subprocess and keep track of it**
+                    try:
+                        print("Starting new process...")
+                        process_startpeopledetect = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        return {
+                            'result': True,
+                            'message': f'People detection started!'
+                        }
+                    except subprocess.CalledProcessError as e:
+                        print(f"Failed to start process: {e}")
+                        return {'result': False, 'message': 'Failed to start process.'}    
+                except subprocess.TimeoutExpired:
+                    # Forcefully kill the process if it didn't terminate
+                    print("Process did not terminate in time. Killing it forcefully.")
+                    process_startpeopledetect.kill()
+                    process_startpeopledetect.wait()
+                    try:
+                        print("Starting new process...")
+                        process_startpeopledetect = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        return {
+                            'result': True,
+                            'message': f'People detection started!'
+                        }
+                    except subprocess.CalledProcessError as e:
+                        print(f"Failed to start process: {e}")
+                        return {'result': False, 'message': 'Failed to start process.'} 
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+            else:
+                try:
+                    print("Starting new process...")
+                    process_startpeopledetect = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    return {
+                        'result': True,
+                        'message': f'People detection started!'
+                    }
+                except Exception as e:
+                    print(f"Failed to start process: {e}")
+                    return {'result': False, 'message': 'Failed to start process.'}   
+        else:
+            try:
+                print("Starting new process...")
+                process_startpeopledetect = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                return {
+                    'result': True,
+                    'message': f'People detected started!'
+                }
+            except Exception as e:
+                print(f"Failed to start process: {e}")
+                return {'result': False, 'message': 'Failed to start process.'}       
  
 async def mapExport_summit_handler(params):
     params = params['input'] if params['input'] else {}

@@ -1,28 +1,17 @@
-#apiVersion: "autoscaling.k8s.io/v1"
-#kind: VerticalPodAutoscaler
+#apiVersion: v1
+#kind: Service
 #metadata:
-#  name: zenoh-vpa
+#  name: zenoh-fake-prometheus
 #spec:
-  # recommenders field can be unset when using the default recommender.
-  # When using an alternative recommender, the alternative recommender's name
-  # can be specified as the following in a list.
-  # recommenders: 
-  #   - name: 'alternative'
-#  targetRef:
-#    apiVersion: "apps/v1"
-#    kind: Deployment
+#  selector:
 #    name: zenoh
-#  resourcePolicy:
-#    containerPolicies:
-#      - containerName: '*'
-#        minAllowed:
-#          cpu: 2
-#          memory: 500Mi
-#        maxAllowed:
-#          cpu: 8
-#          memory: 30Gi
-#        controlledResources: ["cpu", "memory"]
-#---
+#  ports:
+#  - name: zenoh-api-metrics
+#    protocol: TCP
+#    port: 8001  # Use the InitContainer's port
+#    targetPort: 8001
+                     
+#---            
 kind: Service
 apiVersion: v1
 metadata:
@@ -81,6 +70,16 @@ spec:
             items:
             - key: router-conf.json5
               path: router-conf.json5
+#      initContainers:
+#      - name: fake-prometheus-target
+#        image: robopaas/my-fake-prometheus-target:latest
+#        ports:
+#        - containerPort: 8001
+#        command:
+#        - "/bin/sh"
+#        - "-c"
+#        - |
+#          python /app/trigger_alert.py & sleep 30  # Ensures enough time for scraping
       # runtimeClassName: "nvidia"
       containers:
       - name: zenoh

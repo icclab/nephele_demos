@@ -105,6 +105,18 @@
                 </div>
 
 
+                <!-- Start Detection on Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Start detection on Summit-Xl</h3>
+                    <form action="/start_detection_summit" method="get">
+                        <button type="submit" class="btn btn-secondary">Start Detection</button>
+                    </form>
+                    {% if detection_summit %}
+                    <div class="alert alert-info mt-3">{{detection_summit }}</div>
+                    {% endif %}
+                </div>
+
+
                 <!-- Read Data for Summit-Xl -->
                 <div class="mb-4">
                     <h3>Read Properties on Summit-Xl</h3>
@@ -252,11 +264,19 @@
                     <form action="/trigger_execution_drone" method="post" class="form-check">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="bringup_zed" name="launchfile_id_drone" value="bringup_zed">
-                            <label class="form-check-label" for="bringup_zed">Bringup</label>
+                            <label class="form-check-label" for="bringup_zed">Start camera</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="stopzed_drone" name="launchfile_id_drone" value="stopzed_drone">
+                            <label class="form-check-label" for="stopzed_drone">Stop camera</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="startmapping_drone" name="launchfile_id_drone" value="startmapping_drone">
-                            <label class="form-check-label" for="startmapping_drone">Start Mapping</label>
+                            <label class="form-check-label" for="startmapping_drone">Start 2D Mapping</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="3dmap_drone" name="launchfile_id_drone" value="3dmap_drone">
+                            <label class="form-check-label" for="3dmap_drone">Start 3D Mapping</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="savemap_drone" name="launchfile_id_drone" value="savemap_drone">
@@ -268,7 +288,7 @@
                         <div class="alert alert-info mt-3">Execution Status: {{ execution_status_drone }}</div>
                     {% endif %}
                 </div>
-
+                
 
 
 
@@ -346,7 +366,7 @@
                     {% endif %}
                 </div>
 
-                <!-- Save Rosbag on VO's FS for Drone -->
+                <!-- Save Rosbag on VO's FS for Drone 
                 <div class="mb-4">
                     <h3>Save rosbag on VO's FS</h3>
                     <form action="/store_bag_vo_drone" method="get">
@@ -360,7 +380,7 @@
                     
                 </div>
 
-                
+            -->
 
                 <div class="container mt-5">
                     <h3>Control rosbag for Drone</h3>
