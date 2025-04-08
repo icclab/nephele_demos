@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: roboflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: roboflow
+  template:
+    metadata:
+      name: roboflow
+      labels:
+        name: roboflow
+    spec:
+      runtimeClassName: "nvidia"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: nvidia-a30
+                  operator: Exists
+      tolerations:
+        - key: just-gpu-workload
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: inference-server
+          image: roboflow/roboflow-inference-server-gpu:latest
+          ports:
+            - containerPort: 9001
+          resources:
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+            requests:
+              cpu: "1"
+              memory: "4Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboflow-service
+  labels:
+    app: roboflow-service
+spec:
+  selector:
+    name: roboflow
+  ports:
+    - protocol: TCP
+      port: 9001
+      targetPort: 9001  # optional, but explicit is good
+  type: ClusterIP
+
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: roboflow-ingress
+spec:
+  entryPoints:
+    - websecure  # HTTPS only
+  routes:
+    - match: Host(`roboflow.nephele-project.ch`)
+      kind: Rule
+      services:
+        - name: roboflow-service
+          port: 9001
+  tls:
+    certResolver: letsencrypt-cert-production  # must match your traefik static config
+
