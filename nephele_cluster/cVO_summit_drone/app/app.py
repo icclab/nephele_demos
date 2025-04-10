@@ -142,7 +142,7 @@ async def deploy_sensor_summit(coordinates):
 @app.route('/start_sensor_deployment', methods=['POST'])
 def start_sensor_deployment():
     coordinates = []
-    for i in range(3):
+    for i in range(2):
         x = request.form.get(f'coord_x_{i}')
         y = request.form.get(f'coord_y_{i}')
         if x and y:

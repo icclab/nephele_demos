@@ -53,7 +53,7 @@ spec:
       targetPort: 9001  # optional, but explicit is good
   type: ClusterIP
 
-
+---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
@@ -69,4 +69,3 @@ spec:
           port: 9001
   tls:
     certResolver: letsencrypt-cert-production  # must match your traefik static config
-

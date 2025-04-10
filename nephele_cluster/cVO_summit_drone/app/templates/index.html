@@ -78,11 +78,15 @@
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="startarmcam_summit" name="launchfile_id_summit" value="startarmcam_summit">
-                            <label class="form-check-label" for="startarmcam_summit">Start arm camera</label>
+                            <label class="form-check-label" for="startarmcam_summit">Start arm camera detection</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="stoparmcam_summit" name="launchfile_id_summit" value="stoparmcam_summit">
-                            <label class="form-check-label" for="stoparmcam_summit">Stop arm camera</label>
+                            <label class="form-check-label" for="stoparmcam_summit">Stop arm camera detection</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="liquid_sampling_from_marker" name="launchfile_id_summit" value="liquid_sampling_from_marker">
+                            <label class="form-check-label" for="liquid_sampling_from_marker">Start liquid sampling at marker pose on map</label>
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Trigger Execution</button>
                     </form>
@@ -106,7 +110,7 @@
 
 
                 <!-- Start Detection on Summit-Xl -->
-                <div class="mb-4">
+           <!--     <div class="mb-4">
                     <h3>Start detection on Summit-Xl</h3>
                     <form action="/start_detection_summit" method="get">
                         <button type="submit" class="btn btn-secondary">Start Detection</button>
@@ -114,7 +118,7 @@
                     {% if detection_summit %}
                     <div class="alert alert-info mt-3">{{detection_summit }}</div>
                     {% endif %}
-                </div>
+                </div> -->
 
 
                 <!-- Read Data for Summit-Xl -->
@@ -133,7 +137,7 @@
                 <div class="mb-4">
                     <h3>Start Sensor Deployment</h3>
                     <form action="/start_sensor_deployment" method="post">
-                        {% for i in range(3) %}
+                        {% for i in range(2) %}
                         <div class="mb-2">
                             <label>Coordinate {{ i+1 }}:</label>
                             <input type="text" name="coord_x_{{ i }}" placeholder="X{{ i+1 }}">

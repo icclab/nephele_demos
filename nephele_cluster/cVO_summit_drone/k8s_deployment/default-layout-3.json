@@ -293,6 +293,9 @@
         },
         "frame:right_inner_knuckle": {
           "visible": false
+        },
+        "frame:back_box_link": {
+          "visible": false
         }
       },
       "topics": {
@@ -319,6 +322,15 @@
           "visible": true,
           "fallbackColor": "#080000",
           "displayMode": "collision"
+        },
+        "/summit/initialpose": {
+          "visible": true
+        },
+        "/summit/summit/person_marker": {
+          "visible": true
+        },
+        "/summit/summit/leakage_marker": {
+          "visible": true
         }
       },
       "layers": {
@@ -644,6 +656,9 @@
         },
         "frame:rear_right_wheel_link": {
           "visible": false
+        },
+        "frame:back_box_link": {
+          "visible": false
         }
       },
       "topics": {
@@ -757,6 +772,52 @@
       },
       "foxglovePanelTitle": "Summit Front Camera"
     },
+    "Image!2fnuhig": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "topics": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {
+        "imageTopic": "/summit/summit/leakage_annotated_image",
+        "calibrationTopic": "/summit/summit/front_rgbd_camera/color/camera_info"
+      },
+      "foxglovePanelTitle": "Detection"
+    },
     "Image!13f98bj": {
       "cameraState": {
         "distance": 20,
@@ -798,7 +859,7 @@
         "poseEstimateThetaDeviation": 0.26179939
       },
       "imageMode": {
-        "imageTopic": "/summit/summit/oak/rgb/image_raw",
+        "imageTopic": "/summit/summit/color/image",
         "calibrationTopic": "/summit/summit/oak/rgb/camera_info"
       },
       "foxglovePanelTitle": "Summit Arm Camera"
@@ -901,14 +962,7 @@
       "followMode": "follow-pose",
       "scene": {},
       "transforms": {},
-      "topics": {
-        "/drone/occupancy_grid_scan": {
-          "visible": true
-        },
-        "/drone/zed/zed_mode/path_map": {
-          "visible": true
-        }
-      },
+      "topics": {},
       "layers": {
         "grid": {
           "visible": true,
@@ -974,7 +1028,10 @@
       "scene": {},
       "transforms": {},
       "topics": {
-        "/drone/bonxai_point_cloud_centers": {
+        "/initialpose": {
+          "visible": true
+        },
+        "/move_base_simple/goal": {
           "visible": true
         }
       },
@@ -1076,7 +1133,7 @@
       "nameFilter": {}
     },
     "Tab!1iwj6dm": {
-      "activeTabIdx": 2,
+      "activeTabIdx": 0,
       "tabs": [
         {
           "title": "Visual Summit",
@@ -1089,7 +1146,11 @@
             "second": {
               "first": {
                 "first": "Image!3dov617",
-                "second": "Image!13f98bj",
+                "second": {
+                  "first": "Image!2fnuhig",
+                  "second": "Image!13f98bj",
+                  "direction": "row"
+                },
                 "direction": "column"
               },
               "second": {

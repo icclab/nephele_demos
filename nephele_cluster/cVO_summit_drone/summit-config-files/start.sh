@@ -36,10 +36,10 @@ sleep 1s
 
 
 #In the same container we will also start the arm camera
-screen -S summit -X screen -t arm_camera
-screen -S summit -p arm_camera -X exec docker exec -it ros2 bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////hom
-e/summit/nephele-demo/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; ros2 launch icclab_summit_xl oak.camera.launch.py namespace:=summit"
-sleep 1s
+#screen -S summit -X screen -t arm_camera
+#screen -S summit -p arm_camera -X exec docker exec -it ros2 bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////hom
+#e/summit/nephele-demo/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; ros2 launch icclab_summit_xl oak.camera.launch.py namespace:=summit"
+#sleep 1s
 
 #In the same container we will also start the camera
 screen -S summit -X screen -t front_camera
