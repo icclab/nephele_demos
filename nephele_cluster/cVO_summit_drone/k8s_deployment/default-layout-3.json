@@ -814,7 +814,7 @@
       },
       "imageMode": {
         "imageTopic": "/summit/summit/leakage_annotated_image",
-        "calibrationTopic": "/summit/summit/front_rgbd_camera/color/camera_info"
+        "calibrationTopic": ""
       },
       "foxglovePanelTitle": "Detection"
     },
@@ -860,7 +860,7 @@
       },
       "imageMode": {
         "imageTopic": "/summit/summit/color/image",
-        "calibrationTopic": "/summit/summit/oak/rgb/camera_info"
+        "calibrationTopic": "/summit/summit/color/camera_info"
       },
       "foxglovePanelTitle": "Summit Arm Camera"
     },

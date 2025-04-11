@@ -39,7 +39,7 @@ configMapGenerator:
 generatorOptions:
    disableNameSuffixHash: true
 resources:
-#- zenoh-router.yaml
+- zenoh-router.yaml
 - flask-app.yaml
 - foxglove-zenoh_vo.yaml
 - nginx_td.yaml
@@ -48,4 +48,5 @@ resources:
 - rosbag_nginx_drone_deploy.yaml
 - rosbag_nginx_summit_deploy.yaml
 - cvo_deploy.yaml
+- roboflow.yaml
 - liquid_llm.yaml
