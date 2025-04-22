@@ -49,4 +49,4 @@ resources:
 - rosbag_nginx_summit_deploy.yaml
 - cvo_deploy.yaml
 - roboflow.yaml
-- liquid_llm.yaml
+#- liquid_llm.yaml

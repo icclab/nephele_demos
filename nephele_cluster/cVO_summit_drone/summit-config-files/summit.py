@@ -122,8 +122,8 @@ def read_person_marker():
 
     class PersonMarkerRead(Node):
         def __init__(self):
-            super().__init__('marker_read')
-            self.marker_subscription = self.create_subscription(Marker,'/summit/person_marker',self.person_marker_callback,10)
+            super().__init__('marker_person_read')
+            self.marker_person_subscription = self.create_subscription(Marker,'/summit/person_marker',self.person_marker_callback,10)
 
         def person_marker_callback(self, msg: Marker):
             nonlocal x_person
@@ -774,6 +774,7 @@ async def allAvailableResources_summit_read_handler():
 async def currentValues_summit_handler(params):
     altitude, latitude, longitude = read_from_gps_sensor()
     x_liquid, y_liquid =  read_liquid_marker()
+    x_person, y_person =  read_person_marker()
     return {
         'result': True,
         'message': {
