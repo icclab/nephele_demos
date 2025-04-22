@@ -24,6 +24,7 @@ import os
 import signal
 
 process_bringup = None
+process_mapping = None
 
 class BatteryRead(Node):
     def __init__(self):
@@ -121,7 +122,7 @@ allAvailableResources_init = {
     'local_data': local_data
 }
 
-possibleLaunchfiles_drone_init = ['startmapping_drone', 'bringup_zed', 'stopzed_drone', 'save3dmap_drone', 'savemap_drone', 'savebag_drone', 'stopbag_drone']
+possibleLaunchfiles_drone_init = ['stopmapping_drone', 'startmapping_drone', 'bringup_zed', 'stopzed_drone', 'save3dmap_drone', 'savemap_drone', 'savebag_drone', 'stopbag_drone']
 mapdataExportTF_init = [True, False]
 
 def get_map_as_string(map_file_path):
@@ -192,11 +193,13 @@ async def triggerBringup_drone_handler(params):
     bringupaction = None
     stopzedaction = None
     mappingaction = None
+    stopmappingaction = None
     mapping3dsaveaction = None
     saveaction = None
     savebagaction = None
     stopbagaction = None
-    global process_bringup  
+    global process_bringup
+    global process_mapping
     
     if launchfileId == 'bringup_zed':
         print("Start Zed camera!")
@@ -247,12 +250,35 @@ async def triggerBringup_drone_handler(params):
         else:
             print("Failed to start mapping.")
             mappingaction = False
+
+    if launchfileId == 'stopmapping_drone':
+        if process_mapping:
+            # Ensure that the process exists and is running
+            if process_mapping.poll() is None:
+                try:
+                    # Gracefully terminate the process
+                    process_mapping.send_signal(signal.SIGINT)
+                    process_mapping.wait(timeout=30)
+                    print("Process terminated gracefully.")
+                except subprocess.TimeoutExpired:
+                    # Forcefully kill the process if it didn't terminate
+                    print("Process did not terminate in time. Killing it forcefully.")
+                    process_mapping.kill()
+                    process_mapping.wait()
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+                stopmappingaction = True
+            print("Mapping stopped.")
+        else:
+            print("No mapping process running.")
+            stopmappingaction = False
+        process_mapping = None  # Reset the process variable
     
     if launchfileId == 'save3dmap_drone':
-        process_mapping = subprocess.Popen(['ros2', 'launch', 'pc2_to_grid', 'pc2_map_png_launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process_3dmapping = subprocess.Popen(['ros2', 'launch', 'pc2_to_grid', 'pc2_map_png_launch.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         time.sleep(5) 
 
-        if process_mapping.poll() is None:
+        if process_3dmapping.poll() is None:
             print("3D Mapping saved successfully.")
             mapping3dsaveaction = True
         else:
