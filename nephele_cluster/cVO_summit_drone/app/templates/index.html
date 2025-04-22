@@ -276,15 +276,15 @@
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="startmapping_drone" name="launchfile_id_drone" value="startmapping_drone">
-                            <label class="form-check-label" for="startmapping_drone">Start 2D Mapping</label>
+                            <label class="form-check-label" for="startmapping_drone">Start Mapping</label>
                         </div>
-                        <div class="form-check">
+                  <!--       <div class="form-check">
                             <input class="form-check-input" type="radio" id="3dmap_drone" name="launchfile_id_drone" value="3dmap_drone">
                             <label class="form-check-label" for="3dmap_drone">Start 3D Mapping</label>
-                        </div>
+                        </div> -->
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="savemap_drone" name="launchfile_id_drone" value="savemap_drone">
-                            <label class="form-check-label" for="savemap_drone">Save Map</label>
+                            <label class="form-check-label" for="savemap_drone">Save 2D Map</label>
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Trigger Execution</button>
                     </form>
@@ -298,7 +298,7 @@
 
                 <!-- Environment Map for Drone -->
                 <div class="mb-4">
-                    <h3>Environment Map</h3>
+                    <h3>2D Environment Map</h3>
                     {% if image_url_drone %}
                     <img src="{{ image_url_drone }}" alt="Drone Map">
                     {% endif %}
@@ -333,7 +333,7 @@
 
                 <!-- Store Map on VO's DB for Drone -->
                 <div class="mb-4">
-                    <h3>Store Map on VO's DB</h3>
+                    <h3>Store 2D Map on VO's DB</h3>
                     <form action="/store_map_db_drone" method="get">
                         <label for="filename_tosave_drone" class="form-label">Filename to use:</label>
                         <input type="text" id="filename_tosave_drone" name="filename_tosave_drone" class="form-control">
@@ -358,7 +358,7 @@
 
                 <!-- Get Environment Map from VO's DB for Drone -->
                 <div class="mb-4">
-                    <h3>Get Environment Map</h3>
+                    <h3>Get 2D Environment Map</h3>
                     <img src="{{ map_from_db_drone }}" alt="Drone Map" class="img-fluid">
                     <form action="/read_map_from_db_drone" method="get" class="mt-2">
                         <label for="filename_map_drone" class="form-label">Filename:</label>
