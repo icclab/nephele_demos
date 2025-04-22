@@ -60,7 +60,7 @@
       ////               Use 'deny' to allow all except the specified interfaces. If an interface type is set to an empty list
       ////               or is not specified at all, it means that ALL such interface are allowed.
       allow: {
-        subscribers: ["/summit/summit/front_rgbd_camera/color/image_raw"],
+        subscribers: ["/summit/summit/color/image", "/summit/summit/person_marker"],
       //   publishers: [".*/laser_scan", "/tf", ".*/pose"],
       //   subscribers: [".*/cmd_vel"],
       //   service_servers: [".*/.*_parameters"],
