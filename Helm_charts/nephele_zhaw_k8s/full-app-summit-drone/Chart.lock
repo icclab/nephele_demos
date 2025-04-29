@@ -23,11 +23,11 @@ dependencies:
 - name: rosbag-drone
   repository: file://./charts/rosbag-drone
   version: 1.0.0
-- name: liquid-llm
-  repository: file://./charts/liquid-llm
+- name: roboflow
+  repository: file://./charts/roboflow
   version: 1.0.0
 - name: cvo
   repository: file://./charts/cvo
   version: 1.0.0
-digest: sha256:5c8021b5831a3f94ce4c74a70adcdcb5fcb4e245ecf6a52bbf321377526453e0
-generated: "2025-03-12T10:42:52.828274463+01:00"
+digest: sha256:c39687b5c42c74b4e10616c9e5caf86ffae2d72a75b799687a06169e794cc279
+generated: "2025-04-29T13:20:31.54756363+02:00"

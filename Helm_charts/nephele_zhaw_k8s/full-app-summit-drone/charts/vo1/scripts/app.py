@@ -48,7 +48,15 @@ async def filenamesReadDB_drone_handler(params):
     # Default values
     servient = exposed_thing.servient
     sqlite_db = servient.sqlite_db
-    result=sqlite_db.execute_query("SELECT filename FROM string_data_table")
+   # result=sqlite_db.execute_query("SELECT filename FROM string_data_table")
+        # Check if the table exists
+    table_exists = sqlite_db.execute_query(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='string_data_table'"
+    )
+    if not table_exists:
+        return []  # Return an empty list if the table does not exist
+    # If the table exists, execute the query
+    result = sqlite_db.execute_query("SELECT filename FROM string_data_table")
     return result
 
 async def mapReadDB_drone_handler(params):
@@ -59,7 +67,7 @@ async def mapReadDB_drone_handler(params):
     LOGGER.info('Result after params is {}'.format(filename_map_drone))
     servient = exposed_thing.servient
     sqlite_db = servient.sqlite_db
-    result=sqlite_db.execute_query("SELECT content FROM string_data_table WHERE filename='%s'" % filename_map_drone)
+    result=sqlite_db.execute_query("SELECT content FROM string_data_table WHERE filename='%s' LIMIT 1" % filename_map_drone)
    # result= sqlite_db.execute_query("SELECT filename FROM string_data_table") 
     parsed_result=result[0][0]
     return parsed_result
@@ -86,8 +94,10 @@ async def mapStoreDB_drone_handler(params):
         "content": "TEXT"
     }
     sqlite_db.create_table_if_not_exists(TABLE_NAME, columns)
-    result=sqlite_db.insert_data(TABLE_NAME, (filename_tosave_drone, content))
-    
+
+
+    # Insert if the filename does not exist
+    sqlite_db.insert_data(TABLE_NAME, (filename_tosave_drone, content))
     return {'message': f'Your map storing on db is in progress!'}
 
 

@@ -935,9 +935,9 @@
     },
     "3D!2ff7lxq": {
       "cameraState": {
-        "distance": 20,
+        "distance": 6.470670899474089,
         "perspective": true,
-        "phi": 60,
+        "phi": 59.99999999999988,
         "target": [
           0,
           0,
@@ -954,7 +954,7 @@
           0,
           1
         ],
-        "thetaOffset": 45,
+        "thetaOffset": 45.000000000000014,
         "fovy": 45,
         "near": 0.5,
         "far": 5000
@@ -982,6 +982,9 @@
         },
         "frame:odom": {
           "visible": false
+        },
+        "frame:base_link_drone": {
+          "visible": true
         }
       },
       "topics": {
@@ -1022,23 +1025,23 @@
         "poseEstimateThetaDeviation": 0.26179939
       },
       "imageMode": {},
-      "foxglovePanelTitle": "Aerial 2D map"
+      "foxglovePanelTitle": "Aerial 2D map",
+      "followTf": "map_drone"
     },
     "3D!3e0osu8": {
       "cameraState": {
-        "perspective": true,
         "distance": 10.266841665589805,
+        "perspective": true,
         "phi": 59.99999999999968,
-        "thetaOffset": 45.000000000000014,
-        "targetOffset": [
-          2.051077570479511,
-          3.001294298046328,
-          -1.282694296631465e-16
-        ],
         "target": [
           0,
           0,
           0
+        ],
+        "targetOffset": [
+          2.051077570479511,
+          3.001294298046328,
+          -1.282694296631465e-16
         ],
         "targetOrientation": [
           0,
@@ -1046,6 +1049,7 @@
           0,
           1
         ],
+        "thetaOffset": 45.000000000000014,
         "fovy": 45,
         "near": 0.5,
         "far": 5000
@@ -1128,7 +1132,8 @@
         "poseEstimateThetaDeviation": 0.26179939
       },
       "imageMode": {},
-      "foxglovePanelTitle": "Aerial 3D map"
+      "foxglovePanelTitle": "Aerial 3D map",
+      "followTf": "map_drone"
     },
     "Image!m6tx5s": {
       "cameraState": {
@@ -1193,7 +1198,7 @@
       "nameFilter": {}
     },
     "Tab!1iwj6dm": {
-      "activeTabIdx": 2,
+      "activeTabIdx": 0,
       "tabs": [
         {
           "title": "Visual Summit",

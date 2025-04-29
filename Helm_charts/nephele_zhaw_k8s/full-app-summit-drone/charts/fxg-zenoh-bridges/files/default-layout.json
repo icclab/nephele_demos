@@ -2,18 +2,19 @@
   "configById": {
     "3D!2ah3t15": {
       "cameraState": {
-        "distance": 3.8742296891694803,
         "perspective": true,
-        "phi": 59.99999999999965,
+        "distance": 16.290124999996927,
+        "phi": 59.99999999999949,
+        "thetaOffset": 45.00000000000015,
+        "targetOffset": [
+          3.4736670643905807,
+          -2.4141619125036184,
+          -2.910466675890794e-16
+        ],
         "target": [
           0,
           0,
           0
-        ],
-        "targetOffset": [
-          -0.0011549495305696322,
-          0.6090493314121581,
-          -2.1290241794676763e-16
         ],
         "targetOrientation": [
           0,
@@ -21,7 +22,6 @@
           0,
           1
         ],
-        "thetaOffset": 45.000000000000064,
         "fovy": 45,
         "near": 0.5,
         "far": 5000
@@ -293,6 +293,9 @@
         },
         "frame:right_inner_knuckle": {
           "visible": false
+        },
+        "frame:back_box_link": {
+          "visible": false
         }
       },
       "topics": {
@@ -319,6 +322,15 @@
           "visible": true,
           "fallbackColor": "#080000",
           "displayMode": "collision"
+        },
+        "/summit/initialpose": {
+          "visible": true
+        },
+        "/summit/summit/person_marker": {
+          "visible": true
+        },
+        "/summit/summit/leakage_marker": {
+          "visible": true
         }
       },
       "layers": {
@@ -353,18 +365,19 @@
     },
     "3D!1tu4fom": {
       "cameraState": {
-        "distance": 3.8742296891694803,
         "perspective": true,
-        "phi": 59.99999999999965,
+        "distance": 14.701837812497615,
+        "phi": 59.999999999999524,
+        "thetaOffset": 45.000000000000036,
+        "targetOffset": [
+          3.5276554087279433,
+          -2.681863699323312,
+          -4.805923245309878e-16
+        ],
         "target": [
           0,
           0,
           0
-        ],
-        "targetOffset": [
-          -0.0011549495305696322,
-          0.6090493314121581,
-          -2.1290241794676763e-16
         ],
         "targetOrientation": [
           0,
@@ -372,7 +385,6 @@
           0,
           1
         ],
-        "thetaOffset": 45.000000000000064,
         "fovy": 45,
         "near": 0.5,
         "far": 5000
@@ -644,30 +656,43 @@
         },
         "frame:rear_right_wheel_link": {
           "visible": false
+        },
+        "frame:back_box_link": {
+          "visible": false
         }
       },
       "topics": {
-        "/summit/summit/map_rtab": {
+        "/summit/summit/map": {
           "visible": true
+        },
+        "/summit/summit/global_costmap/costmap": {
+          "visible": false,
+          "colorMode": "costmap"
+        },
+        "/summit/summit/local_costmap/costmap": {
+          "visible": false,
+          "colorMode": "costmap"
+        },
+        "/summit/summit/merged_laser/scan": {
+          "visible": true,
+          "colorField": "intensity",
+          "colorMode": "flat",
+          "colorMap": "turbo",
+          "flatColor": "#dbd300ff",
+          "pointSize": 6
         },
         "/summit/summit/robot_description": {
           "visible": true,
           "fallbackColor": "#080000",
           "displayMode": "collision"
         },
-        "/summit/summit/local_costmap/published_footprint": {
-          "visible": true
-        },
         "/summit/summit/cloud_map": {
-          "visible": true
+          "visible": true,
+          "colorField": "rgb",
+          "colorMode": "rgb",
+          "colorMap": "turbo"
         },
-        "/summit/summit/mapPath": {
-          "visible": true
-        },
-        "/summit/summit/octomap_obstacles": {
-          "visible": true
-        },
-        "/summit/summit/octomap_grid": {
+        "/summit/summit/goal": {
           "visible": true
         }
       },
@@ -747,6 +772,52 @@
       },
       "foxglovePanelTitle": "Summit Front Camera"
     },
+    "Image!2fnuhig": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "topics": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {
+        "imageTopic": "/summit/summit/leakage_annotated_image",
+        "calibrationTopic": "/summit/summit/front_rgbd_camera/color/camera_info"
+      },
+      "foxglovePanelTitle": "Detection"
+    },
     "Image!13f98bj": {
       "cameraState": {
         "distance": 20,
@@ -788,10 +859,13 @@
         "poseEstimateThetaDeviation": 0.26179939
       },
       "imageMode": {
-        "imageTopic": "/summit/summit/oak/rgb/image_raw/compressed",
-        "calibrationTopic": "/summit/summit/oak/rgb/camera_info"
+        "imageTopic": "/summit/summit/color/image"
       },
       "foxglovePanelTitle": "Summit Arm Camera"
+    },
+    "map!1x0dv1t": {
+      "foxglovePanelTitle": "Ground robot map",
+      "zoomLevel": 18
     },
     "Teleop!4km4ztc": {
       "topic": "/summit/summit/cmd_vel_smoothed",
@@ -859,8 +933,207 @@
       "topicToRender": "/summit/diagnostics",
       "sortByLevel": true
     },
-    "map!1wfxcr0": {
-      "foxglovePanelTitle": "Drone Map"
+    "3D!2ff7lxq": {
+      "cameraState": {
+        "distance": 6.470670899474089,
+        "perspective": true,
+        "phi": 59.99999999999988,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45.000000000000014,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {
+        "frame:base_link": {
+          "visible": false
+        },
+        "frame:zed_camera_link": {
+          "visible": false
+        },
+        "frame:zed_left_camera_frame": {
+          "visible": false
+        },
+        "frame:zed_imu_link": {
+          "visible": false
+        },
+        "frame:map": {
+          "visible": false
+        },
+        "frame:zed_left_camera_optical_frame": {
+          "visible": false
+        },
+        "frame:odom": {
+          "visible": false
+        },
+        "frame:base_link_drone": {
+          "visible": true
+        }
+      },
+      "topics": {
+        "/drone/mapUAV": {
+          "visible": true
+        }
+      },
+      "layers": {
+        "grid": {
+          "visible": true,
+          "frameLocked": true,
+          "label": "Grid",
+          "instanceId": "79abb599-5dbf-4899-a179-4636a7d8194b",
+          "layerId": "foxglove.Grid",
+          "size": 10,
+          "divisions": 10,
+          "lineWidth": 1,
+          "color": "#248eff",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {},
+      "foxglovePanelTitle": "Aerial 2D map",
+      "followTf": "map_drone"
+    },
+    "3D!3e0osu8": {
+      "cameraState": {
+        "distance": 10.266841665589805,
+        "perspective": true,
+        "phi": 59.99999999999968,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          2.051077570479511,
+          3.001294298046328,
+          -1.282694296631465e-16
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45.000000000000014,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {
+        "frame:base_link": {
+          "visible": false
+        },
+        "frame:zed_camera_link": {
+          "visible": false
+        },
+        "frame:zed_left_camera_frame": {
+          "visible": false
+        },
+        "frame:zed_imu_link": {
+          "visible": false
+        },
+        "frame:map": {
+          "visible": false
+        },
+        "frame:zed_left_camera_optical_frame": {
+          "visible": false
+        },
+        "frame:odom": {
+          "visible": false
+        }
+      },
+      "topics": {
+        "/initialpose": {
+          "visible": true
+        },
+        "/move_base_simple/goal": {
+          "visible": true
+        },
+        "/drone/zed/zed_node/mapping/fused_cloud": {
+          "visible": true,
+          "colorField": "rgb",
+          "colorMode": "rgb",
+          "colorMap": "turbo"
+        },
+        "/drone/zed/zed_node/path_map": {
+          "visible": true
+        },
+        "/drone/zed/zed_node/path_odom": {
+          "visible": true
+        }
+      },
+      "layers": {
+        "grid": {
+          "visible": true,
+          "frameLocked": true,
+          "label": "Grid",
+          "instanceId": "79abb599-5dbf-4899-a179-4636a7d8194b",
+          "layerId": "foxglove.Grid",
+          "size": 10,
+          "divisions": 10,
+          "lineWidth": 1,
+          "color": "#248eff",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {},
+      "foxglovePanelTitle": "Aerial 3D map",
+      "followTf": "map_drone"
     },
     "Image!m6tx5s": {
       "cameraState": {
@@ -908,6 +1181,9 @@
       },
       "foxglovePanelTitle": "Drone camera"
     },
+    "map!1wfxcr0": {
+      "foxglovePanelTitle": "Drone Map"
+    },
     "TopicGraph!fi746g": {},
     "DiagnosticSummary!1rfhwmr": {
       "minLevel": 0,
@@ -935,10 +1211,18 @@
             "second": {
               "first": {
                 "first": "Image!3dov617",
-                "second": "Image!13f98bj",
+                "second": {
+                  "first": "Image!2fnuhig",
+                  "second": "Image!13f98bj",
+                  "direction": "row"
+                },
                 "direction": "column"
               },
-              "second": "Teleop!4km4ztc",
+              "second": {
+                "first": "map!1x0dv1t",
+                "second": "Teleop!4km4ztc",
+                "direction": "row"
+              },
               "direction": "column",
               "splitPercentage": 68.51851851851852
             },
@@ -973,8 +1257,16 @@
         {
           "title": "Visual drone",
           "layout": {
-            "first": "map!1wfxcr0",
-            "second": "Image!m6tx5s",
+            "first": {
+              "first": "3D!2ff7lxq",
+              "second": "3D!3e0osu8",
+              "direction": "column"
+            },
+            "second": {
+              "first": "Image!m6tx5s",
+              "second": "map!1wfxcr0",
+              "direction": "column"
+            },
             "direction": "row"
           }
         },

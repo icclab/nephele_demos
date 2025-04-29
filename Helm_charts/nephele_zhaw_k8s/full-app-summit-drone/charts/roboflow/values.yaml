@@ -1,0 +1,50 @@
+fullnameOverride: roboflow
+
+# Deployment Settings
+replicaCount: 1
+
+image:
+  repository: roboflow/roboflow-inference-server-gpu
+  tag: latest
+  pullPolicy: Always
+
+resources:
+  requests:
+    cpu: "2"
+    memory: "4Gi"
+  limits:
+    cpu: "2"
+    memory: "4Gi"
+
+service:
+  name: roboflow-service
+  type: ClusterIP
+  port: 9001
+  targetPort: 9001
+
+runtimeClassName: nvidia
+
+  
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: nvidia-a30
+              operator: Exists
+
+tolerations:
+  - key: just-gpu-workload
+    operator: Exists
+    effect: NoSchedule
+    
+    
+traefik:
+  enabled: true
+  routes:
+    - name: roboflow-ingress
+      host: roboflow.nephele-project.ch
+      path: /
+      port: 9001
+      tlsSecret: letsencrypt-cert-production
+

@@ -42,5 +42,5 @@ proxy:
     currentValues_summit: summit
     sample_liquid_summit: summit
     deploy_sensor_summit: summit
-
+    people_detect_summit: summit
 

@@ -20,7 +20,7 @@ bindingSB:
 #        securityScheme: basic
 #        username: user
 #        password: pass
-  routerURL: "160.85.253.140:30447"
+  routerURL: "160.85.253.56:30447"
 databaseConfig:
   timeseriesDB:
     influxDB: disabled
@@ -42,4 +42,5 @@ proxy:
     currentValues_summit: summit
     sample_liquid_summit: summit
     deploy_sensor_summit: summit
+    people_detect_summit: summit
 

@@ -1,10 +1,23 @@
-cvo:
-  fullnameOverride: cvo
+zenoh-helm:
+  fullnameOverride: zenoh-helm
   replicaCount: 1
-
+ 
+roboflow:
+  fullnameOverride: roboflow
+  replicaCount: 1
+ 
 flask-gui:
   fullnameOverride: flask-gui
   replicaCount: 1
+ 
+rosbag-drone:
+  fullnameOverride: rosbag-drone
+  replicaCount: 1
+  
+rosbag-summit:
+  fullnameOverride: rosbag-summit
+  replicaCount: 1
+ 
 
 fxg-zenoh-bridges:
   fullnameOverride: fxg-zenoh-bridges
@@ -21,20 +34,18 @@ vo1:
 vo2:
   fullnameOverride: vo2
   replicaCount: 1
+    
+cvo:
+  fullnameOverride: cvo
+  replicaCount: 1
+
+
  
-rosbag-drone:
-  fullnameOverride: rosbag-drone
-  replicaCount: 1
-  
-rosbag-summit:
-  fullnameOverride: rosbag-summit
-  replicaCount: 1
 
-liquid-llm:
-  fullnameOverride: liquid-llm
-  replicaCount: 1
+#liquid-llm:
+#  fullnameOverride: liquid-llm
+#  replicaCount: 1
 
 
-zenoh-helm:
-  fullnameOverride: zenoh-helm
-  replicaCount: 1
+
+

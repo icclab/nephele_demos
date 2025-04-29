@@ -252,7 +252,7 @@ hdaGraph:
           name: HELM
           version: v3
         valuesOverwrite: {}  
-    - id: liquid-llm
+    - id: roboflow
       deployment:
         trigger:
           auto:
@@ -272,7 +272,7 @@ hdaGraph:
           connectionPoints: ["zenoh"]
           metrics: []
       artifact:
-        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/liquid-llm"
+        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/roboflow"
         ociConfig:
           type: App
           implementer: HELM

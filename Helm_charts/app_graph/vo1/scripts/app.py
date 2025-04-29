@@ -21,7 +21,8 @@ import time
 
 config = zenoh.Config()
 config.insert_json5("mode", json.dumps("client"))
-router_url = "tcp/160.85.253.140:30447"
+#router_url = "quic/160.85.253.56:30452"
+router_url = "tcp/160.85.253.56:30447"
 config.insert_json5("connect/endpoints", json.dumps([router_url]))
 print("Opening Zenoh session...")
 zenoh_session = zenoh.open(config)
@@ -47,7 +48,15 @@ async def filenamesReadDB_drone_handler(params):
     # Default values
     servient = exposed_thing.servient
     sqlite_db = servient.sqlite_db
-    result=sqlite_db.execute_query("SELECT filename FROM string_data_table")
+   # result=sqlite_db.execute_query("SELECT filename FROM string_data_table")
+        # Check if the table exists
+    table_exists = sqlite_db.execute_query(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='string_data_table'"
+    )
+    if not table_exists:
+        return []  # Return an empty list if the table does not exist
+    # If the table exists, execute the query
+    result = sqlite_db.execute_query("SELECT filename FROM string_data_table")
     return result
 
 async def mapReadDB_drone_handler(params):
@@ -58,7 +67,7 @@ async def mapReadDB_drone_handler(params):
     LOGGER.info('Result after params is {}'.format(filename_map_drone))
     servient = exposed_thing.servient
     sqlite_db = servient.sqlite_db
-    result=sqlite_db.execute_query("SELECT content FROM string_data_table WHERE filename='%s'" % filename_map_drone)
+    result=sqlite_db.execute_query("SELECT content FROM string_data_table WHERE filename='%s' LIMIT 1" % filename_map_drone)
    # result= sqlite_db.execute_query("SELECT filename FROM string_data_table") 
     parsed_result=result[0][0]
     return parsed_result
@@ -85,12 +94,14 @@ async def mapStoreDB_drone_handler(params):
         "content": "TEXT"
     }
     sqlite_db.create_table_if_not_exists(TABLE_NAME, columns)
-    result=sqlite_db.insert_data(TABLE_NAME, (filename_tosave_drone, content))
-    
+
+
+    # Insert if the filename does not exist
+    sqlite_db.insert_data(TABLE_NAME, (filename_tosave_drone, content))
     return {'message': f'Your map storing on db is in progress!'}
 
 
-async def bagStoreVO_drone_handler(params):
+""" async def bagStoreVO_drone_handler(params):
     params = params['input'] if params['input'] else {}
      # Default values
     bagname_tosave_drone = 'rosbag.mcap'
@@ -113,7 +124,7 @@ async def bagStoreVO_drone_handler(params):
             file.write(rosbag_raw_data)
     
     
-    return {'message': f'Your bag storing on VO is in progress!'}
+    return {'message': f'Your bag storing on VO is in progress!'} """
 
 
 
