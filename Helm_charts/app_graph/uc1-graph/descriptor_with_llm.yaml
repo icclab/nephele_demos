@@ -252,6 +252,34 @@ hdaGraph:
           name: HELM
           version: v3
         valuesOverwrite: {}  
+    - id: roboflow
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network:
+            deviceProximity:
+              enabled: False
+            latencies: []
+          compute:
+            cpu: "large"
+            ram: "large"
+            storage: "large"
+            gpu:
+              enabled: True
+          coLocation: []
+          connectionPoints: ["zenoh"]
+          metrics: []
+      artifact:
+        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/roboflow"
+        ociConfig:
+          type: App
+          implementer: HELM
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}   
     - id: liquid-llm
       deployment:
         trigger:
