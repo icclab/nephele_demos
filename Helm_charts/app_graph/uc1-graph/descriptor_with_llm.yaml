@@ -1,0 +1,341 @@
+hdaGraph:
+  imVersion: 0.4.0
+  id: uc1-graph
+  version: "1.0.0"
+  designer: ZHAW
+  hdaGraphIntent: 
+    security: # Either colocation either VO-related security either app-graph deployed using the same Blueprint
+      enabled: False
+    highAvailability: # Application graph is not considered for reconfigurations. Placement is final
+      enabled: False
+    highPerformance: # Defined end-to-end for all services. If selected, overwrites the per service latency qos intent
+      enabled: False
+    energyEfficiency: # Cost reduction of cloud-deployed services
+      enabled: False
+  description: >-
+    HDAG for Nephele Use Case 1
+  services:
+    - id: cvo
+      deployment:
+        trigger:
+          auto:
+            dependencies: [] 
+          #event:
+          #  condition: ANY
+          #  events:
+          #    - id: "PLACEHOLDER"
+          #      source: 
+          #        - serviceId: "PLACEHOLDER"
+          #          metricId: "PLACEHOLDER"
+          #       condition: # This needs to be mapped to a prometheus query by the monitoring component
+          #        promQuery: absent(up{prometheus="kc1/kube-prometheus-operator"})
+          #        gracePeriod: 2m
+          #        description: "High vo-metric"
+        intent:
+          network:
+            deviceProximity: # Only relevant for the VO
+                enabled: False # If true, enable TSN
+            latencies:
+              - connectionPoint: "" # Relevant for the next service in the application graph
+                qos: "best-effort"
+                # "ultralow"    - under 10ms
+                # "low"         - 1hop maximum
+                # "best-effort" - default value
+          compute:
+            cpu: "small"
+            # "light"  - 0.5 vCPU
+            # "small"  - 1   vCPU
+            # "medium" - 4   vCPU
+            # "large"  - 8   vCPU
+            ram: "small"
+            # "light"  - 500MB RAM
+            # "small"  - 1  GB RAM
+            # "medium" - 2  GB RAM
+            # "large"  - 8  GB RAM
+            storage: "small"
+            # "small"  - 10GB
+            # "medium" - 20GB
+            # "large"  - 40GB
+            gpu:
+              enabled: False 
+          coLocation: []
+            # - id: 2
+            #   groundedGraphId: UUID
+          connectionPoints: ["vo1", "vo2"]
+          metrics: []
+         # metrics: # list of metrics to be scraped by centralized monitoring system.
+         #   - id: "PLACEHOLDER" # used for events
+         #     metricName: "PLACEHOLDER" #name of metric exposed to prometheus
+         #     selector: # the target service (label). Cannot be to a pod directly, has to point to the service
+          #      PLACEHOLDER: PLACEHOLDER
+          #    endpoint: # why would we need more than one??. a second metric will have an additional entry in this list 
+          #      port: metrics # name of exposed port
+          #      interval: 1s # scraping period of prometheus 
+      artifact:
+        # if tag is not added, newest tag will be selected by the docker, helm and hdarctl CLIs. 
+        # removing oci:// because should not customize the descriptor for implementations
+        #   The OCI thing is only for helm, SMO/FRM should add it based on the target
+        #   e.g., tag has a different way of adding it in helm (":1.0.0" --> "--version 1.0.0").  which would also need a custom entry in the descriptor. Better to have translation of descriptor
+        ociImage: https://nephele-hdar.netmode.ece.ntua.gr/zhaw/cvo
+        ociConfig:
+          type: cVO
+          implementer: WOT
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}
+    - id: vo1
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network:
+            deviceProximity:
+              enabled: False
+            latencies: []
+          compute:
+            cpu: "small"
+            ram: "small"
+            storage: "small"
+            gpu:
+              enabled: False
+          coLocation: []
+          connectionPoints: ["nginx-td", "zenoh", "rosbag-drone", "fxg-zenoh-bridges"]
+          metrics: []
+      artifact:
+        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/vo1"
+        ociConfig:
+          type: VO
+          implementer: WOT
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}
+    - id: vo2
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network:
+            deviceProximity:
+              enabled: False
+            latencies: []
+          compute:
+            cpu: "small"
+            ram: "small"
+            storage: "small"
+            gpu:
+              enabled: False
+          coLocation: []
+          connectionPoints: ["nginx-td", "zenoh", "rosbag-summit", "fxg-zenoh-bridges"]
+          metrics: []
+      artifact:
+        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/vo2"
+        ociConfig:
+          type: VO
+          implementer: WOT
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {} 
+    - id: flask-gui
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network:
+            deviceProximity:
+              enabled: False
+            latencies: []
+          compute:
+            cpu: "small"
+            ram: "small"
+            storage: "small"
+            gpu:
+              enabled: False
+          coLocation: []
+          connectionPoints: ["cvo"]
+          metrics: []
+      artifact:
+        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/flask-gui"
+        ociConfig:
+          type: App
+          implementer: HELM
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}    
+    - id: nginx-td
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network:
+            deviceProximity:
+              enabled: False
+            latencies: []
+          compute:
+            cpu: "small"
+            ram: "small"
+            storage: "small"
+            gpu:
+              enabled: False
+          coLocation: []
+          connectionPoints: []
+          metrics: []
+      artifact:
+        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/nginx-td"
+        ociConfig:
+          type: App
+          implementer: HELM
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}    
+    - id: zenoh
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network:
+            deviceProximity:
+              enabled: False
+            latencies: []
+          compute:
+            cpu: "large"
+            ram: "large"
+            storage: "small"
+            gpu:
+              enabled: False
+          coLocation: []
+          connectionPoints: []
+          metrics: []
+      artifact:
+        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/zenoh"
+        ociConfig:
+          type: App
+          implementer: HELM
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}  
+    - id: fxg-zenoh-bridges
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network:
+            deviceProximity:
+              enabled: False
+            latencies: []
+          compute:
+            cpu: "large"
+            ram: "large"
+            storage: "small"
+            gpu:
+              enabled: False
+          coLocation: []
+          connectionPoints: ["zenoh", "liquid-llm", "rosbag_summit", "rosbgag_drone"]
+          metrics: []
+      artifact:
+        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/fxg-zenoh-bridges"
+        ociConfig:
+          type: App
+          implementer: HELM
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}  
+    - id: liquid-llm
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network:
+            deviceProximity:
+              enabled: False
+            latencies: []
+          compute:
+            cpu: "large"
+            ram: "large"
+            storage: "large"
+            gpu:
+              enabled: True
+          coLocation: []
+          connectionPoints: ["zenoh"]
+          metrics: []
+      artifact:
+        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/liquid-llm"
+        ociConfig:
+          type: App
+          implementer: HELM
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}      
+    - id: rosbag-summit
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network:
+            deviceProximity:
+              enabled: False
+            latencies: []
+          compute:
+            cpu: "large"
+            ram: "large"
+            storage: "large"
+            gpu:
+              enabled: False
+          coLocation: []
+          connectionPoints: ["zenoh"]
+          metrics: []
+      artifact:
+        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/rosbag-summit"
+        ociConfig:
+          type: App
+          implementer: HELM
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}      
+    - id: rosbag-drone
+      deployment:
+        trigger:
+          auto:
+            dependencies: []
+        intent:
+          network:
+            deviceProximity:
+              enabled: False
+            latencies: []
+          compute:
+            cpu: "large"
+            ram: "large"
+            storage: "large"
+            gpu:
+              enabled: False
+          coLocation: []
+          connectionPoints: ["zenoh"]
+          metrics: []
+      artifact:
+        ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/rosbag-drone"
+        ociConfig:
+          type: App
+          implementer: HELM
+        ociRun:
+          name: HELM
+          version: v3
+        valuesOverwrite: {}      
+
+
+
