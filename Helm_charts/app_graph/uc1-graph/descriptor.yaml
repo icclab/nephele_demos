@@ -241,7 +241,7 @@ hdaGraph:
             gpu:
               enabled: False
           coLocation: []
-          connectionPoints: ["zenoh", "liquid-llm", "rosbag_summit", "rosbgag_drone"]
+          connectionPoints: ["zenoh", "roboflow", "rosbag_summit", "rosbgag_drone"]
           metrics: []
       artifact:
         ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/fxg-zenoh-bridges"
