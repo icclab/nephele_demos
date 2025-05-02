@@ -31,6 +31,10 @@ screen -S drone -p vo-wot -X exec vo-wot -t /home/orin/nephele_demos/cVO_summit_
 # screen -S drone -X screen -t fake
 # screen -S drone -p vo-wot -X exec python3 /home/orin/ros2_ws/src/pc2_to_grid/pc2_to_grid/test.py
 
+#In the same container we will also start the 2d mapping
+# screen -S drone -X screen -t 2dmap
+# screen -S drone -p vo-wot -X exec ros2 launch pc2_to_grid grid_mapping_launch.py
+
 
 #Attach to screen
 #screen -r drone

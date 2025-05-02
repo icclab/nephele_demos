@@ -4,9 +4,9 @@ from rclpy.node import Node
 
 from std_msgs.msg import Bool
 from std_msgs.msg import Float32
-from sensor_msgs.msg import BatteryState
+from sensor_msgs.msg import BatteryState, NavSatFix
 from geometry_msgs.msg import Point
-from visualization_msgs.msg import Marker, MarkerArray
+from nav_msgs.msg import Odometry
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.wait_for_message import wait_for_message
@@ -26,100 +26,163 @@ import signal
 process_bringup = None
 process_mapping = None
 
-class BatteryRead(Node):
-    def __init__(self):
-        super().__init__('battery_read')
-
-    #     qos_profile = QoSProfile(
-    #         reliability=ReliabilityPolicy.BEST_EFFORT,
-    #         durability=DurabilityPolicy.VOLATILE,
-    #         depth=10
-    #     )
-
-    #     self.battery_percent = None
-    #     self.gps_data = []
-    #     self.local_data = []
-
-    #     self.subscription = self.create_subscription(
-    #         BatteryState, '/mavros/battery', self.battery_callback, qos_profile)
-
-    #     self.local_position_subscription = self.create_subscription(
-    #         Marker, '/local_marker', self.local_callback, 10)
-        
-    #     self.gps_subscription = self.create_subscription(
-    #         Marker, '/gps_marker', self.gps_callback, 10) 
-
-    # def battery_callback(self, msg):
-    #     if msg.voltage < 13.6:
-    #         self.battery_percent = 0
-    #     elif msg.voltage == 16.8: 
-    #         self.battery_percent = 100
-    #     else: 
-    #         self.battery_percent = ((msg.voltage - 13.6) / (16.8 - 13.6)) * 100
-    #     self.get_logger().info(f'Battery: {self.battery_percent:.2f}%')
-
-    # def gps_callback(self, msg):
-    #     self.gps_data = [msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]
-
-    # def local_callback(self, msg):
-    #     # self.get_logger().info(f"Received local marker message: {msg}")
-    #     self.local_data = [msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]
 
 def read_from_sensor():
-    rclpy.init()
-    battery_read = BatteryRead()
-    print("Reading data from drone...")
 
-    battery_percent, gps_data, local_data = 0, [], []
+    battery_percent = None
+    
+    class BatteryRead(Node):
+        def __init__(self):
+            super().__init__('battery_read')
 
-    # Spin for 2 seconds
-    # t_end = time.time() + 2.5
-    try:
-        # while time.time() < t_end:
-            # print(time.time())
-        # rclpy.spin_once(battery_read, timeout_sec=0.5)
-        
-        # Battery
-        msg = wait_for_message(BatteryState, battery_read, "/mavros/battery", time_to_wait=0.5)
-        if msg[0] :
-            battery_percent = msg[1].voltage
-            if msg[1].voltage < 13.6:
+            qos_profile = QoSProfile(
+                reliability=ReliabilityPolicy.BEST_EFFORT,
+                durability=DurabilityPolicy.VOLATILE,
+                depth=10
+            )
+
+            self.subscription = self.create_subscription(
+                BatteryState, '/mavros/battery', self.battery_callback, qos_profile)
+
+        def battery_callback(self, msg):
+            nonlocal battery_percent
+            if msg.voltage < 13.6:
                 battery_percent = 0
-            elif msg[1].voltage == 16.8: 
+            elif msg.voltage == 16.8: 
                 battery_percent = 100
             else: 
-                battery_percent = ((msg[1].voltage - 13.6) / (16.8 - 13.6)) * 100
-        # GPS
-        msg = wait_for_message(Marker, battery_read, "/local_marker", time_to_wait=1.5)
-        if msg[0] :
-            gps_data = [msg[1].pose.position.x, msg[1].pose.position.y, msg[1].pose.position.z]
-        else :
-            print("No GPS data")
-        # Local data
-        msg = wait_for_message(Marker, battery_read, "/gps_marker", time_to_wait=1.5)
-        if msg[0] :
-            local_data = [msg[1].pose.position.x, msg[1].pose.position.y, msg[1].pose.position.z]
-        time.sleep(0.1)
-    finally:
+                battery_percent = ((msg.voltage - 13.6) / (16.8 - 13.6)) * 100
+            self.get_logger().info(f'Battery: {battery_percent:.2f}%')
+    
+    def main():
+        rclpy.init()
+        battery_read = BatteryRead()
+        rclpy.spin_once(battery_read, timeout_sec=1.0)
         battery_read.destroy_node()
         rclpy.shutdown()
-    print("Done!")
-    # executor = MultiThreadedExecutor()
-    # executor.add_node(battery_read)
-    # executor.spin()  # Run in a multi-threaded mode
+    
+    main()
 
-    # battery_read.destroy_node()
-    # rclpy.shutdown()
+    return battery_percent
+
+# def read_from_sensor():
+#     rclpy.init()
+#     battery_read = BatteryRead()
+#     print("Reading data from drone...")
+
+#     battery_percent, gps_data, local_data = 0, [], []
+
+#     # Spin for 2 seconds
+#     # t_end = time.time() + 2.5
+#     try:
+#         # while time.time() < t_end:
+#             # print(time.time())
+#         # rclpy.spin_once(battery_read, timeout_sec=0.5)
+        
+#         # Battery
+#         msg = wait_for_message(BatteryState, battery_read, "/mavros/battery", time_to_wait=0.5)
+#         if msg[0] :
+#             battery_percent = msg[1].voltage
+#             if msg[1].voltage < 13.6:
+#                 battery_percent = 0
+#             elif msg[1].voltage == 16.8: 
+#                 battery_percent = 100
+#             else: 
+#                 battery_percent = ((msg[1].voltage - 13.6) / (16.8 - 13.6)) * 100
+#         # GPS
+#         msg = wait_for_message(NavSatFix, battery_read, "/mavros/global_position/global", time_to_wait=1.5)
+#         if msg[0] :
+#             gps_data = [msg[1].latitude, msg[1].longitude, msg[1].altitude]
+#         else :
+#             print("No GPS data")
+#         # Local data
+#         msg = wait_for_message(Odometry, battery_read, "/mavros/global_position/local", time_to_wait=1.5)
+#         if msg[0] :
+#             local_data = [msg[1].pose.pose.position.x, msg[1].pose.pose.position.y, msg[1].pose.pose.position.z]
+#         time.sleep(0.1)
+#     finally:
+#         battery_read.destroy_node()
+#         rclpy.shutdown()
+#     print("Done!")
+#     # executor = MultiThreadedExecutor()
+#     # executor.add_node(battery_read)
+#     # executor.spin()  # Run in a multi-threaded mode
+
+#     # battery_read.destroy_node()
+#     # rclpy.shutdown()
     
-    # return battery_read.battery_percent, battery_read.gps_data, battery_read.local_data
-    return battery_percent, gps_data, local_data
+#     # return battery_read.battery_percent, battery_read.gps_data, battery_read.local_data
+#     return battery_percent, gps_data, local_data
+
+def read_from_gps_sensor():
     
-battery_percent, gps_data, local_data = read_from_sensor()
+    altitude = None 
+    longitude = None 
+    latitude = None 
+
+    class GpsRead(Node):
+        def __init__(self):
+            super().__init__('gps_read')
+
+            qos_profile = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, durability=DurabilityPolicy.VOLATILE, depth=10)          
+            self.subscription = self.create_subscription(NavSatFix, '/mavros/global_position/global', self.gps_callback, qos_profile)
+
+        def gps_callback(self, msg):
+            nonlocal altitude
+            nonlocal latitude
+            nonlocal longitude
+            altitude = msg.altitude
+            latitude = msg.latitude
+            longitude = msg.longitude
+            self.get_logger().info(f"GPS: {latitude}, {longitude}, {altitude}")
+
+    def main():
+        rclpy.init()
+        gps_read = GpsRead()
+        rclpy.spin_once(gps_read, timeout_sec=1.0)
+        gps_read.destroy_node()
+        rclpy.shutdown()
+
+    main()
+
+    return altitude, latitude, longitude
+
+def read_from_local_sensor():
+    
+    pos_x = None
+    pos_y = None
+    pos_z = None
+
+    class LocalRead(Node):
+        def __init__(self):
+            super().__init__('localpose_read')
+            qos_profile = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, durability=DurabilityPolicy.VOLATILE, depth=10)
+            self.subscription = self.create_subscription(Odometry, '/mavros/global_position/local', self.gps_callback, qos_profile)
+
+        def gps_callback(self, msg):
+            nonlocal pos_x
+            nonlocal pos_y
+            nonlocal pos_x
+            pos_x = msg.pose.pose.position.x
+            pos_y = msg.pose.pose.position.y
+            pos_z = msg.pose.pose.position.z
+            self.get_logger().info(f"Local Position: x = {pos_x}, y = {pos_y}, z = {pos_y}")
+
+    def main():
+        rclpy.init()
+        local_read = LocalRead()
+        rclpy.spin_once(local_read, timeout_sec=1.0)
+        local_read.destroy_node()
+        rclpy.shutdown()
+
+    main()
+
+    return pos_x, pos_y, pos_z
 
 allAvailableResources_init = {
-    'battery_percent': battery_percent,
-    'gps_data': gps_data,
-    'local_data': local_data
+    'battery_percent': read_from_sensor(),
+    'gps_data': read_from_gps_sensor(),
+    'local_data': read_from_gps_sensor()
 }
 
 possibleLaunchfiles_drone_init = ['stopmapping_drone', 'startmapping_drone', 'bringup_zed', 'stopzed_drone', 'save3dmap_drone', 'savemap_drone', 'savebag_drone', 'stopbag_drone']
@@ -187,7 +250,8 @@ async def triggerBringup_drone_handler(params):
     launchfileId = params.get('launchfileId', launchfileId)
 
     # Check if there is resources
-    battery_info, gps_data, local_data = read_from_sensor()
+    battery_info = read_from_sensor()
+
     batterypercent = battery_info if battery_info is not None else None
     print(f'Battery Percentage: {batterypercent}%')
     bringupaction = None
@@ -319,8 +383,10 @@ async def triggerBringup_drone_handler(params):
 
     # Calculate the new level of resources
     newResources = resources.copy()
-    battery_info, gps_data, local_data = read_from_sensor()
-    newResources['battery_percent'] = battery_info
+    
+    battery_percent = read_from_sensor()
+    
+    newResources['battery_percent'] = battery_percent
     # newResources['gps_data'] = gps_data
     # newResources['local_data'] = local_data
         
@@ -383,25 +449,23 @@ async def localExport_drone_handler(params):
     return local_export_string
 
 async def allAvailableResources_drone_read_handler():
-    battery_percent, gps_data, local_data = read_from_sensor()
-
+    
     allAvailableResources_current = {
-    'battery_percent': battery_percent,
-    'gps_data': gps_data,
-    'local_data': local_data
+    'battery_percent': read_from_sensor(),
+    'gps_data': read_from_gps_sensor(),
+    'local_data': read_from_local_sensor()
     }
 
     return allAvailableResources_current
 
 async def currentValues_drone_handler(params):
-    battery_percent, gps_data, local_data = read_from_sensor()
-
+    
     return {
         'result': True,
         'message': {
-            'battery_percent': battery_percent,
-            'gps_data': gps_data,
-            'local_data': local_data
+            'battery_percent': read_from_sensor(),
+            'gps_data': read_from_gps_sensor(),
+            'local_data': read_from_local_sensor()
         }
     }
 
