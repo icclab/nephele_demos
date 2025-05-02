@@ -94,8 +94,9 @@ async def mapStoreDB_drone_handler(params):
         "content": "TEXT"
     }
     sqlite_db.create_table_if_not_exists(TABLE_NAME, columns)
-    result=sqlite_db.insert_data(TABLE_NAME, (filename_tosave_drone, content))
-    
+
+    # Insert if the filename does not exist
+    sqlite_db.insert_data(TABLE_NAME, (filename_tosave_drone, content))
     return {'message': f'Your map storing on db is in progress!'}
 
 

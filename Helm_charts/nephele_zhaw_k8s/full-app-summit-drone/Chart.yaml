@@ -30,9 +30,6 @@ dependencies:
   - name: roboflow
     version: "1.0.0"
     repository: "file://./charts/roboflow"
- # - name: liquid-llm
- #   version: "1.0.0"
- #   repository: "file://./charts/liquid-llm"
   - name: cvo
     version: "1.0.0"
     repository: "file://./charts/cvo"

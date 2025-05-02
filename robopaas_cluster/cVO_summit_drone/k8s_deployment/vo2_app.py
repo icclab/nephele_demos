@@ -58,6 +58,7 @@ async def filenamesReadDB_summit_handler(params):
         return []  # Return an empty list if the table does not exist
     # If the table exists, execute the query
     result = sqlite_db.execute_query("SELECT filename FROM string_data_table")
+    return result
 
 async def mapReadDB_summit_handler(params):
     params = params['input'] if params['input'] else {}
@@ -94,10 +95,21 @@ async def mapStoreDB_summit_handler(params):
         "content": "TEXT"
     }
     sqlite_db.create_table_if_not_exists(TABLE_NAME, columns)
-    result=sqlite_db.insert_data(TABLE_NAME, (filename_tosave_summit, content))
+    #result=sqlite_db.insert_data(TABLE_NAME, (filename_tosave_summit, content))
     
-    return {'message': f'Your map storing on db is in progress!'}
 
+    # Check if the filename already exists
+   # existing_entry = sqlite_db.execute_query(
+   #     "SELECT filename FROM {} WHERE filename=?".format(TABLE_NAME),
+   #     (filename_tosave_summit,)
+  #  )
+  #  LOGGER.info('Result after checkentry is {}'.format(existing_entry))
+  #  if existing_entry:
+  #      return {'message': f'Error: The filename "{filename_tosave_summit}" already exists in the database!'}
+
+    # Insert if the filename does not exist
+    sqlite_db.insert_data(TABLE_NAME, (filename_tosave_summit, content))
+    return {'message': f'Your map storing on db is in progress!'}
 
 """ async def bagStoreVO_summit_handler(params):
     params = params['input'] if params['input'] else {}
@@ -134,4 +146,3 @@ async def read_property_from_summit():
     # Initialize the property values
     await exposed_thing.properties['allAvailableResources_summit'].write(allAvailableResources_summit)
     await exposed_thing.properties['possibleLaunchfiles_summit'].write(possibleLaunchfiles_summit)
-

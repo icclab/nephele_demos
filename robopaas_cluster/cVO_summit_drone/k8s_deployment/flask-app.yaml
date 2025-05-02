@@ -28,7 +28,7 @@ spec:
     spec: 
       containers: 
       - name: flaskapp-container 
-        image: robopaas/flaskapp_summit_drone:latest 
+        image: robopaas/flaskapp_summit_drone:robopaas 
         ports: 
         - containerPort: 5000 
 

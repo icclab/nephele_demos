@@ -32,7 +32,7 @@ spec:
         ports:
         - containerPort: 80
       - name: rosbagsaver-drone
-        image: robopaas/rosbagsaver:latest
+        image: robopaas/rosbagsaver:robopaas
         imagePullPolicy:  Always #IfNotPresent 
         resources:
           requests:
