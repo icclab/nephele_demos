@@ -23,10 +23,10 @@
       // ros_automatic_discovery_range: "SUBNET",
 
        allow: {
-         publishers: ["/diagnostics", "/tf", "/tf_static", "/zed/zed_node/odom", "/zed/zed_node/path_map", "/zed/zed_node/path_odom", "/zed/zed_node/imu/data", "/zed/zed_node/rgb/image_rect_color/compressed", "/zed/zed_node/rgb/camera_info", "/zed/zed_node/depth/camera_info", "/zed/zed_node/depth/depth_registered", "/zed/zed_node/stereo/image_rect_color", "/mavros/local_position/pose", "/mavros/local_position/odom", "/mavros/global_position/global", "/mavros/global_position/local", "/zed/zed_node/mapping/fused_cloud", "/mapUAV"
+         publishers: ["/diagnostics", "/tf", "/tf_static", "/zed/zed_node/odom", "/zed/zed_node/path_map", "/zed/zed_node/path_odom", "/zed/zed_node/imu/data", "/zed/zed_node/rgb/image_rect_color/compressed", "/zed/zed_node/rgb/camera_info", "/zed/zed_node/depth/camera_info", "/zed/zed_node/depth/depth_registered", "/zed/zed_node/stereo/image_rect_color", "/mavros/local_position/pose", "/mavros/local_position/odom", "/mavros/global_position/global", "/mavros/global_position/local", "/occupancy_grid_scan", "/bonxai_point_cloud_centers"
          // , "/camera"
          ],
-         subscribers: ["/leakage_marker"],
+         subscribers: ["/leakage_gps", "/leakage_local"],
          service_servers: [".*/.*_parameters"],
          service_clients: [],
          action_servers: [".*/rotate_absolute"],
@@ -41,7 +41,7 @@
     "/zed/zed_node/depth/depth_registered=0.1", "/zed/zed_node/stereo/image_rect_color=0.1", 
     "/mavros/local_position/pose=1", "/mavros/local_position/odom=1", 
     "/mavros/global_position/global=1", "/mavros/global_position/local=1", 
-    "/zed/zed_node/mapping/fused_cloud=1", "/mapUAV=1"
+    "/occupancy_grid_scan=1", "/bonxai_point_cloud_centers=1"
       ]
       ////
       //// queries_timeout: Timeouts configuration for various Zenoh queries.
@@ -52,7 +52,7 @@
       ////                      - "float" is the timeout in seconds
       // queries_timeout: {
       //   //// default timeout that will apply to all query, except the ones specified below
-    //   //// in 'transient_local_subscribers', 'services' and 'actions'
+      //   //// in 'transient_local_subscribers', 'services' and 'actions'
       //   default: 5.0,
       //   //// timeouts for TRANSIENT_LOCAL subscriber when querying publishers for historical publications
       //   transient_local_subscribers: 1.0,
@@ -78,17 +78,8 @@
   connect: {
     timeout_ms: -1,
     exit_on_failure: false,
-      endpoints: ["quic/160.85.253.56:30452"] 
- // endpoints: ["tcp/160.85.253.56:30447"] 
-  //endpoints: ["tls/160.85.253.56:30449"] 
-  },
-  "transport": {
-    "link": {
-      "tls": {
-        "root_ca_certificate": "/home/orin/nephele_demos/cVO_summit_drone/drone-config-files/minica.pem",
-	"verify_name_on_connect": false,
-
-      }
-    }
+    endpoints: [
+       "tcp/160.85.253.140:30447"
+    ]
   },
 }

@@ -1,0 +1,254 @@
+---
+# Source: nephele-uc1-inria-app/templates/db-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: cinder-csi
+---
+# Source: nephele-uc1-inria-app/templates/pgadmin-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pgadmin-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: cinder-csi
+---
+# Source: nephele-uc1-inria-app/templates/api-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: "inria-api"
+spec:
+  ports:
+  - port: 5001
+    targetPort: 5001
+  selector:
+    app: "inria-api"
+---
+# Source: nephele-uc1-inria-app/templates/db-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: db
+---
+# Source: nephele-uc1-inria-app/templates/frontend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: "inria-front"
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: "inria-front"
+---
+# Source: nephele-uc1-inria-app/templates/pgadmin-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin
+spec:
+  ports:
+  - port: 8888
+    targetPort: 8888
+  selector:
+    app: pgadmin
+---
+# Source: nephele-uc1-inria-app/templates/api-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "inria-api"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "inria-api"
+  template:
+    metadata:
+      labels:
+        app: "inria-api"
+    spec:
+      containers:
+      - name: "inria-api"
+        image: "alivershem/nephele_uc1_inria:api"
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 5001
+        env:
+        - name: CVO_ACTION_SEND_COORDINATES
+          value: "/action/deploy_sensor_summit"
+        - name: CVO_BASE_URL
+          value: "http://cvo:9090/cvo"
+        - name: IS_CVO_MOCKED
+          value: "true"
+        - name: IS_VIRTUAL_GATEWAY_MOCKED
+          value: "true"
+        - name: NEPHELE_DATABASE_URI
+          value: "postgresql+psycopg://nephele:nephele@db:5432/nephele_dashboard_db"
+        - name: NEPHELE_FLASK_ENV
+          value: "dev"
+        - name: VIRTUAL_GATEWAY_ACTION_DEPLOY_NODE
+          value: "/action/deploy_node"
+        - name: VIRTUAL_GATEWAY_ACTION_GET_ALL_NODES
+          value: "/action/get_all_nodes"
+        - name: VIRTUAL_GATEWAY_ACTION_REGISTER_NODE
+          value: "/action/register_new_node"
+        - name: VIRTUAL_GATEWAY_AUTH_PASSWORD
+          value: "nephele"
+        - name: VIRTUAL_GATEWAY_AUTH_USERNAME
+          value: "nephele"
+        - name: VIRTUAL_GATEWAY_BASE_URL
+          value: "http://localhost:8081/virtualgateway"
+---
+# Source: nephele-uc1-inria-app/templates/db-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: db
+        image: postgres:17.0-alpine3.20
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: nephele
+        - name: POSTGRES_PASSWORD
+          value: nephele
+        - name: POSTGRES_DB
+          value: nephele_dashboard_db
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata  # NB: there is a sub-directory at the end, required to let the container have the write rights
+        volumeMounts:
+          - name: db-data
+            mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: db-data
+        persistentVolumeClaim:
+          claimName: db-pvc
+---
+# Source: nephele-uc1-inria-app/templates/frontend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "inria-front"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "inria-front"
+  template:
+    metadata:
+      labels:
+        app: "inria-front"
+    spec:
+      containers:
+      - name: "inria-front"
+        image: "alivershem/nephele_uc1_inria:front"
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 80
+        env:
+        - name: API_URL
+          value: "http://inria-api:5001"
+---
+# Source: nephele-uc1-inria-app/templates/pgadmin-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+    spec:
+      securityContext:  # NB: pgadmin runs with the user 5050 / group 5050
+        runAsUser: 5050
+        runAsGroup: 5050
+        fsGroup: 5050
+      containers:
+      - name: pgadmin
+        image: dpage/pgadmin4
+        ports:
+        - containerPort: 8888
+        env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          value: nephele@nephele.eu
+        - name: PGADMIN_DEFAULT_PASSWORD
+          value: nephele
+        volumeMounts:
+          - name: pgadmin-data
+            mountPath: /var/lib/pgadmin
+      volumes:
+      - name: pgadmin-data
+        persistentVolumeClaim:
+          claimName: pgadmin-pvc
+---
+# Source: nephele-uc1-inria-app/templates/api-ingress-route.yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: "inria-api-secure"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`inria-api.nephele-project.ch`)
+      kind: Rule
+      services:
+        - name: "inria-api"
+          port: 5001
+  tls:
+    secretName: letsencrypt-cert-production
+---
+# Source: nephele-uc1-inria-app/templates/frontend-ingress-route.yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: "inria-front-secure"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`inria-front.nephele-project.ch`)
+      kind: Rule
+      services:
+        - name: "inria-front"
+          port: 80
+  tls:
+    secretName: letsencrypt-cert-production

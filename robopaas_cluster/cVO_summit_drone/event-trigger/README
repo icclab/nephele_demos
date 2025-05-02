@@ -1,0 +1,4 @@
+docker build -t my-fake-prometheus-target .
+docker tag my-fake-prometheus-target robopaas/my-fake-prometheus-target:latest
+docker push robopaas/my-fake-prometheus-target:latest
+
