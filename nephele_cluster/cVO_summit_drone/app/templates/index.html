@@ -107,7 +107,16 @@
                         <button type="submit" class="btn btn-secondary">Export Map</button>
                     </form>
                 </div>
-
+                                <!-- Read Data for Summit-Xl -->
+                <div class="mb-4">
+                    <h3>Get Map Origin on Summit-Xl</h3>
+                    <form action="/map_origin_export_summit" method="get">
+                        <button type="submit" class="btn btn-secondary">Get Map Origin</button>
+                    </form>
+                    {% if map_origin_summit %}
+                    <div class="alert alert-info mt-3">Data: {{map_origin_summit }}</div>
+                    {% endif %}
+                </div>
 
                 <!-- Start Detection on Summit-Xl -->
            <!--     <div class="mb-4">
@@ -131,6 +140,7 @@
                     <div class="alert alert-info mt-3">Data: {{data_summit }}</div>
                     {% endif %}
                 </div>
+
 
 
                 <!-- Sensor Deployment for Summit-Xl -->
@@ -429,4 +439,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
-

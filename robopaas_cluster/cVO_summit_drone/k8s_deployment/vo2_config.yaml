@@ -43,3 +43,4 @@ proxy:
     sample_liquid_summit: summit
     deploy_sensor_summit: summit
     people_detect_summit: summit
+    mapOriginExport_summit: summit

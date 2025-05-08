@@ -54,8 +54,8 @@ def index():
         stopstorezenoh_bag_vo_drone=session.get('stopstorezenoh_bag_vo_drone'),
         sensor_status=session.get('sensor_status'),
         detection_summit=session.get('detection_summit'),
-        liquid_status=session.get('liquid_status')
-
+        liquid_status=session.get('liquid_status'),
+        map_origin_summit=session.get('map_origin_summit')
     )
 
 http_client = HTTPClient()
@@ -68,6 +68,23 @@ credentials_dict = {
 http_client.set_security(security_scheme_dict, credentials_dict)
 wot = WoT(servient=Servient(clients=[http_client]))
 
+async def export_map_origin_summit():
+    try:
+        consumed_thing_summit = await wot.consume_from_url("http://cvo:9090/cvo")
+        result_summit = await consumed_thing_summit.invoke_action("mapOriginExport_summit")
+        if result_summit is None:
+            return None
+        else:
+            return result_summit
+    except Exception as e:
+        print("Error in mapOriginExport_summit:", e)
+        return None
+
+@app.route('/map_origin_export_summit', methods=['GET'])
+def map_origin_export_summit():
+    result_summit = async_to_sync(export_map_origin_summit)()
+    session['map_origin_summit'] = result_summit
+    return index()
 
 
 # Define async function 
