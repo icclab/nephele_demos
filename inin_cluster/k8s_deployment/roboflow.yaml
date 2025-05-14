@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: roboflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: roboflow
+  template:
+    metadata:
+      name: roboflow
+      labels:
+        name: roboflow
+    spec:
+   #   runtimeClassName: "nvidia"
+      securityContext:
+        supplementalGroups:
+          - 44  # GID of 'video' group on host
+      containers:
+        - name: inference-server
+          image: roboflow/roboflow-inference-server-gpu:latest
+          ports:
+            - containerPort: 9001
+          volumeMounts:
+            - name: dev-dri
+              mountPath: /dev/dri
+          resources:
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+            requests:
+              cpu: "0.3"
+              memory: "2Gi"
+      volumes:
+        - name: dev-dri
+          hostPath:
+            path: /dev/dri
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboflow
+  labels:
+    app: roboflow
+spec:
+  selector:
+    name: roboflow
+  ports:
+    - protocol: TCP
+      port: 9001
+      nodePort: 30336
+  type: NodePort
