@@ -34,7 +34,6 @@ spec:
       containers:
       - name: foxglove-zenoh-bridges-vo-container       
         image: robopaas/foxglove-zenoh-bridges:inin
-       # image: robopaas/foxglove-zenoh-bridge-summit:210125
         imagePullPolicy: Always
         resources:
           requests:
@@ -46,8 +45,6 @@ spec:
         env:
           - name: ROS_HOSTNAME
             value: foxglove-zenoh-bridges-vo
-         # - name: ROS_PACKAGE_PATH
-         #   value: "/home/ros/colcon_ws/src:/opt/ros/humble/share"
         command:
          - /run_bridge.sh
         ports:
@@ -61,7 +58,7 @@ spec:
               - NET_ADMIN
           privileged: true
       - name: fxg-std    
-        image: robopaas/foxglove-studio:latest #ghcr.io/foxglove/studio:latest
+        image: robopaas/foxglove-studio:latest 
         imagePullPolicy: Always
         resources:
           requests:

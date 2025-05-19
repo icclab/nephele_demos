@@ -38,9 +38,6 @@ spec:
         - "nginx-vo2.robopaas.dev"
         - "nginx-vo1.robopaas.dev"
         - "bridges-vo.robopaas.dev"
-    #    - "flask-gui.robopaas.dev"
-    #    - "inria-api.nephele-project.ch"
-    #    - "inria-front.nephele-project.ch"
     
 
 ---

@@ -1,28 +1,3 @@
-#apiVersion: "autoscaling.k8s.io/v1"
-#kind: VerticalPodAutoscaler
-#metadata:
-#  name: zenoh-vpa
-#spec:
-  # recommenders field can be unset when using the default recommender.
-  # When using an alternative recommender, the alternative recommender's name
-  # can be specified as the following in a list.
-  # recommenders: 
-  #   - name: 'alternative'
-#  targetRef:
-#    apiVersion: "apps/v1"
-#    kind: Deployment
-#    name: zenoh
-#  resourcePolicy:
-#    containerPolicies:
-#      - containerName: '*'
-#        minAllowed:
-#          cpu: 2
-#          memory: 500Mi
-#        maxAllowed:
-#          cpu: 8
-#          memory: 30Gi
-#        controlledResources: ["cpu", "memory"]
-#---
 kind: Service
 apiVersion: v1
 metadata:
@@ -84,7 +59,7 @@ spec:
       # runtimeClassName: "nvidia"
       containers:
       - name: zenoh
-        image: eclipse/zenoh:1.0.2 #eclipse/zenoh::1.0.2 #eclipse/zenoh:0.11.0 #eclipse/zenoh:0.11.0-rc.3 version for ros rmw  #eclipse/zenoh:0.11.0 version for demo tb2 
+        image: eclipse/zenoh:1.0.2 
         env:
         - name: RUST_LOG
           value: "zenoh=debug"

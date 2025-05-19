@@ -100,32 +100,6 @@ async def mapStoreDB_drone_handler(params):
     return {'message': f'Your map storing on db is in progress!'}
 
 
-""" async def bagStoreVO_drone_handler(params):
-    params = params['input'] if params['input'] else {}
-     # Default values
-    bagname_tosave_drone = 'rosbag.mcap'
-
-    # Check if params are provided
-    bagname_tosave_drone = params.get('bagname_tosave_drone', bagname_tosave_drone)
-    LOGGER.info('Consumed Thing: {}'.format(consumed_vos["drone"]))
-    LOGGER.info('VO1 funciton')
-    bagstring = await consumed_vos["drone"].invoke_action("bagExport_drone")
-    LOGGER.info('VO1 funvton 2')
-    LOGGER.info('Result after params is {}'.format(bagstring))
-
-    
-    if bagstring is None:
-            return None
-    else:
-        rosbag_raw_data= base64.b64decode(bagstring)
-        bag_path = '/pod-data/rosbag.mcap'
-        with open(bag_path, 'wb') as file:
-            file.write(rosbag_raw_data)
-    
-    
-    return {'message': f'Your bag storing on VO is in progress!'} """
-
-
 
 async def read_property_from_drone():
     # Initialize the property values

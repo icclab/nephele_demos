@@ -1,10 +1,4 @@
 configMapGenerator:
-#- name: foxglove-demo-vo1
-#  files:
-#  - default-layout.json=default-layout-1.json 
-#- name: foxglove-demo-vo2
-#  files:
-#  - default-layout.json=default-layout-3.json 
 - name: tls-zenoh
   files:
   - key.pem=key.pem
@@ -50,4 +44,3 @@ resources:
 - roboflow.yaml
 - zenoh-router.yaml
 - inria.yaml
-#- liquid_llm.yaml

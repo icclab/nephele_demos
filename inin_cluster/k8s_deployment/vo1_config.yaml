@@ -15,11 +15,6 @@ bindingNB:
     httpPort: 8080
 bindingSB:
   bindingModeSB: [Z]
-#  securitySB:
-#      securitySBMQTT:
-#        securityScheme: basic
-#        username: user
-#        password: pass
   routerURL: "192.168.100.1:30447"
 databaseConfig:
   timeseriesDB:
