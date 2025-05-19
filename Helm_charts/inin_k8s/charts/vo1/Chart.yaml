@@ -1,0 +1,8 @@
+apiVersion: v2
+appVersion: "0.1.0"
+description: A Helm chart for deploying a VO1
+name:  vo1
+type: application
+version: "1.0.0"
+maintainers:
+  - name: NEPHELE

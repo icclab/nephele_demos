@@ -1,0 +1,8 @@
+apiVersion: v2
+appVersion: "0.1.0"
+description: This is my first artifact
+name:  cvo
+type: application
+version: "1.0.0"
+maintainers:
+  - name: NEPHELE

@@ -20,17 +20,6 @@ hdaGraph:
         trigger:
           auto:
             dependencies: [] 
-          #event:
-          #  condition: ANY
-          #  events:
-          #    - id: "PLACEHOLDER"
-          #      source: 
-          #        - serviceId: "PLACEHOLDER"
-          #          metricId: "PLACEHOLDER"
-          #       condition: # This needs to be mapped to a prometheus query by the monitoring component
-          #        promQuery: absent(up{prometheus="kc1/kube-prometheus-operator"})
-          #        gracePeriod: 2m
-          #        description: "High vo-metric"
         intent:
           network:
             deviceProximity: # Only relevant for the VO
@@ -101,7 +90,7 @@ hdaGraph:
             gpu:
               enabled: False
           coLocation: []
-          connectionPoints: ["nginx-td", "zenoh", "rosbag-drone", "fxg-zenoh-bridges"]
+          connectionPoints: ["nginx-td", "zenoh", "rosbag-drone"]
           metrics: []
       artifact:
         ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/vo1"
@@ -129,7 +118,7 @@ hdaGraph:
             gpu:
               enabled: False
           coLocation: []
-          connectionPoints: ["nginx-td", "zenoh", "rosbag-summit", "fxg-zenoh-bridges"]
+          connectionPoints: ["nginx-td", "zenoh", "rosbag-summit"]
           metrics: []
       artifact:
         ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/vo2"
@@ -241,7 +230,7 @@ hdaGraph:
             gpu:
               enabled: False
           coLocation: []
-          connectionPoints: ["zenoh", "roboflow", "rosbag_summit", "rosbgag_drone"]
+          connectionPoints: ["zenoh", "roboflow", "rosbag-summit", "rosbag-drone"]
           metrics: []
       artifact:
         ociImage: "oci://registry.nephele-hdar.netmode.ece.ntua.gr/zhaw/fxg-zenoh-bridges"

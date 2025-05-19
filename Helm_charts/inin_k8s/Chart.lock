@@ -1,0 +1,33 @@
+dependencies:
+- name: zenoh
+  repository: file://./charts/zenoh
+  version: 1.0.0
+- name: nginx-td
+  repository: file://./charts/nginx-td
+  version: 1.0.0
+- name: vo1
+  repository: file://./charts/vo1
+  version: 1.0.0
+- name: vo2
+  repository: file://./charts/vo2
+  version: 1.0.0
+- name: flask-gui
+  repository: file://./charts/flask-gui
+  version: 1.0.0
+- name: fxg-zenoh-bridges
+  repository: file://./charts/fxg-zenoh-bridges
+  version: 1.0.0
+- name: rosbag-summit
+  repository: file://./charts/rosbag-summit
+  version: 1.0.0
+- name: rosbag-drone
+  repository: file://./charts/rosbag-drone
+  version: 1.0.0
+- name: roboflow
+  repository: file://./charts/roboflow
+  version: 1.0.0
+- name: cvo
+  repository: file://./charts/cvo
+  version: 1.0.0
+digest: sha256:c39687b5c42c74b4e10616c9e5caf86ffae2d72a75b799687a06169e794cc279
+generated: "2025-04-29T13:20:31.54756363+02:00"

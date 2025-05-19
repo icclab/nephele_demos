@@ -15,12 +15,7 @@ bindingNB:
     httpPort: 8080
 bindingSB:
   bindingModeSB: [Z]
-#  securitySB:
-#      securitySBMQTT:
-#        securityScheme: basic
-#        username: user
-#        password: pass
-  routerURL: "160.85.253.56:30447"
+  routerURL: "192.168.100.1:30447"
 databaseConfig:
   timeseriesDB:
     influxDB: disabled
@@ -40,3 +35,4 @@ proxy:
     triggerBringup_drone: drone
     mapExport_drone: drone
     currentValues_drone: drone
+

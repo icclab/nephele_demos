@@ -21,8 +21,8 @@ import time
 
 config = zenoh.Config()
 config.insert_json5("mode", json.dumps("client"))
-#router_url = "quic/160.85.253.56:30452"
-router_url = "tcp/160.85.253.56:30447"
+#router_url = "quic/160.85.253.140:30452"
+router_url = "tcp/192.168.100.1:30447"
 config.insert_json5("connect/endpoints", json.dumps([router_url]))
 print("Opening Zenoh session...")
 zenoh_session = zenoh.open(config)
@@ -95,36 +95,9 @@ async def mapStoreDB_drone_handler(params):
     }
     sqlite_db.create_table_if_not_exists(TABLE_NAME, columns)
 
-
     # Insert if the filename does not exist
     sqlite_db.insert_data(TABLE_NAME, (filename_tosave_drone, content))
     return {'message': f'Your map storing on db is in progress!'}
-
-
-""" async def bagStoreVO_drone_handler(params):
-    params = params['input'] if params['input'] else {}
-     # Default values
-    bagname_tosave_drone = 'rosbag.mcap'
-
-    # Check if params are provided
-    bagname_tosave_drone = params.get('bagname_tosave_drone', bagname_tosave_drone)
-    LOGGER.info('Consumed Thing: {}'.format(consumed_vos["drone"]))
-    LOGGER.info('VO1 funciton')
-    bagstring = await consumed_vos["drone"].invoke_action("bagExport_drone")
-    LOGGER.info('VO1 funvton 2')
-    LOGGER.info('Result after params is {}'.format(bagstring))
-
-    
-    if bagstring is None:
-            return None
-    else:
-        rosbag_raw_data= base64.b64decode(bagstring)
-        bag_path = '/pod-data/rosbag.mcap'
-        with open(bag_path, 'wb') as file:
-            file.write(rosbag_raw_data)
-    
-    
-    return {'message': f'Your bag storing on VO is in progress!'} """
 
 
 
@@ -136,4 +109,5 @@ async def read_property_from_drone():
     # Initialize the property values
     await exposed_thing.properties['allAvailableResources_drone'].write(allAvailableResources_drone)
     await exposed_thing.properties['possibleLaunchfiles_drone'].write(possibleLaunchfiles_drone)
+
 
