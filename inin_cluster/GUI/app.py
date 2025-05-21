@@ -140,7 +140,6 @@ def trigger_execution_summit():
     launchfile_id_summit = request.form['launchfile_id_summit']
     result_summit = async_to_sync(trigger_summit)(launchfile_id_summit)
     print("trigger_summit", result_summit)
-    app.logger.info("trigger_summit: %s", result_summit)
     session['execution_status_summit'] = result_summit
     return index()
 

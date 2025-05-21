@@ -1,0 +1,477 @@
+---
+# Source: nephele-uc1-inria-app/templates/mosquitto-pvc.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mosquitto-passwd
+type: Opaque
+data:
+  passwd: bmVwaGVsZTokNyQxMDEkWmM3dGE1bThFblRpZnJwVSQxSzZIZ05KdFZXc21kRjkrVjlvMktCMGVqM2F5aWhnQkFQS3RkdWlGMnhVTTFBZ1NHdUJkZVAza2U5Y1RXQUF2RGQvRSt5aUQwUmxaWGdJMTBHeW1kZz09Cg==
+---
+# Source: nephele-uc1-inria-app/templates/mosquitto-pvc.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-config
+data:
+  mosquitto.conf: |-
+    allow_anonymous false
+    listener 1883
+    password_file /mosquitto/config/passwd
+    persistence true
+    persistence_location /mosquitto/data/
+    log_dest file /mosquitto/log/mosquitto.log
+---
+# Source: nephele-uc1-inria-app/templates/db-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: cinder-csi
+---
+# Source: nephele-uc1-inria-app/templates/influxdb-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: influxdb-config-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: cinder-csi
+---
+# Source: nephele-uc1-inria-app/templates/influxdb-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: influxdb-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: cinder-csi
+---
+# Source: nephele-uc1-inria-app/templates/mosquitto-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mosquitto-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: cinder-csi
+---
+# Source: nephele-uc1-inria-app/templates/mosquitto-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mosquitto-log-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: cinder-csi
+---
+# Source: nephele-uc1-inria-app/templates/pgadmin-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pgadmin-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: cinder-csi
+---
+# Source: nephele-uc1-inria-app/templates/api-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: "inria-api"
+spec:
+  
+  ports:
+  - port: 5001
+    targetPort: 5001
+    
+  selector:
+    app: "inria-api"
+---
+# Source: nephele-uc1-inria-app/templates/db-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  
+  ports:
+  - port: 5432
+    targetPort: 5432
+    
+  selector:
+    app: db
+---
+# Source: nephele-uc1-inria-app/templates/frontend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: "inria-front"
+spec:
+  
+  ports:
+  - port: 80
+    targetPort: 80
+    
+  selector:
+    app: "inria-front"
+---
+# Source: nephele-uc1-inria-app/templates/influxdb-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: influxdb
+spec:
+  
+  ports:
+    - port: 8086
+      targetPort: 8086
+      
+  selector:
+    app: influxdb
+---
+# Source: nephele-uc1-inria-app/templates/mosquitto-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mosquitto
+spec:
+  
+  ports:
+    - name: mosquitto-tcp
+      port: 1883
+      targetPort: 1883
+      
+    - name: mosquitto-ws
+      port: 9001
+      targetPort: 9001
+      
+  selector:
+    app: mosquitto
+---
+# Source: nephele-uc1-inria-app/templates/pgadmin-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin
+spec:
+  
+  ports:
+  - port: 8888
+    targetPort: 8888
+    
+  selector:
+    app: pgadmin
+---
+# Source: nephele-uc1-inria-app/templates/api-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "inria-api"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "inria-api"
+  template:
+    metadata:
+      labels:
+        app: "inria-api"
+    spec:
+      containers:
+      - name: "inria-api"
+        image: "alivershem/nephele_uc1_inria:api-amd64"
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 5001
+        env:
+        - name: CRON_ACTIVATED
+          value: "true"
+        - name: CRON_DEFAULT_PERIOD
+          value: "30"
+        - name: CVO_ACTION_GET_MAP
+          value: "/action/mapExport_summit"
+        - name: CVO_ACTION_GET_MAP_ORIGIN
+          value: "/action/mapOriginExport_summit"
+        - name: CVO_ACTION_SEND_COORDINATES
+          value: "/action/deploy_sensor_summit"
+        - name: CVO_AUTH_TOKEN
+          value: "token"
+        - name: CVO_AUTH_TYPE
+          value: "bearer"
+        - name: CVO_BASE_URL
+          value: "http://cvo:8080/cvo"
+        - name: IS_CVO_MOCKED
+          value: "false"
+        - name: IS_VIRTUAL_GATEWAY_MOCKED
+          value: "true"
+        - name: NEPHELE_DATABASE_URI
+          value: "postgresql+psycopg://nephele:nephele@db:5432/nephele_dashboard_db"
+        - name: NEPHELE_FLASK_ENV
+          value: "dev"
+        - name: VIRTUAL_GATEWAY_ACTION_DEPLOY_NODE
+          value: "/action/deploy_node"
+        - name: VIRTUAL_GATEWAY_ACTION_GET_ALL_NODES
+          value: "/action/get_all_nodes"
+        - name: VIRTUAL_GATEWAY_ACTION_REGISTER_NODE
+          value: "/action/register_new_node"
+        - name: VIRTUAL_GATEWAY_AUTH_PASSWORD
+          value: "nephele"
+        - name: VIRTUAL_GATEWAY_AUTH_TYPE
+          value: "basic"
+        - name: VIRTUAL_GATEWAY_AUTH_USERNAME
+          value: "nephele"
+        - name: VIRTUAL_GATEWAY_BASE_URL
+          value: "http://localhost:8081/virtualgateway"
+---
+# Source: nephele-uc1-inria-app/templates/db-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: db
+        image: postgres:17.0-alpine3.20
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: nephele
+        - name: POSTGRES_PASSWORD
+          value: nephele
+        - name: POSTGRES_DB
+          value: nephele_dashboard_db
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata  # NB: there is a sub-directory at the end, required to let the container have the write rights
+        volumeMounts:
+          - name: db-data
+            mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: db-data
+        persistentVolumeClaim:
+          claimName: db-pvc
+---
+# Source: nephele-uc1-inria-app/templates/frontend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "inria-front"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "inria-front"
+  template:
+    metadata:
+      labels:
+        app: "inria-front"
+    spec:
+      containers:
+      - name: "inria-front"
+        image: "alivershem/nephele_uc1_inria:front-amd64"
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 80
+        env:
+        - name: API_URL
+          value: "http://inria-api:5001"
+---
+# Source: nephele-uc1-inria-app/templates/influxdb-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influxdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+      - name: influxdb
+        image: influxdb:2.7.10-alpine
+        ports:
+          - containerPort: 8086
+        env:
+          - name: DOCKER_INFLUXDB_INIT_MODE
+            value: setup
+          - name: DOCKER_INFLUXDB_INIT_USERNAME
+            value: nephele-usr
+          - name: DOCKER_INFLUXDB_INIT_PASSWORD
+            value: nephele-pwd
+          - name: DOCKER_INFLUXDB_INIT_ORG
+            value: wot
+          - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+            value: nephele-key
+          - name: DOCKER_INFLUXDB_INIT_BUCKET
+            value: home
+          - name: DOCKER_INFLUXDB_INIT_RETENTION
+            value: 1w
+        volumeMounts:
+          - name: influxdb-config
+            mountPath: /etc/influxdb2
+          - name: influxdb-data
+            mountPath: /var/lib/influxdb2
+      volumes:
+        - name: influxdb-config
+          persistentVolumeClaim:
+            claimName: influxdb-config-pvc
+        - name: influxdb-data
+          persistentVolumeClaim:
+            claimName: influxdb-data-pvc
+---
+# Source: nephele-uc1-inria-app/templates/mosquitto-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquitto
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+    spec:
+      containers:
+      - name: mosquitto
+        image: eclipse-mosquitto:2.0.18
+        ports:
+          - containerPort: 1883
+          - containerPort: 9001
+        volumeMounts:
+          - name: mosquitto-config
+            mountPath: /mosquitto/config
+          - name: mosquitto-data
+            mountPath: /mosquitto/data
+          - name: mosquitto-log
+            mountPath: /mosquitto/log
+      volumes:
+        - name: mosquitto-config
+          projected:
+            sources:
+              - configMap:
+                  name: mosquitto-config
+              - secret:
+                  name: mosquitto-passwd
+        - name: mosquitto-data
+          persistentVolumeClaim:
+            claimName: mosquitto-data-pvc
+        - name: mosquitto-log
+          persistentVolumeClaim:
+            claimName: mosquitto-log-pvc
+---
+# Source: nephele-uc1-inria-app/templates/pgadmin-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+    spec:
+      securityContext:  # NB: pgadmin runs with the user 5050 / group 5050
+        runAsUser: 5050
+        runAsGroup: 5050
+        fsGroup: 5050
+      containers:
+      - name: pgadmin
+        image: dpage/pgadmin4
+        ports:
+        - containerPort: 8888
+        env:
+        - name: PGADMIN_LISTEN_PORT
+          value: "8888"
+        - name: PGADMIN_DEFAULT_EMAIL
+          value: nephele@nephele.eu
+        - name: PGADMIN_DEFAULT_PASSWORD
+          value: nephele
+        volumeMounts:
+          - name: pgadmin-data
+            mountPath: /var/lib/pgadmin
+      volumes:
+      - name: pgadmin-data
+        persistentVolumeClaim:
+          claimName: pgadmin-pvc
+---
+# Source: nephele-uc1-inria-app/templates/api-ingress-route.yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: "inria-api-secure"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`inria-api.nephele-project.ch`)
+      kind: Rule
+      services:
+        - name: "inria-api"
+          port: 5001
+  tls:
+    secretName: letsencrypt-cert-production
+---
+# Source: nephele-uc1-inria-app/templates/frontend-ingress-route.yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: "inria-front-secure"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`inria-front.nephele-project.ch`)
+      kind: Rule
+      services:
+        - name: "inria-front"
+          port: 80
+  tls:
+    secretName: letsencrypt-cert-production
