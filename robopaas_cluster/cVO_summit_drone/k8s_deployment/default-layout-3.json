@@ -700,6 +700,12 @@
         },
         "/summit/summit/global_costmap/published_footprint": {
           "visible": true
+        },
+        "/summit/summit/person_marker": {
+          "visible": true
+        },
+        "/summit/summit/leakage_marker": {
+          "visible": true
         }
       },
       "layers": {

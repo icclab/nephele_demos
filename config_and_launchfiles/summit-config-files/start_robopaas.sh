@@ -4,10 +4,6 @@
 screen -D -m -S summit &
 PID=$!
 
-#Start another window, name it "robot" and run robot startup in it
-#screen -S summit -X screen -t robot
-#screen -S summit -p robot -X exec roslaunch icclab_summit_xl summit_xl_base_bringup.launch
-#sleep 1s
 
 #In another window we have the ros1_bridge
 screen -S summit -X screen -t ros1_bridge
@@ -40,9 +36,9 @@ sleep 1s
 #sleep 1s
 
 #In the same container we will also start the camera
-screen -S summit -X screen -t front_camera
-screen -S summit -p front_camera -X exec docker exec -it ros2 bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////home/summit/nephele-demo/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; ros2 launch icclab_summit_xl astra_mini.launch.py"
-sleep 1s
+#screen -S summit -X screen -t front_camera
+#screen -S summit -p front_camera -X exec docker exec -it ros2 bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////home/summit/nephele-demo/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; ros2 launch icclab_summit_xl astra_mini.launch.py"
+#sleep 1s
 
 #In the same container we will also start the vo-wot environment
 screen -S summit -X screen -t vo-wot
@@ -50,9 +46,9 @@ screen -S summit -p vo-wot -X exec docker exec -it ros2 bash -c "export ROS_DIST
 
 
 #In the same container we will also start nav2
-screen -S summit -X screen -t nav2
-screen -S summit -p nav2 -X exec docker exec -it ros2 bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////home/summit/nephele-demo/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; ros2 launch icclab_summit_xl summit_xl_nav2.launch.py use_sim_time:=false slam:=True params_file:=/home/ros/colcon_ws/install/icclab_summit_xl/share/icclab_summit_xl/config/nav2_params_real.yaml"
-sleep 1s
+#screen -S summit -X screen -t nav2
+#screen -S summit -p nav2 -X exec docker exec -it ros2 bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////home/summit/nephele-demo/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; ros2 launch icclab_summit_xl summit_xl_nav2.launch.py use_sim_time:=false slam:=True params_file:=/home/ros/colcon_ws/install/icclab_summit_xl/share/icclab_summit_xl/config/nav2_params_real.yaml"
+#sleep 1s
 
 
 #In the same container we will also start the arm
@@ -79,9 +75,9 @@ screen -S summit -p gps -X exec docker exec -it ros2 bash -c "export ROS_DISTRO=
 sleep 1s
 
 #In the same container we will also start rtabmap
-screen -S summit -X screen -t rtabmap
-screen -S summit -p rtabmap -X exec docker exec -it ros2 bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////home/summit/nephele-demo/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; ros2 launch icclab_summit_xl rtabmap.launch.py use_sim_time:=False"
-sleep 1s
+#screen -S summit -X screen -t rtabmap
+#screen -S summit -p rtabmap -X exec docker exec -it ros2 bash -c "export ROS_DISTRO=humble; export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp; export CYCLONEDDS_URI=file:////home/summit/nephele-demo/cyclonedds-bridge.xml; source /home/ros/colcon_ws/install/setup.bash; ros2 launch icclab_summit_xl rtabmap.launch.py use_sim_time:=False"
+#sleep 1s
 
 #Attach to screen
 #screen -r summit
@@ -98,3 +94,4 @@ wait $PID
 #Kill docker containers
 docker kill ros1_bridge
 docker kill ros2
+

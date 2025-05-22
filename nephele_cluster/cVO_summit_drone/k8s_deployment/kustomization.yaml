@@ -49,5 +49,5 @@ resources:
 - rosbag_nginx_summit_deploy.yaml
 - roboflow.yaml
 - inria.yaml
-  #- zenoh-router.yaml
+- zenoh-router.yaml
 #- liquid_llm.yaml

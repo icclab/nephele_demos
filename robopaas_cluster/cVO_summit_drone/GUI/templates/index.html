@@ -114,9 +114,9 @@
 
                                 <!-- Read Data for Summit-Xl -->
                 <div class="mb-4">
-                    <h3>Get Map Origin on Summit-Xl</h3>
+                    <h3>Get 2D Map Origin on Summit-Xl</h3>
                     <form action="/map_origin_export_summit" method="get">
-                        <button type="submit" class="btn btn-secondary">Get Map Origin</button>
+                        <button type="submit" class="btn btn-secondary">Get 2D Map Origin</button>
                     </form>
                     {% if map_origin_summit %}
                     <div class="alert alert-info mt-3">Data: {{map_origin_summit }}</div>
@@ -200,11 +200,11 @@
 
                 <!-- Store Map on VO's DB for Summit-Xl -->
                 <div class="mb-4">
-                    <h3>Store Map on VO's DB</h3>
+                    <h3>Store 2D Map on VO's DB</h3>
                     <form action="/store_map_db_summit" method="get">
                         <label for="filename_tosave_summit" class="form-label">Filename to use:</label>
                         <input type="text" id="filename_tosave_summit" name="filename_tosave_summit" class="form-control">
-                        <button type="submit" class="btn btn-secondary mt-2">Store map on DB</button>
+                        <button type="submit" class="btn btn-secondary mt-2">Store 2D map on DB</button>
                     </form>
                     {% if store_map_db_summit %}
                     <div class="alert alert-info mt-3">Execution Status: {{store_map_db_summit }}</div>
@@ -356,7 +356,7 @@
                     <form action="/store_map_db_drone" method="get">
                         <label for="filename_tosave_drone" class="form-label">Filename to use:</label>
                         <input type="text" id="filename_tosave_drone" name="filename_tosave_drone" class="form-control">
-                        <button type="submit" class="btn btn-secondary mt-2">Store map on DB</button>
+                        <button type="submit" class="btn btn-secondary mt-2">Store 2D map on DB</button>
                     </form>
                     {% if store_map_db_drone %}
                     <div class="alert alert-info mt-3">Execution Status: {{store_map_db_drone }}</div>
@@ -420,11 +420,11 @@
                     </div>
             
                     <!-- Execution Status Messages -->
-                    {% if startstorezenoh_bag_vo_tb2 %}
-                    <div class="alert alert-info mt-3">Execution Status: {{ startstorezenoh_bag_vo_tb2 }}</div>
+                    {% if startstorezenoh_bag_vo_drone %}
+                    <div class="alert alert-info mt-3">Execution Status: {{ startstorezenoh_bag_vo_drone }}</div>
                     {% endif %}
-                    {% if stopstorezenoh_bag_vo_tb2 %}
-                    <div class="alert alert-info mt-3">Execution Status: {{ stopstorezenoh_bag_vo_tb2 }}</div>
+                    {% if stopstorezenoh_bag_vo_drone %}
+                    <div class="alert alert-info mt-3">Execution Status: {{ stopstorezenoh_bag_vo_drone }}</div>
                     {% endif %}
                 </div>
 

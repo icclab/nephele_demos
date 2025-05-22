@@ -98,12 +98,11 @@
                         <div class="alert alert-info mt-3">Execution Status: {{ execution_status_summit }}</div>
                     {% endif %}
                 </div>
-                
-                
+                    
 
                 <!-- Environment Map for Summit-Xl -->
                 <div class="mb-4">
-                    <h3>Environment Map</h3>
+                    <h3>2D Environment Map</h3>
                     {% if image_url_summit %}
                     <img src="{{ image_url_summit }}" alt="Summit-Xl Map">
                     {% endif %}
@@ -113,9 +112,9 @@
                 </div>
                                 <!-- Read Data for Summit-Xl -->
                 <div class="mb-4">
-                    <h3>Get Map Origin on Summit-Xl</h3>
+                    <h3>Get 2D Map Origin on Summit-Xl</h3>
                     <form action="/map_origin_export_summit" method="get">
-                        <button type="submit" class="btn btn-secondary">Get Map Origin</button>
+                        <button type="submit" class="btn btn-secondary">Get 2D Map Origin</button>
                     </form>
                     {% if map_origin_summit %}
                     <div class="alert alert-info mt-3">Data: {{map_origin_summit }}</div>
@@ -199,11 +198,11 @@
 
                 <!-- Store Map on VO's DB for Summit-Xl -->
                 <div class="mb-4">
-                    <h3>Store Map on VO's DB</h3>
+                    <h3>Store 2D Map on VO's DB</h3>
                     <form action="/store_map_db_summit" method="get">
                         <label for="filename_tosave_summit" class="form-label">Filename to use:</label>
                         <input type="text" id="filename_tosave_summit" name="filename_tosave_summit" class="form-control">
-                        <button type="submit" class="btn btn-secondary mt-2">Store map on DB</button>
+                        <button type="submit" class="btn btn-secondary mt-2">Store 2D map on DB</button>
                     </form>
                     {% if store_map_db_summit %}
                     <div class="alert alert-info mt-3">Execution Status: {{store_map_db_summit }}</div>
@@ -225,12 +224,12 @@
 
                 <!-- Get Environment Map from VO's DB for Summit-Xl -->
                 <div class="mb-4">
-                    <h3>Get Environment Map</h3>
+                    <h3>Get Environment 2D Map</h3>
                     <img src="{{ map_from_db_summit }}" alt="Summit Map" class="img-fluid">
                     <form action="/read_map_from_db_summit" method="get" class="mt-2">
                         <label for="filename_map_summit" class="form-label">Filename:</label>
                         <input type="text" id="filename_map_summit" name="filename_map_summit" class="form-control">
-                        <button type="submit" class="btn btn-secondary mt-2">Get Map</button>
+                        <button type="submit" class="btn btn-secondary mt-2">Get 2D Map</button>
                     </form>
                     {% if map_from_db_summit %}
                     <div class="alert alert-info mt-3">Execution Status: {{map_from_db_summit }}</div>
@@ -355,7 +354,7 @@
                     <form action="/store_map_db_drone" method="get">
                         <label for="filename_tosave_drone" class="form-label">Filename to use:</label>
                         <input type="text" id="filename_tosave_drone" name="filename_tosave_drone" class="form-control">
-                        <button type="submit" class="btn btn-secondary mt-2">Store map on DB</button>
+                        <button type="submit" class="btn btn-secondary mt-2">Store 2D map on DB</button>
                     </form>
                     {% if store_map_db_drone %}
                     <div class="alert alert-info mt-3">Execution Status: {{store_map_db_drone }}</div>
@@ -419,11 +418,11 @@
                     </div>
             
                     <!-- Execution Status Messages -->
-                    {% if startstorezenoh_bag_vo_tb2 %}
-                    <div class="alert alert-info mt-3">Execution Status: {{ startstorezenoh_bag_vo_tb2 }}</div>
+                    {% if startstorezenoh_bag_vo_drone %}
+                    <div class="alert alert-info mt-3">Execution Status: {{ startstorezenoh_bag_vo_drone }}</div>
                     {% endif %}
-                    {% if stopstorezenoh_bag_vo_tb2 %}
-                    <div class="alert alert-info mt-3">Execution Status: {{ stopstorezenoh_bag_vo_tb2 }}</div>
+                    {% if stopstorezenoh_bag_vo_drone %}
+                    <div class="alert alert-info mt-3">Execution Status: {{ stopstorezenoh_bag_vo_drone }}</div>
                     {% endif %}
                 </div>
 
