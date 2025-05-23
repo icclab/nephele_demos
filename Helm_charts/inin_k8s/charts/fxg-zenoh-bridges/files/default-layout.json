@@ -3,9 +3,9 @@
     "3D!2ah3t15": {
       "cameraState": {
         "perspective": true,
-        "distance": 16.290124999996927,
+        "distance": 13.2684086257787,
         "phi": 59.99999999999949,
-        "thetaOffset": 45.00000000000015,
+        "thetaOffset": 45.000000000000135,
         "targetOffset": [
           3.4736670643905807,
           -2.4141619125036184,
@@ -331,6 +331,9 @@
         },
         "/summit/summit/leakage_marker": {
           "visible": true
+        },
+        "/summit/summit/global_costmap/published_footprint": {
+          "visible": true
         }
       },
       "layers": {
@@ -365,19 +368,18 @@
     },
     "3D!1tu4fom": {
       "cameraState": {
-        "perspective": true,
         "distance": 14.701837812497615,
+        "perspective": true,
         "phi": 59.999999999999524,
-        "thetaOffset": 45.000000000000036,
-        "targetOffset": [
-          3.5276554087279433,
-          -2.681863699323312,
-          -4.805923245309878e-16
-        ],
         "target": [
           0,
           0,
           0
+        ],
+        "targetOffset": [
+          3.5276554087279433,
+          -2.681863699323312,
+          -4.805923245309878e-16
         ],
         "targetOrientation": [
           0,
@@ -385,6 +387,7 @@
           0,
           1
         ],
+        "thetaOffset": 45.000000000000036,
         "fovy": 45,
         "near": 0.5,
         "far": 5000
@@ -693,6 +696,15 @@
           "colorMap": "turbo"
         },
         "/summit/summit/goal": {
+          "visible": true
+        },
+        "/summit/summit/global_costmap/published_footprint": {
+          "visible": true
+        },
+        "/summit/summit/person_marker": {
+          "visible": true
+        },
+        "/summit/summit/leakage_marker": {
           "visible": true
         }
       },

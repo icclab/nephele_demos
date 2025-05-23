@@ -10,8 +10,8 @@ image:
 
 resources:
   requests:
-    cpu: "2"
-    memory: "4Gi"
+    cpu: "0.2"
+    memory: "2Gi"
   limits:
     cpu: "2"
     memory: "4Gi"
@@ -22,29 +22,5 @@ service:
   port: 9001
   targetPort: 9001
 
-runtimeClassName: nvidia
 
-  
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: nvidia-a30
-              operator: Exists
-
-tolerations:
-  - key: just-gpu-workload
-    operator: Exists
-    effect: NoSchedule
-    
-    
-traefik:
-  enabled: true
-  routes:
-    - name: roboflow-ingress
-      host: roboflow.nephele-project.ch
-      path: /
-      port: 9001
-      tlsSecret: letsencrypt-cert-production
 

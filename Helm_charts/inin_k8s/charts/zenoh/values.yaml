@@ -29,8 +29,8 @@ ports:
 # Resources
 resources:
   requests:
-    cpu: "2"
-    memory: 5Gi
+    cpu: "0.2"
+    memory: 2Gi
 
 
 volumes:
